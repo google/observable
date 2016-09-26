@@ -313,7 +313,7 @@ _runTests() {
 
 ObservableList list;
 
-_lengthChange(int oldValue, int newValue) =>
+PropertyChangeRecord _lengthChange(int oldValue, int newValue) =>
     new PropertyChangeRecord(list, #length, oldValue, newValue);
 
 _change(int index, {List removed: const [], int addedCount: 0}) =>
