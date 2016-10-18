@@ -362,6 +362,21 @@ _runTests() {
       });
     });
   });
+
+  group('Updates delegate as a spy', () {
+    Map delegate;
+    ObservableMap map;
+
+    setUp(() {
+      delegate = {};
+      map = new ObservableMap.spy(delegate);
+    });
+
+    test('[]=', () {
+      map['a'] = 42;
+      expect(delegate, {'a': 42});
+    });
+  });
 }
 
 _lengthChange(map, int oldValue, int newValue) =>
