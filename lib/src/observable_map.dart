@@ -95,6 +95,9 @@ class ObservableMap<K, V> extends Observable implements Map<K, V> {
     return result;
   }
 
+  /// Creates a new observable map wrapping [other].
+  ObservableMap.spy(Map<K, V> other) : _map = other;
+
   Iterable<K> get keys => _map.keys;
 
   Iterable<V> get values => _map.values;
