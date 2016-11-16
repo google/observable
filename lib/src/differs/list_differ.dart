@@ -327,6 +327,7 @@ void _mergeSplices/*<E>*/(
   // - it applies the merge in a particular splice
   // - then continues and updates the subsequent splices with any offset diff.
   for (var i = 0; i < splices.length; i++) {
+    print('>>> insertionOffset = $insertionOffset');
     final current = splices[i];
     var currentIndex = current.index;
     currentIndex += insertionOffset;
