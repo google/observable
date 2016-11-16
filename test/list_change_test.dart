@@ -62,12 +62,9 @@ listChangeTests() {
     applyAndCheckDeltas(model, copy, changes) => changes.then((summary) {
           // apply deltas to the copy
           for (ListChangeRecord delta in summary) {
-            print('>>> Apply $delta to $copy from $model');
             delta.apply(copy);
           }
 
-          // Note: compare strings for easier debugging.
-          print('>>> Comparing $copy to $model');
           expect('$copy', '$model', reason: 'summary $summary');
         });
 

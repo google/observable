@@ -267,7 +267,7 @@ List<ListChangeRecord/*<E>*/ > _calcSplices/*<E>*/(
         oldIndex++;
         break;
       case _Edit.update:
-        if (hasSplice()) {
+        if (!hasSplice()) {
           spliceIndex = index;
         }
         spliceAddedCount++;
@@ -276,14 +276,14 @@ List<ListChangeRecord/*<E>*/ > _calcSplices/*<E>*/(
         oldIndex++;
         break;
       case _Edit.add:
-        if (hasSplice()) {
+        if (!hasSplice()) {
           spliceIndex = index;
         }
         spliceAddedCount++;
         index++;
         break;
       case _Edit.delete:
-        if (hasSplice()) {
+        if (!hasSplice()) {
           spliceIndex = index;
         }
         spliceRemovals.add(old[oldIndex]);
@@ -307,7 +307,6 @@ List<ListChangeRecord/*<E>*/ > _calcSplices/*<E>*/(
 }
 
 int _intersect(int start1, int end1, int start2, int end2) {
-  print('>>> called $start1, $end1, $start2, $end2');
   return math.min(end1, end2) - math.max(start1, start2);
 }
 
@@ -327,7 +326,6 @@ void _mergeSplices/*<E>*/(
   // - it applies the merge in a particular splice
   // - then continues and updates the subsequent splices with any offset diff.
   for (var i = 0; i < splices.length; i++) {
-    print('>>> insertionOffset = $insertionOffset');
     final current = splices[i];
     var currentIndex = current.index;
     currentIndex += insertionOffset;
@@ -340,7 +338,6 @@ void _mergeSplices/*<E>*/(
       currentIndex,
       currentIndex + current.addedCount,
     );
-    print('>>> intersec = $intersectCount');
     if (intersectCount >= 0) {
       // Merge the two splices.
       splices.removeAt(i);
