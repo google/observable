@@ -326,17 +326,21 @@ void _mergeSplices/*<E>*/(
   // - it applies the merge in a particular splice
   // - then continues and updates the subsequent splices with any offset diff.
   for (var i = 0; i < splices.length; i++) {
-    final current = splices[i];
-    var currentIndex = current.index;
-    currentIndex += insertionOffset;
+    var current = splices[i];
+    current = splices[i] = new ListChangeRecord<E>(
+      current.object,
+      current.index + insertionOffset,
+      removed: current.removed,
+      addedCount: current.addedCount,
+    );
 
     if (inserted) continue;
 
     var intersectCount = _intersect(
       spliceIndex,
       spliceIndex + spliceRemoved.length,
-      currentIndex,
-      currentIndex + current.addedCount,
+      current.index,
+      current.index + current.addedCount,
     );
     if (intersectCount >= 0) {
       // Merge the two splices.
@@ -353,27 +357,27 @@ void _mergeSplices/*<E>*/(
         inserted = true;
       } else {
         final removed = current.removed.toList();
-        if (spliceIndex < currentIndex) {
+        if (spliceIndex < current.index) {
           // Some prefix of splice.removed is prepended to current.removed.
           removed.insertAll(
             0,
-            spliceRemoved.getRange(0, currentIndex - spliceIndex),
+            spliceRemoved.getRange(0, current.index - spliceIndex),
           );
         }
         if (spliceIndex + spliceRemoved.length >
-            currentIndex + current.addedCount) {
+            current.index + current.addedCount) {
           // Some suffix of splice.removed is appended to current.removed.
           removed.addAll(spliceRemoved.getRange(
-            currentIndex + current.addedCount - spliceIndex,
+              current.index + current.addedCount - spliceIndex,
             spliceRemoved.length,
           ));
         }
         spliceRemoved = removed;
-        if (currentIndex < spliceIndex) {
-          spliceIndex = currentIndex;
+        if (current.index < spliceIndex) {
+          spliceIndex = current.index;
         }
       }
-    } else if (spliceIndex < currentIndex) {
+    } else if (spliceIndex < current.index) {
       // Insert splice here.
       inserted = true;
       splices.insert(
@@ -387,7 +391,12 @@ void _mergeSplices/*<E>*/(
       );
       i++;
       final offset = spliceAdded - spliceRemoved.length;
-      currentIndex += offset;
+      current = splices[i] = new ListChangeRecord<E>(
+        current.object,
+        current.index + offset,
+        removed: current.removed,
+        addedCount: current.addedCount,
+      );
       insertionOffset += offset;
     }
   }
