@@ -4,7 +4,8 @@
 
 library observable.src.property_change_record;
 
-import 'change_record.dart';
+import 'observable.dart';
+import 'records.dart' show ChangeRecord;
 
 /// A change record to a field of an [Observable] object.
 class PropertyChangeRecord<T> extends ChangeRecord {
@@ -22,6 +23,7 @@ class PropertyChangeRecord<T> extends ChangeRecord {
 
   PropertyChangeRecord(this.object, this.name, this.oldValue, this.newValue);
 
+  @override
   String toString() =>
       '#<PropertyChangeRecord $name from: $oldValue to: $newValue>';
 }

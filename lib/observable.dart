@@ -4,8 +4,7 @@
 
 library observable;
 
-export 'src/change_record.dart';
-export 'src/list_diff.dart' show ListChangeRecord;
+export 'src/records.dart' show ChangeRecord, ListChangeRecord;
 export 'src/observable.dart';
 export 'src/observable_list.dart';
 export 'src/observable_map.dart';
