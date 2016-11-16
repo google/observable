@@ -317,6 +317,7 @@ void _mergeSplices/*<E>*/(
   var spliceIndex = record.index;
   var spliceRemoved = record.removed;
   var spliceAdded = record.addedCount;
+
   var inserted = false;
   var insertionOffset = 0;
 
@@ -336,7 +337,9 @@ void _mergeSplices/*<E>*/(
     );
     if (intersectCount >= 0) {
       // Merge the two splices.
-      splices.removeAt(i--);
+      splices.removeAt(i);
+      i--;
+
       insertionOffset = current.addedCount - current.removed.length;
       spliceAdded += current.addedCount - intersectCount;
 
@@ -347,7 +350,7 @@ void _mergeSplices/*<E>*/(
         inserted = true;
       } else {
         final removed = current.removed.toList();
-        if (spliceIndex < current.index) {
+        if (spliceIndex < currentIndex) {
           // Some prefix of splice.removed is prepended to current.removed.
           removed.insertAll(
             0,
@@ -355,19 +358,19 @@ void _mergeSplices/*<E>*/(
           );
         }
         if (spliceIndex + spliceRemoved.length >
-            current.index + current.addedCount) {
+            currentIndex + current.addedCount) {
           // Some suffix of splice.removed is appended to current.removed.
           removed.addAll(spliceRemoved.getRange(
-            current.index + current.addedCount - spliceIndex,
+            currentIndex + current.addedCount - spliceIndex,
             spliceRemoved.length,
           ));
         }
         spliceRemoved = removed;
-        if (current.index < spliceIndex) {
-          spliceIndex = current.index;
+        if (currentIndex < spliceIndex) {
+          spliceIndex = currentIndex;
         }
       }
-    } else if (spliceIndex < current.index) {
+    } else if (spliceIndex < currentIndex) {
       // Insert splice here.
       inserted = true;
       splices.insert(
