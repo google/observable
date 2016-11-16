@@ -4,6 +4,7 @@
 
 library observable;
 
+export 'src/differs.dart' show Differ, EqualityDiffer, ListDiffer;
 export 'src/records.dart' show ChangeRecord, ListChangeRecord;
 export 'src/observable.dart';
 export 'src/observable_list.dart';

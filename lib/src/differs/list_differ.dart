@@ -1,3 +1,6 @@
+// Copyright (c) 2016, the Dart project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
 part of observable.src.differs;
 
 /// Determines differences between two lists, returning [ListChangeRecord]s.
@@ -7,10 +10,10 @@ part of observable.src.differs;
 /// the details in the record will actually be used.
 ///
 /// See also [EqualityDiffer] for a simpler comparison.
-class VerboseListDiffer<E> implements Differ<List<E>> {
+class ListDiffer<E> implements Differ<List<E>> {
   final Equality<E> _equality;
 
-  const VerboseListDiffer([this._equality = const DefaultEquality<E>()]);
+  const ListDiffer([this._equality = const DefaultEquality<E>()]);
 
   @override
   List<ListChangeRecord<E>> diff(List<E> e1, List<E> e2) {
@@ -368,7 +371,7 @@ void _mergeSplices/*<E>*/(
             current.index + current.addedCount) {
           // Some suffix of splice.removed is appended to current.removed.
           removed.addAll(spliceRemoved.getRange(
-              current.index + current.addedCount - spliceIndex,
+            current.index + current.addedCount - spliceIndex,
             spliceRemoved.length,
           ));
         }
