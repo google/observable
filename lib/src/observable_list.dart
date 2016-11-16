@@ -311,7 +311,7 @@ class ObservableList<E> extends ListBase<E> with Observable {
     List/*<E>*/ oldValue,
     List/*<E>*/ newValue,
   ) {
-    return const ListDiffer<E>().diff(oldValue, newValue);
+    return const ListDiffer/*<E>*/().diff(oldValue, newValue);
   }
 
   /// Updates the [previous] list using the [changeRecords]. For added items,

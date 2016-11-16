@@ -1,3 +1,7 @@
+## 0.15.0+1
+
+* Fix analysis errors caused via missing `/*<E>*/` syntax in `0.15.0`
+
 ## 0.15.0
 
 * Added the `Differ` interface, as well as `EqualityDiffer`
