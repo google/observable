@@ -6,9 +6,10 @@ library observable.src.observable_map;
 
 import 'dart:collection';
 
-import 'change_record.dart' show ChangeRecord;
 import 'observable.dart' show Observable;
 import 'property_change_record.dart' show PropertyChangeRecord;
+import 'records.dart' show ChangeRecord;
+import 'to_observable.dart';
 
 // TODO(jmesserly): this needs to be faster. We currently require multiple
 // lookups per key to get the old value.
@@ -50,6 +51,7 @@ class MapChangeRecord<K, V> extends ChangeRecord {
         isRemove = true,
         newValue = null;
 
+  @override
   String toString() {
     var kind = isInsert ? 'insert' : isRemove ? 'remove' : 'set';
     return '#<MapChangeRecord $kind $key from: $oldValue to: $newValue>';
@@ -95,22 +97,31 @@ class ObservableMap<K, V> extends Observable implements Map<K, V> {
     return result;
   }
 
+  @override
   Iterable<K> get keys => _map.keys;
 
+  @override
   Iterable<V> get values => _map.values;
 
+  @override
   int get length => _map.length;
 
+  @override
   bool get isEmpty => length == 0;
 
+  @override
   bool get isNotEmpty => !isEmpty;
 
+  @override
   bool containsValue(Object value) => _map.containsValue(value);
 
+  @override
   bool containsKey(Object key) => _map.containsKey(key);
 
+  @override
   V operator [](Object key) => _map[key];
 
+  @override
   void operator []=(K key, V value) {
     if (!hasObservers) {
       _map[key] = value;
@@ -132,12 +143,14 @@ class ObservableMap<K, V> extends Observable implements Map<K, V> {
     }
   }
 
+  @override
   void addAll(Map<K, V> other) {
     other.forEach((K key, V value) {
       this[key] = value;
     });
   }
 
+  @override
   V putIfAbsent(K key, V ifAbsent()) {
     int len = _map.length;
     V result = _map.putIfAbsent(key, ifAbsent);
@@ -149,6 +162,7 @@ class ObservableMap<K, V> extends Observable implements Map<K, V> {
     return result;
   }
 
+  @override
   V remove(Object key) {
     int len = _map.length;
     V result = _map.remove(key);
@@ -160,6 +174,7 @@ class ObservableMap<K, V> extends Observable implements Map<K, V> {
     return result;
   }
 
+  @override
   void clear() {
     int len = _map.length;
     if (hasObservers && len > 0) {
@@ -172,8 +187,10 @@ class ObservableMap<K, V> extends Observable implements Map<K, V> {
     _map.clear();
   }
 
+  @override
   void forEach(void f(K key, V value)) => _map.forEach(f);
 
+  @override
   String toString() => Maps.mapToString(this);
 
   // Note: we don't really have a reasonable old/new value to use here.

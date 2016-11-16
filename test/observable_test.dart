@@ -218,5 +218,6 @@ class ObservableSubclass<T> extends Observable {
 
   T _value;
 
+  @override
   String toString() => '#<$runtimeType value: $value>';
 }

@@ -9,8 +9,9 @@ import 'dart:collection' show UnmodifiableListView;
 
 import 'package:meta/meta.dart';
 
-import 'change_record.dart' show ChangeRecord;
+import 'observable_map.dart';
 import 'property_change_record.dart' show PropertyChangeRecord;
+import 'records.dart' show ChangeRecord;
 
 /// Represents an object with observable properties. This is used by data in
 /// model-view architectures to notify interested parties of [changes] to the

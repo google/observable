@@ -1,5 +1,6 @@
-Support for marking objects as observable, and getting notifications when those
-objects are mutated.
+Support for detecting and being notified when an object is mutated.
 
-This library is used to observe changes to observable types. It also
-has helpers to make implementing and using observable objects easy.
+There are two general ways to detect changes:
+
+* Listen to `Observable.changes` and be notified when an object changes
+* Use `Differ.diff` to determine changes between two objects
