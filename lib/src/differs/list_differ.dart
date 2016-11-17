@@ -14,7 +14,7 @@ part of observable.src.differs;
 class ListDiffer<E> implements Differ<List<E>> {
   final Equality<E> _equality;
 
-  const ListDiffer([this._equality = const DefaultEquality<E>()]);
+  const ListDiffer([this._equality = const DefaultEquality()]);
 
   @override
   List<ListChangeRecord<E>> diff(List<E> e1, List<E> e2) {
@@ -296,7 +296,7 @@ List<ListChangeRecord/*<E>*/ > _calcSplices/*<E>*/(
     }
   }
   if (hasSplice()) {
-    splices.add(new ListChangeRecord<E>(
+    splices.add(new ListChangeRecord/*<E>*/(
       current,
       spliceIndex,
       removed: spliceRemovals,
@@ -331,7 +331,7 @@ void _mergeSplices/*<E>*/(
   // - then continues and updates the subsequent splices with any offset diff.
   for (var i = 0; i < splices.length; i++) {
     var current = splices[i];
-    current = splices[i] = new ListChangeRecord<E>(
+    current = splices[i] = new ListChangeRecord/*<E>*/(
       current.object,
       current.index + insertionOffset,
       removed: current.removed,
@@ -395,7 +395,7 @@ void _mergeSplices/*<E>*/(
       );
       i++;
       final offset = spliceAdded - spliceRemoved.length;
-      current = splices[i] = new ListChangeRecord<E>(
+      current = splices[i] = new ListChangeRecord/*<E>*/(
         current.object,
         current.index + offset,
         removed: current.removed,
