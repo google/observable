@@ -1,3 +1,7 @@
+## 0.15.0+2
+
+* Fix a bug in `ListDiffer` that caused a `RangeError`
+
 ## 0.15.0+1
 
 * Fix analysis errors caused via missing `/*<E>*/` syntax in `0.15.0`

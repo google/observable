@@ -210,7 +210,7 @@ List<ListChangeRecord/*<E>*/ > _calcSplices/*<E>*/(
   }
 
   if (currentStart == currentEnd) {
-    final spliceRemoved = old.sublist(oldStart, oldStart + oldEnd);
+    final spliceRemoved = old.sublist(oldStart, oldStart + (oldEnd - oldStart));
     return [
       new ListChangeRecord/*<E>*/ .remove(
         current,
