@@ -7,7 +7,8 @@ library observable.src.observable_list;
 import 'dart:async';
 import 'dart:collection' show ListBase, UnmodifiableListView;
 
-import 'list_diff.dart' show ListChangeRecord, projectListSplices, calcSplices;
+import 'differs.dart';
+import 'records.dart';
 import 'observable.dart' show Observable;
 
 /// Represents an observable list of model values. If any items are added,
@@ -79,8 +80,10 @@ class ObservableList<E> extends ListBase<E> with Observable {
 
   bool get hasListObservers => _listChanges != null && _listChanges.hasListener;
 
+  @override
   int get length => _list.length;
 
+  @override
   set length(int value) {
     int len = _list.length;
     if (len == value) return;
@@ -98,8 +101,10 @@ class ObservableList<E> extends ListBase<E> with Observable {
     _list.length = value;
   }
 
+  @override
   E operator [](int index) => _list[index];
 
+  @override
   void operator []=(int index, E value) {
     E oldValue = _list[index];
     if (hasListObservers && oldValue != value) {
@@ -109,7 +114,10 @@ class ObservableList<E> extends ListBase<E> with Observable {
   }
 
   // Forwarders so we can reflect on the properties.
+  @override
   bool get isEmpty => super.isEmpty;
+
+  @override
   bool get isNotEmpty => super.isNotEmpty;
 
   // TODO(jmesserly): should we support first/last/single? They're kind of
@@ -118,7 +126,7 @@ class ObservableList<E> extends ListBase<E> with Observable {
   // existing list notifications.
 
   // The following methods are here so that we can provide nice change events.
-
+  @override
   void setAll(int index, Iterable<E> iterable) {
     if (iterable is! List && iterable is! Set) {
       iterable = iterable.toList();
@@ -131,6 +139,7 @@ class ObservableList<E> extends ListBase<E> with Observable {
     _list.setAll(index, iterable);
   }
 
+  @override
   void add(E value) {
     int len = _list.length;
     _notifyChangeLength(len, len + 1);
@@ -141,6 +150,7 @@ class ObservableList<E> extends ListBase<E> with Observable {
     _list.add(value);
   }
 
+  @override
   void addAll(Iterable<E> iterable) {
     int len = _list.length;
     _list.addAll(iterable);
@@ -153,6 +163,7 @@ class ObservableList<E> extends ListBase<E> with Observable {
     }
   }
 
+  @override
   bool remove(Object element) {
     for (int i = 0; i < this.length; i++) {
       if (this[i] == element) {
@@ -163,6 +174,7 @@ class ObservableList<E> extends ListBase<E> with Observable {
     return false;
   }
 
+  @override
   void removeRange(int start, int end) {
     _rangeCheck(start, end);
     int rangeLength = end - start;
@@ -176,6 +188,7 @@ class ObservableList<E> extends ListBase<E> with Observable {
     _list.removeRange(start, end);
   }
 
+  @override
   void insertAll(int index, Iterable<E> iterable) {
     if (index < 0 || index > length) {
       throw new RangeError.range(index, 0, length);
@@ -201,6 +214,7 @@ class ObservableList<E> extends ListBase<E> with Observable {
     }
   }
 
+  @override
   void insert(int index, E element) {
     if (index < 0 || index > length) {
       throw new RangeError.range(index, 0, length);
@@ -223,6 +237,7 @@ class ObservableList<E> extends ListBase<E> with Observable {
     _list[index] = element;
   }
 
+  @override
   E removeAt(int index) {
     E result = this[index];
     removeRange(index, index + 1);
@@ -238,14 +253,22 @@ class ObservableList<E> extends ListBase<E> with Observable {
     }
   }
 
-  void _notifyListChange(int index, {List removed, int addedCount}) {
+  void _notifyListChange(
+    int index, {
+    List removed: const [],
+    int addedCount: 0,
+  }) {
     if (!hasListObservers) return;
     if (_listRecords == null) {
       _listRecords = [];
       scheduleMicrotask(deliverListChanges);
     }
-    _listRecords.add(new ListChangeRecord(this, index,
-        removed: removed, addedCount: addedCount));
+    _listRecords.add(new ListChangeRecord(
+      this,
+      index,
+      removed: removed,
+      addedCount: addedCount,
+    ));
   }
 
   void _notifyChangeLength(int oldValue, int newValue) {
@@ -261,7 +284,8 @@ class ObservableList<E> extends ListBase<E> with Observable {
 
   bool deliverListChanges() {
     if (_listRecords == null) return false;
-    List<ListChangeRecord> records = projectListSplices(this, _listRecords);
+    List<ListChangeRecord> records =
+        projectListSplices/*<E>*/(this, _listRecords);
     _listRecords = null;
 
     if (hasListObservers && records.isNotEmpty) {
@@ -283,9 +307,12 @@ class ObservableList<E> extends ListBase<E> with Observable {
   ///
   /// Complexity is `O(l * p)` where `l` is the length of the current list and
   /// `p` is the length of the old list.
-  static List<ListChangeRecord> calculateChangeRecords(
-          List<Object> oldValue, List<Object> newValue) =>
-      calcSplices(newValue, 0, newValue.length, oldValue, 0, oldValue.length);
+  static List<ListChangeRecord/*<E>*/ > calculateChangeRecords/*<E>*/(
+    List/*<E>*/ oldValue,
+    List/*<E>*/ newValue,
+  ) {
+    return const ListDiffer/*<E>*/().diff(oldValue, newValue);
+  }
 
   /// Updates the [previous] list using the [changeRecords]. For added items,
   /// the [current] list is used to find the current value.

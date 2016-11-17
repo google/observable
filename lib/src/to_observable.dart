@@ -4,6 +4,8 @@
 
 library observable.src.to_observable;
 
+import 'dart:collection';
+
 import 'observable.dart' show Observable;
 import 'observable_list.dart' show ObservableList;
 import 'observable_map.dart' show ObservableMap;

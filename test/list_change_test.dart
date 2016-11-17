@@ -20,7 +20,7 @@ listChangeTests() {
   var model;
 
   tearDown(() {
-    sub.cancel();
+    sub?.cancel();
     model = null;
   });
 
@@ -47,7 +47,6 @@ listChangeTests() {
     sub = model.listChanges.listen((r) => summary = r);
 
     model.length = 2;
-
     return new Future(() {
       expectChanges(summary, [
         _delta(2, ['c', 'd', 'e'], 0)
@@ -62,14 +61,10 @@ listChangeTests() {
   group('List deltas can be applied', () {
     applyAndCheckDeltas(model, copy, changes) => changes.then((summary) {
           // apply deltas to the copy
-          for (var delta in summary) {
-            copy.removeRange(delta.index, delta.index + delta.removed.length);
-            for (int i = delta.addedCount - 1; i >= 0; i--) {
-              copy.insert(delta.index, model[delta.index + i]);
-            }
+          for (ListChangeRecord delta in summary) {
+            delta.apply(copy);
           }
 
-          // Note: compare strings for easier debugging.
           expect('$copy', '$model', reason: 'summary $summary');
         });
 
