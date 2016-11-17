@@ -55,10 +55,10 @@ class MapChangeRecord<K, V> implements ChangeRecord {
   bool operator ==(Object o) {
     if (o is MapChangeRecord<K, V>) {
       return key == o.key &&
-             oldValue == o.oldValue &&
-             newValue == o.newValue &&
-             isInsert == o.isInsert &&
-             isRemove == o.isRemove;
+          oldValue == o.oldValue &&
+          newValue == o.newValue &&
+          isInsert == o.isInsert &&
+          isRemove == o.isRemove;
     }
     return false;
   }

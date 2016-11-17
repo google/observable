@@ -6,9 +6,8 @@ library observable.src.observable_map;
 
 import 'dart:collection';
 
-import 'observable.dart' show Observable;
-import 'property_change_record.dart' show PropertyChangeRecord;
-import 'records.dart' show MapChangeRecord;
+import 'observable.dart';
+import 'records.dart';
 import 'to_observable.dart';
 
 // TODO(jmesserly): this needs to be faster. We currently require multiple
