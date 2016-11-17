@@ -2,6 +2,7 @@ language: dart
 
 dart:
   - dev
-  - stable
+  # Currently requires a dev-branch in order to use properly.
+  # - stable
 
 script: ./tool/presubmit.sh
