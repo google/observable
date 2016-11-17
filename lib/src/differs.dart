@@ -10,14 +10,17 @@ import 'package:collection/collection.dart';
 
 import 'records.dart';
 
+import 'internal.dart';
+
 part 'differs/list_differ.dart';
+part 'differs/map_differ.dart';
 
 /// Generic comparisons between two comparable objects.
 abstract class Differ<E> {
   /// Returns a list of change records between [e1] and [e2].
   ///
   /// A return value of an empty [ChangeRecord.NONE] means no changes found.
-  List<ChangeRecord> diff(E e1, E e2);
+  List<ChangeRecord> diff(E oldValue, E newValue);
 }
 
 /// Uses [Equality] to determine a simple [ChangeRecord.ANY] response.
@@ -29,7 +32,9 @@ class EqualityDiffer<E> implements Differ<E> {
   const EqualityDiffer.identity() : this._equality = const IdentityEquality();
 
   @override
-  List<ChangeRecord> diff(E e1, E e2) {
-    return _equality.equals(e1, e2) ? ChangeRecord.NONE : ChangeRecord.ANY;
+  List<ChangeRecord> diff(E oldValue, E newValue) {
+    return _equality.equals(oldValue, newValue)
+        ? ChangeRecord.NONE
+        : ChangeRecord.ANY;
   }
 }

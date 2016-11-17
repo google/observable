@@ -4,15 +4,6 @@
 
 part of observable.src.records;
 
-List/*<E>*/ _freezeInDevMode/*<E>*/(List/*<E>*/ list) {
-  if (list == null) return const [];
-  assert(() {
-    list = new List/*<E>*/ .unmodifiable(list);
-    return true;
-  });
-  return list;
-}
-
 /// A [ChangeRecord] that denotes adding or removing nodes at [index].
 ///
 /// It should be assumed that elements are [removed] *before* being added.
@@ -50,7 +41,7 @@ class ListChangeRecord<E> implements ChangeRecord {
 
   /// Records a `remove` operation at `object[index]` of [removed] elements.
   ListChangeRecord.remove(this.object, this.index, List<E> removed)
-      : this.removed = _freezeInDevMode/*<E>*/(removed),
+      : this.removed = freezeInDevMode/*<E>*/(removed),
         this.addedCount = 0 {
     _assertValidState();
   }
@@ -60,7 +51,7 @@ class ListChangeRecord<E> implements ChangeRecord {
   /// If [addedCount] is not specified it defaults to `removed.length`.
   ListChangeRecord.replace(this.object, this.index, List<E> removed,
       [int addedCount])
-      : this.removed = _freezeInDevMode/*<E>*/(removed),
+      : this.removed = freezeInDevMode/*<E>*/(removed),
         this.addedCount = addedCount ?? removed.length {
     _assertValidState();
   }

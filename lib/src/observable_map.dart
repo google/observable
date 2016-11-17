@@ -8,7 +8,7 @@ import 'dart:collection';
 
 import 'observable.dart' show Observable;
 import 'property_change_record.dart' show PropertyChangeRecord;
-import 'records.dart' show ChangeRecord;
+import 'records.dart' show MapChangeRecord;
 import 'to_observable.dart';
 
 // TODO(jmesserly): this needs to be faster. We currently require multiple
@@ -16,47 +16,6 @@ import 'to_observable.dart';
 // TODO(jmesserly): this doesn't implement the precise interfaces like
 // LinkedHashMap, SplayTreeMap or HashMap. However it can use them for the
 // backing store.
-
-// TODO(jmesserly): should we summarize map changes like we do for list changes?
-class MapChangeRecord<K, V> extends ChangeRecord {
-  // TODO(jmesserly): we could store this more compactly if it matters, with
-  // subtypes for inserted and removed.
-
-  /// The map key that changed.
-  final K key;
-
-  /// The previous value associated with this key.
-  final V oldValue;
-
-  /// The new value associated with this key.
-  final V newValue;
-
-  /// True if this key was inserted.
-  final bool isInsert;
-
-  /// True if this key was removed.
-  final bool isRemove;
-
-  MapChangeRecord(this.key, this.oldValue, this.newValue)
-      : isInsert = false,
-        isRemove = false;
-
-  MapChangeRecord.insert(this.key, this.newValue)
-      : isInsert = true,
-        isRemove = false,
-        oldValue = null;
-
-  MapChangeRecord.remove(this.key, this.oldValue)
-      : isInsert = false,
-        isRemove = true,
-        newValue = null;
-
-  @override
-  String toString() {
-    var kind = isInsert ? 'insert' : isRemove ? 'remove' : 'set';
-    return '#<MapChangeRecord $kind $key from: $oldValue to: $newValue>';
-  }
-}
 
 /// Represents an observable map of model values. If any items are added,
 /// removed, or replaced, then observers that are listening to [changes]
