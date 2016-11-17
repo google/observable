@@ -9,7 +9,6 @@ import 'dart:collection' show UnmodifiableListView;
 
 import 'package:meta/meta.dart';
 
-import 'observable_map.dart';
 import 'property_change_record.dart' show PropertyChangeRecord;
 import 'records.dart' show ChangeRecord;
 

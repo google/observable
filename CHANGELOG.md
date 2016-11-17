@@ -1,3 +1,10 @@
+## 0.16.0
+
+* Refactored `MapChangeRecord`
+    * Added equality and hashCode checks
+    * Added `MapChangeRecord.apply` to apply a change record
+* Added `MapDiffer`, which implements `Differ` for a `Map`
+
 ## 0.15.0+2
 
 * Fix a bug in `ListDiffer` that caused a `RangeError`
