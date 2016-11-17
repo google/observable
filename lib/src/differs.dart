@@ -17,7 +17,7 @@ part 'differs/map_differ.dart';
 
 /// Generic comparisons between two comparable objects.
 abstract class Differ<E> {
-  /// Returns a list of change records between [e1] and [e2].
+  /// Returns a list of change records between [oldValue] and [newValue].
   ///
   /// A return value of an empty [ChangeRecord.NONE] means no changes found.
   List<ChangeRecord> diff(E oldValue, E newValue);

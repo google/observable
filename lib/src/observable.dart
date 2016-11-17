@@ -5,74 +5,57 @@
 library observable.src.observable;
 
 import 'dart:async';
-import 'dart:collection' show UnmodifiableListView;
 
 import 'package:meta/meta.dart';
 
-import 'property_change_record.dart' show PropertyChangeRecord;
-import 'records.dart' show ChangeRecord;
+import 'change_notifier.dart';
+import 'records.dart';
 
-/// Represents an object with observable properties. This is used by data in
-/// model-view architectures to notify interested parties of [changes] to the
-/// object's properties (fields or getter/setter pairs).
+/// Represents an object with observable state or properties.
 ///
 /// The interface does not require any specific technique to implement
-/// observability. You can implement it in the following ways:
-///
-/// - Deriving from this class via a mixin or base class. When a field,
-///   property, or indexable item is changed, the derived class should call
-///   [notifyPropertyChange]. See that method for an example.
-/// - Implementing this interface and providing your own implementation.
-abstract class Observable {
-  StreamController<List<ChangeRecord>> _changes;
+/// observability. You may implement it in the following ways:
+/// - Extend or mixin [ChangeNotifier]
+/// - Implement the interface yourself and provide your own implementation
+abstract class Observable<C extends ChangeRecord> {
+  // To be removed when https://github.com/dart-lang/observable/issues/10
+  final ChangeNotifier<C> _delegate = new ChangeNotifier<C>();
 
-  List<ChangeRecord> _records;
+  // Whether Observable was not given a type.
+  final bool _isNotGeneric = C == dynamic;
 
-  /// The stream of property change records to this object, delivered
-  /// asynchronously.
+  /// Emits a list of changes when the state of the object changes.
   ///
-  /// [deliverChanges] can be called to force synchronous delivery.
-  Stream<List<ChangeRecord>> get changes {
-    if (_changes == null) {
-      _changes = new StreamController.broadcast(
-          sync: true, onListen: observed, onCancel: unobserved);
-    }
-    return _changes.stream;
-  }
+  /// Changes should produced in order, if significant.
+  Stream<List<C>> get changes => _delegate.changes;
 
-  /// Derived classes may override this method to be called when the [changes]
-  /// are first observed.
-  // TODO(tvolkert): @mustCallSuper (github.com/dart-lang/sdk/issues/27275)
+  /// May override to be notified when [changes] is first observed.
   @protected
-  void observed() {}
+  @mustCallSuper
+  @Deprecated('Use ChangeNotifier instead to have this method available')
+  // REMOVE IGNORE when https://github.com/dart-lang/observable/issues/10
+  // ignore: invalid_use_of_protected_member
+  void observed() => _delegate.observed();
 
-  /// Derived classes may override this method to be called when the [changes]
-  /// are no longer being observed.
-  // TODO(tvolkert): @mustCallSuper (github.com/dart-lang/sdk/issues/27275)
+  /// May override to be notified when [changes] is no longer observed.
   @protected
-  void unobserved() {
-    // Free some memory
-    _changes = null;
-  }
+  @mustCallSuper
+  @Deprecated('Use ChangeNotifier instead to have this method available')
+  // REMOVE IGNORE when https://github.com/dart-lang/observable/issues/10
+  // ignore: invalid_use_of_protected_member
+  void unobserved() => _delegate.unobserved();
 
   /// True if this object has any observers.
-  bool get hasObservers => _changes != null && _changes.hasListener;
+  @Deprecated('Use ChangeNotifier instead to have this method available')
+  bool get hasObservers => _delegate.hasObservers;
 
-  /// Synchronously deliver pending [changes].
+  /// If [hasObservers], synchronously emits [changes] that have been queued.
   ///
-  /// Returns `true` if any records were delivered, otherwise `false`.
-  /// Pending records will be cleared regardless, to keep newly added
-  /// observers from being notified of changes that occurred before
-  /// they started observing.
-  bool deliverChanges() {
-    List<ChangeRecord> records = _records;
-    _records = null;
-    if (hasObservers && records != null) {
-      _changes.add(new UnmodifiableListView<ChangeRecord>(records));
-      return true;
-    }
-    return false;
-  }
+  /// Returns `true` if changes were emitted.
+  @Deprecated('Use ChangeNotifier instead to have this method available')
+  // REMOVE IGNORE when https://github.com/dart-lang/observable/issues/10
+  // ignore: invalid_use_of_protected_member
+  bool deliverChanges() => _delegate.deliverChanges();
 
   /// Notify that the [field] name of this object has been changed.
   ///
@@ -80,27 +63,45 @@ abstract class Observable {
   /// equal, no change will be recorded.
   ///
   /// For convenience this returns [newValue].
+  ///
+  /// ## Deprecated
+  ///
+  /// All [Observable] objects will no longer be required to emit change records
+  /// when any property changes. For example, `ObservableList` will only emit
+  /// on `ObservableList.changes`, instead of on `ObservableList.listChanges`.
+  ///
+  /// If you are using a typed `implements/extends Observable<C>`, it is illegal
+  /// to call this method - will throw an [UnsupportedError] when called.
+  @Deprecated('Use PropertyChangeNotifier')
   /*=T*/ notifyPropertyChange/*<T>*/(
-      Symbol field, /*=T*/ oldValue, /*=T*/ newValue) {
+    Symbol field,
+    /*=T*/
+    oldValue,
+    /*=T*/
+    newValue,
+  ) {
     if (hasObservers && oldValue != newValue) {
-      notifyChange(new PropertyChangeRecord(this, field, oldValue, newValue));
+      if (_isNotGeneric) {
+        notifyChange(
+          new PropertyChangeRecord(
+            this,
+            field,
+            oldValue,
+            newValue,
+          ) as C,
+        );
+      } else {
+        throw new UnsupportedError('Generic typed Observable does not support');
+      }
     }
     return newValue;
   }
 
-  /// Notify observers of a change.
+  /// Schedules [change] to be delivered.
   ///
-  /// This will automatically schedule [deliverChanges].
+  /// If [change] is omitted then [ChangeRecord.ANY] will be sent.
   ///
-  /// For most objects [Observable.notifyPropertyChange] is more convenient, but
-  /// collections sometimes deliver other types of changes such as a
-  /// [MapChangeRecord].
-  void notifyChange(ChangeRecord record) {
-    if (!hasObservers) return;
-    if (_records == null) {
-      _records = [];
-      scheduleMicrotask(deliverChanges);
-    }
-    _records.add(record);
-  }
+  /// If there are no listeners to [changes], this method does nothing.
+  @Deprecated('Use ChangeNotifier instead to have this method available')
+  void notifyChange([C change]) => _delegate.notifyChange(change);
 }
