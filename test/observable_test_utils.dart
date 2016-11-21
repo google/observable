@@ -18,7 +18,6 @@ newMicrotask(_) => new Future.value();
 // TODO(jmesserly): use matchers when we have a way to compare ChangeRecords.
 // For now just use the toString.
 void expectChanges(actual, expected, {String reason}) {
-  print('>>> $actual v $expected');
   expect('$actual', '$expected', reason: reason);
 }
 

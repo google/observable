@@ -4,6 +4,20 @@ import 'package:collection/collection.dart';
 import 'package:observable/observable.dart';
 import 'package:observable/src/differs.dart';
 
+/// A [List] that broadcasts [changes] to subscribers for efficient mutations.
+///
+/// When client code expects a read heavy/write light workload, it is often more
+/// efficient to notify _when_ something has changed, instead of constantly
+/// diffing lists to find a single change (like an inserted record). You may
+/// accept an observable list to be notified of mutations:
+///     set names(List<String> names) {
+///       clearAndWrite(names);
+///       if (names is ObservableList<String>) {
+///         names.listChanges.listen(smallIncrementalUpdate);
+///       }
+///     }
+///
+/// *See [ListDiffer] to manually diff two lists instead*
 abstract class ObservableList<E> implements List<E>, Observable {
   /// Applies [changes] to [previous] based on the [current] values.
   ///
@@ -12,7 +26,7 @@ abstract class ObservableList<E> implements List<E>, Observable {
   /// If you need this functionality, copy it into your own library. The only
   /// known usage is in `package:template_binding` - ill be upgraded before
   /// removing this method.
-  @Deprecated('')
+  @Deprecated('Use ListChangeRecord#apply instead')
   static void applyChangeRecords/*<T>*/(
     List/*<T>*/ previous,
     List/*<T>*/ current,
@@ -22,10 +36,7 @@ abstract class ObservableList<E> implements List<E>, Observable {
       throw new ArgumentError("Can't use same list for previous and current");
     }
     for (final change in changes) {
-      final addEnd = change.index + change.addedCount;
-      final removeEnd = change.index + change.removed.length;
-      final addedItems = current.getRange(change.index, addEnd);
-      previous.replaceRange(change.index, removeEnd, addedItems);
+      change.apply(previous);
     }
   }
 
@@ -76,6 +87,10 @@ abstract class ObservableList<E> implements List<E>, Observable {
   bool get hasListObservers;
 
   /// A stream of summarized list changes, delivered asynchronously.
+  @Deprecated(''
+      'The `changes` stream will soon only emit ListChangeRecord; '
+      'either continue to use this getter until removed, or use the changes '
+      'stream with a `Stream.where` guard')
   Stream<List<ListChangeRecord<E>>> get listChanges;
 
   @Deprecated('Should no longer be used external from ObservableList')
@@ -103,19 +118,15 @@ class _ObservableDelegatingList<E> extends DelegatingList<E>
       StreamSubscription listSub;
       StreamSubscription propSub;
       _allChanges = new StreamController<List<ChangeRecord>>.broadcast(
-        sync: true,
-        onListen: () {
-          listSub = _listChanges.changes.listen((records) {
-            // We optimize the edit distances of list change records.
-            _allChanges.add(projectListSplices(this, records));
+          sync: true,
+          onListen: () {
+            listSub = listChanges.listen(_allChanges.add);
+            propSub = _propChanges.changes.listen(_allChanges.add);
+          },
+          onCancel: () {
+            listSub.cancel();
+            propSub.cancel();
           });
-          propSub = _propChanges.changes.listen(_allChanges.add);
-        },
-        onCancel: () {
-          listSub.cancel();
-          propSub.cancel();
-        }
-      );
     }
     return _allChanges.stream;
   }
@@ -179,7 +190,9 @@ class _ObservableDelegatingList<E> extends DelegatingList<E>
   bool get hasListObservers => _listChanges.hasObservers;
 
   @override
-  Stream<List<ListChangeRecord<E>>> get listChanges => _listChanges.changes;
+  Stream<List<ListChangeRecord<E>>> get listChanges {
+    return _listChanges.changes.map((r) => projectListSplices(this, r));
+  }
 
   @override
   void notifyListChange(
@@ -215,8 +228,8 @@ class _ObservableDelegatingList<E> extends DelegatingList<E>
   @override
   void add(E value) {
     if (hasObservers) {
-      notifyListChange(length, addedCount: 1);
       _notifyChangeLength(length, length + 1);
+      notifyListChange(length, addedCount: 1);
     }
     super.add(value);
   }
