@@ -1,3 +1,7 @@
+## 0.17.0+1
+
+* Revert `PropertyChangeMixin`, which does not work in dart2js
+
 ## 0.17.0
 
 This is a larger change with a goal of no runtime changes for current
