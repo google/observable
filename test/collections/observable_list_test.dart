@@ -126,6 +126,8 @@ _runListTests() {
 _runObservableListTests() {
   group('content changes', () {
     Completer<List<ListChangeRecord>> completer;
+    List<String> previousState;
+
     ObservableList<String> list;
     Stream<List<ChangeRecord>> stream;
     StreamSubscription sub;
@@ -135,13 +137,28 @@ _runObservableListTests() {
       return completer.future;
     }
 
+    Future<Null> expectChanges(List<ListChangeRecord> changes) {
+      // Applying these change records in order should make the new list.
+      for (final change in changes) {
+        change.apply(previousState);
+      }
+      expect(list, previousState);
+
+      // If these fail, it might be safe to update if optimized/changed.
+      return next().then((actualChanges) {
+        expect(actualChanges, changes);
+      });
+    }
+
     setUp(() {
-      list = new ObservableList<String>.from(['a', 'b', 'c']);
+      previousState = ['a', 'b', 'c'];
+      list = new ObservableList<String>.from(previousState);
       stream = list.changes.where(_hasListChanges);
       sub = stream.listen((c) {
         if (completer?.isCompleted == false) {
           completer.complete(c.where(_onlyListChanges).toList());
         }
+        previousState = list.toList();
       });
     });
 
@@ -162,8 +179,126 @@ _runObservableListTests() {
 
     test('operator[]=', () async {
       list[0] = 'd';
-      expect(await next(), [
+      await expectChanges([
         _delta(0, removed: ['a'], addedCount: 1),
+      ]);
+    });
+
+    test('add', () async {
+      list.add('d');
+      await expectChanges([
+        _delta(3, addedCount: 1),
+      ]);
+    });
+
+    test('addAll', () async {
+      list.addAll(['d', 'e']);
+      await expectChanges([
+        _delta(3, addedCount: 2),
+      ]);
+    });
+
+    test('clear', () async {
+      list.clear();
+      await expectChanges([
+        _delta(0, removed: ['a', 'b', 'c']),
+      ]);
+    });
+
+    test('fillRange', () async {
+      list.fillRange(1, 3, 'd');
+      await expectChanges([
+        _delta(1, removed: ['b', 'c'], addedCount: 2),
+      ]);
+    });
+
+    test('insert', () async {
+      list.insert(1, 'd');
+      await expectChanges([
+        _delta(1, addedCount: 1),
+      ]);
+    });
+
+    test('insertAll', () async {
+      list.insertAll(1, ['d', 'e']);
+      await expectChanges([
+        _delta(1, addedCount: 2),
+      ]);
+    });
+
+    test('length', () async {
+      list.length = 5;
+      await expectChanges([
+        _delta(3, addedCount: 2),
+      ]);
+      list.length = 1;
+      await expectChanges([
+        _delta(1, removed: ['b', 'c', null, null])
+      ]);
+    });
+
+    test('remove', () async {
+      list.remove('b');
+      await expectChanges([
+        _delta(1, removed: ['b'])
+      ]);
+    });
+
+    test('removeAt', () async {
+      list.removeAt(1);
+      await expectChanges([
+        _delta(1, removed: ['b'])
+      ]);
+    });
+
+    test('removeRange', () async {
+      list.removeRange(0, 2);
+      await expectChanges([
+        _delta(0, removed: ['a', 'b'])
+      ]);
+    });
+
+    test('removeWhere', () async {
+      list.removeWhere((s) => s == 'b');
+      await expectChanges([
+        _delta(1, removed: ['b'])
+      ]);
+    });
+
+    test('replaceRange', () async {
+      list.replaceRange(0, 2, ['d', 'e']);
+      await expectChanges([
+        // Normally would be
+        //   _delta(0, removed: ['a', 'b']),
+        //   _delta(0, addedCount: 2),
+        // But projectListSplices(...) optimizes to single record
+        _delta(0, removed: ['a', 'b'], addedCount: 2),
+      ]);
+    });
+
+    test('retainWhere', () async {
+      list.retainWhere((s) => s == 'b');
+      await expectChanges([
+        _delta(0, removed: ['a']),
+        _delta(1, removed: ['c']),
+      ]);
+    });
+
+    test('setAll', () async {
+      list.setAll(1, ['d', 'e']);
+      await expectChanges([
+        _delta(1, removed: ['b', 'c'], addedCount: 2),
+      ]);
+    });
+
+    test('setRange', () async {
+      list.setRange(0, 2, ['d', 'e']);
+      await expectChanges([
+        _delta(0, removed: ['a', 'b'], addedCount: 2),
+      ]);
+      list.setRange(1, 3, ['f', 'g', 'h'], 1);
+      await expectChanges([
+        _delta(1, removed: ['e', 'c'], addedCount: 2),
       ]);
     });
   });

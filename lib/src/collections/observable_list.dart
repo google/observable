@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:observable/observable.dart';
+import 'package:observable/src/differs.dart';
 
 abstract class ObservableList<E> implements List<E>, Observable {
   /// Applies [changes] to [previous] based on the [current] values.
@@ -104,7 +105,10 @@ class _ObservableDelegatingList<E> extends DelegatingList<E>
       _allChanges = new StreamController<List<ChangeRecord>>.broadcast(
         sync: true,
         onListen: () {
-          listSub = _listChanges.changes.listen(_allChanges.add);
+          listSub = _listChanges.changes.listen((records) {
+            // We optimize the edit distances of list change records.
+            _allChanges.add(projectListSplices(this, records));
+          });
           propSub = _propChanges.changes.listen(_allChanges.add);
         },
         onCancel: () {
@@ -232,7 +236,7 @@ class _ObservableDelegatingList<E> extends DelegatingList<E>
   @override
   void clear() {
     if (hasObservers) {
-      notifyListChange(0, removed: this);
+      notifyListChange(0, removed: toList());
       _notifyChangeLength(length, 0);
     }
     super.clear();
@@ -403,7 +407,6 @@ class _ObservableDelegatingList<E> extends DelegatingList<E>
 
   @override
   void setRange(int start, int end, Iterable<E> elements, [int skipCount = 0]) {
-    super.setRange(start, end, elements, skipCount);
     if (!hasObservers) {
       super.setRange(start, end, elements, skipCount);
       return;
