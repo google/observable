@@ -1,3 +1,22 @@
+## 0.18.0
+
+* Refactor and deprecate `ObservableList`-specific API
+    * `ObservableList.applyChangeRecords`
+    * `ObservableList.calculateChangeRecords`
+    * `ObservableList.withLength`
+    * `ObservableList.deliverListChanges`
+    * `ObservableList.discardListChanges`
+    * `ObservableList.hasListChanges`
+    * `ObservableList.listChanges`
+    * `ObservableList.notifyListChange`
+* Potentially breaking: `ObservableList` may no longer be extended
+
+It is also considered deprecated to be notified of `length`, `isEmpty`
+and `isNotEmpty` `PropertyChangeRecord`s on `ObservableList` - in a
+future release `ObservableList.changes` will be
+`Stream<List<ListChangeRecord>>`.
+
+
 ## 0.17.0
 
 This is a larger change with a goal of no runtime changes for current
