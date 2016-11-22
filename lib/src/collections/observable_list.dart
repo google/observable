@@ -24,7 +24,7 @@ abstract class ObservableList<E> implements List<E>, Observable {
   /// ## Deprecated
   ///
   /// If you need this functionality, copy it into your own library. The only
-  /// known usage is in `package:template_binding` - ill be upgraded before
+  /// known usage is in `package:template_binding` - it will be upgraded before
   /// removing this method.
   @Deprecated('Use ListChangeRecord#apply instead')
   static void applyChangeRecords/*<T>*/(
