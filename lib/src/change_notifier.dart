@@ -49,7 +49,6 @@ class ChangeNotifier<C extends ChangeRecord> implements Observable<C> {
   ///
   /// Returns `true` if changes were emitted.
   @override
-  @protected
   @mustCallSuper
   bool deliverChanges() {
     List<ChangeRecord> changes;
