@@ -10,12 +10,14 @@ import 'package:observable/src/differs.dart';
 /// efficient to notify _when_ something has changed, instead of constantly
 /// diffing lists to find a single change (like an inserted record). You may
 /// accept an observable list to be notified of mutations:
+///     ```
 ///     set names(List<String> names) {
 ///       clearAndWrite(names);
 ///       if (names is ObservableList<String>) {
 ///         names.listChanges.listen(smallIncrementalUpdate);
 ///       }
 ///     }
+///     ```
 ///
 /// *See [ListDiffer] to manually diff two lists instead*
 abstract class ObservableList<E> implements List<E>, Observable {
