@@ -22,7 +22,7 @@ abstract class Observable<C extends ChangeRecord> {
   final ChangeNotifier<C> _delegate = new ChangeNotifier<C>();
 
   // Whether Observable was not given a type.
-  final bool _supportsPropertyChanges = C is PropertyChangeRecord;
+  final bool _supportsPropertyChanges = PropertyChangeRecord is C;
 
   /// Emits a list of changes when the state of the object changes.
   ///
