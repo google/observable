@@ -22,7 +22,7 @@ abstract class Observable<C extends ChangeRecord> {
   final ChangeNotifier<C> _delegate = new ChangeNotifier<C>();
 
   // Whether Observable was not given a type.
-  final bool _isNotGeneric = C == dynamic;
+  final bool _supportsPropertyChanges = PropertyChangeRecord is C;
 
   /// Emits a list of changes when the state of the object changes.
   ///
@@ -80,19 +80,15 @@ abstract class Observable<C extends ChangeRecord> {
     /*=T*/
     newValue,
   ) {
-    if (hasObservers && oldValue != newValue) {
-      if (_isNotGeneric) {
-        notifyChange(
-          new PropertyChangeRecord(
-            this,
-            field,
-            oldValue,
-            newValue,
-          ) as C,
-        );
-      } else {
-        throw new UnsupportedError('Generic typed Observable does not support');
-      }
+    if (hasObservers && oldValue != newValue && _supportsPropertyChanges) {
+      notifyChange(
+        new PropertyChangeRecord(
+          this,
+          field,
+          oldValue,
+          newValue,
+        ) as C,
+      );
     }
     return newValue;
   }

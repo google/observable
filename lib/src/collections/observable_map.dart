@@ -46,9 +46,9 @@ abstract class ObservableMap<K, V> implements Map<K, V>, Observable {
 
   /// Creates a new observable map that contains all entries in [other].
   ///
-  /// It will attempt to use the same backing map if the other map is either a
-  /// [LinkedHashMap], [SplayTreeMap], or [HashMap]. Otherwise it will fall
-  /// back to using a [HashMap].
+  /// It will attempt to use the same backing map  type if the other map is
+  /// either a [LinkedHashMap], [SplayTreeMap], or [HashMap]. Otherwise it will
+  /// fall back to using a [HashMap].
   factory ObservableMap.from(Map<K, V> other) {
     return new ObservableMap<K, V>.createFromType(other)..addAll(other);
   }
