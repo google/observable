@@ -90,8 +90,6 @@ abstract class Observable<C extends ChangeRecord> {
             newValue,
           ) as C,
         );
-      } else {
-        throw new UnsupportedError('Generic typed Observable does not support');
       }
     }
     return newValue;
