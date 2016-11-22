@@ -1,3 +1,7 @@
+## 0.18.1
+
+* Bug fix: Do not throw when `Observable<T>.notifyChange` is used
+
 ## 0.18.0
 
 * Refactor and deprecate `ObservableList`-specific API
