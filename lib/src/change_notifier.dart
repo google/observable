@@ -104,11 +104,15 @@ class ChangeNotifier<C extends ChangeRecord> implements Observable<C> {
   }
 }
 
-/// Implements [notifyPropertyChange] for classes that need support.
+/// Supplies property `changes` and various hooks to implement [Observable].
 ///
-/// Will be folded entirely into [PropertyChangeNotifier] in the future.
-@Deprecated('Exists to make migrations off Observable easier')
-abstract class PropertyChangeMixin implements ChangeNotifier {
+/// May use `notifyChange` or `notifyPropertyChange` to queue a property change
+/// record; they are asynchronously delivered at the end of the VM turn.
+///
+/// [PropertyChangeNotifier] may be extended or used as a delegate. To use as
+/// a mixin, instead use with [PropertyChangeMixin]:
+///     with ChangeNotifier<PropertyChangeRecord>, PropertyChangeMixin
+class PropertyChangeNotifier extends ChangeNotifier<PropertyChangeRecord> {
   @override
   /*=T*/ notifyPropertyChange/*<T>*/(
     Symbol field,
@@ -130,14 +134,3 @@ abstract class PropertyChangeMixin implements ChangeNotifier {
     return newValue;
   }
 }
-
-/// Supplies property `changes` and various hooks to implement [Observable].
-///
-/// May use `notifyChange` or `notifyPropertyChange` to queue a property change
-/// record; they are asynchronously delivered at the end of the VM turn.
-///
-/// [PropertyChangeNotifier] may be extended or used as a delegate. To use as
-/// a mixin, instead use with [PropertyChangeMixin]:
-///     with ChangeNotifier<PropertyChangeRecord>, PropertyChangeMixin
-class PropertyChangeNotifier = ChangeNotifier<PropertyChangeRecord>
-    with PropertyChangeMixin;
