@@ -12,6 +12,7 @@ import 'internal.dart';
 part 'records/list_change_record.dart';
 part 'records/map_change_record.dart';
 part 'records/property_change_record.dart';
+part 'records/set_change_record.dart';
 
 /// Result of a change to an observed object.
 class ChangeRecord {

@@ -14,6 +14,7 @@ import 'internal.dart';
 
 part 'differs/list_differ.dart';
 part 'differs/map_differ.dart';
+part 'differs/set_differ.dart';
 
 /// Generic comparisons between two comparable objects.
 abstract class Differ<E> {
