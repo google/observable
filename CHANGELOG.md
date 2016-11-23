@@ -1,3 +1,12 @@
+## 0.19.0
+
+* Refactor and deprecate `ObservableMap`-specific API
+    * `ObservableMap` no longer emits `#keys` and `#values` change records
+    * `ObservableMap.spy` is deprecated, becomes `.delegate` instead
+* Potentially breaking: `ObservableMap` may no longer be extended
+
+It is also considered deprecated to be notified of `length` changes.
+
 ## 0.18.1
 
 * Bug fix: Do not throw when `Observable<T>.notifyChange` is used
