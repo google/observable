@@ -1,4 +1,4 @@
-## 0.21.0
+## 0.20.1
 
 * Add `Observable<List|Set|Map>.unmodifiable` for immutable collections
 * Add `Observable<List|Set|Map>.EMPTY` for empty immutable collections
