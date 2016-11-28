@@ -1,3 +1,7 @@
+// Copyright (c) 2016, the Dart project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'dart:async';
 import 'dart:collection';
 
@@ -13,7 +17,7 @@ import 'package:observable/observable.dart';
 ///     ```
 ///     set grades(Map<String, int> grades) {
 ///       buildBook(grades);
-///       if (names is ObservableMap<String>, int) {
+///       if (names is ObservableMap<String, int>) {
 ///         grades.changes.listen(updateBook);
 ///       }
 ///     }
@@ -46,7 +50,7 @@ abstract class ObservableMap<K, V> implements Map<K, V>, Observable {
 
   /// Creates a new observable map that contains all entries in [other].
   ///
-  /// It will attempt to use the same backing map  type if the other map is
+  /// It will attempt to use the same backing map type if the other map is
   /// either a [LinkedHashMap], [SplayTreeMap], or [HashMap]. Otherwise it will
   /// fall back to using a [HashMap].
   factory ObservableMap.from(Map<K, V> other) {
