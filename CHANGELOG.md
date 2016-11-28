@@ -1,3 +1,11 @@
+## 0.21.0
+
+* Add `Observable<List|Set|Map>.unmodifiable` for immutable collections
+* Add `Observable<List|Set|Map>.EMPTY` for empty immutable collections
+    * This can be used as an optimization for libraries that always
+      need to return an observable collection, but don't want to
+      allocate a new instance to represent an empty immutable.
+
 ## 0.20.0
 
 * Add `ObservableSet`, `SetChangeRecord`, and `SetDiffer`

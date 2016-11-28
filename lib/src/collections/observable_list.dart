@@ -25,6 +25,11 @@ import 'package:observable/src/differs.dart';
 ///
 /// *See [ListDiffer] to manually diff two lists instead*
 abstract class ObservableList<E> implements List<E>, Observable {
+  /// An empty observable list that never has changes.
+  static const ObservableList EMPTY = const _ObservableUnmodifiableList(
+    const [],
+  );
+
   /// Applies [changes] to [previous] based on the [current] values.
   ///
   /// ## Deprecated
@@ -81,6 +86,20 @@ abstract class ObservableList<E> implements List<E>, Observable {
   @Deprecated('Use the default constructor')
   factory ObservableList.withLength(int length) {
     return new ObservableList<E>(length);
+  }
+
+  /// Create new unmodifiable list from [list].
+  ///
+  /// [ObservableList.changes] and [ObservableList.listChanges] both always
+  /// return an empty stream, and mutating or adding change records throws an
+  /// [UnsupportedError].
+  factory ObservableList.unmodifiable(
+    List<E> list,
+  ) {
+    if (list is! UnmodifiableListView<E>) {
+      list = new List<E>.unmodifiable(list);
+    }
+    return new _ObservableUnmodifiableList<E>(list);
   }
 
   @Deprecated('No longer supported. Just use deliverChanges')
@@ -441,4 +460,61 @@ class _ObservableDelegatingList<E> extends DelegatingList<E>
       notifyListChange(start, removed: removed, addedCount: removed.length);
     }
   }
+}
+
+class _ObservableUnmodifiableList<E> extends DelegatingList<E>
+    implements ObservableList<E> {
+  const _ObservableUnmodifiableList(List<E> list) : super(list);
+
+  @override
+  Stream<List<ChangeRecord>> get changes => const Stream.empty();
+
+  @override
+  bool deliverChanges() => false;
+
+  @override
+  bool deliverListChanges() => false;
+
+  @override
+  void discardListChanges() {}
+
+  @override
+  final bool hasListObservers = false;
+
+  @override
+  final bool hasObservers = false;
+
+  @override
+  Stream<List<ListChangeRecord<E>>> get listChanges => const Stream.empty();
+
+  @override
+  void notifyChange([ChangeRecord change]) {
+    throw new UnsupportedError('Not modifiable');
+  }
+
+  @override
+  void notifyListChange(
+    int index, {
+    List<E> removed: const [],
+    int addedCount: 0,
+  }) {
+    throw new UnsupportedError('Not modifiable');
+  }
+
+  @override
+  /*=T*/ notifyPropertyChange/*<T>*/(
+    Symbol field,
+    /*=T*/
+    oldValue,
+    /*=T*/
+    newValue,
+  ) {
+    throw new UnsupportedError('Not modifiable');
+  }
+
+  @override
+  void observed() {}
+
+  @override
+  void unobserved() {}
 }
