@@ -71,7 +71,7 @@ main() {
   });
 
   group('$MapChangeRecord', () {
-    test('should reply an insertion', () {
+    test('should replay an insertion', () {
       final map1 = {
         'key-a': 'value-a',
         'key-b': 'value-b',

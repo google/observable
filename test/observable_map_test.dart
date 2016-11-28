@@ -305,5 +305,3 @@ _changeKey(key, old, newValue) => new MapChangeRecord(key, old, newValue);
 _insertKey(key, newValue) => new MapChangeRecord.insert(key, newValue);
 
 _removeKey(key, oldValue) => new MapChangeRecord.remove(key, oldValue);
-
-_propChange(map, prop) => new PropertyChangeRecord(map, prop, null, null);

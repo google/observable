@@ -13,16 +13,16 @@ import 'package:observable/observable.dart';
 /// efficient to notify _when_ something has changed, instead of constantly
 /// diffing lists to find a single change (like an inserted element). You may
 /// accept an observable set to be notified of mutations:
-///     ```
-///     set emails(Set<String> emails) {
-///       emailUsers(emails);
-///       if (names is ObservableSet<String>) {
-///         emails.changes.listen(updateEmailList);
-///       }
-///     }
-///     ```
+/// ```
+/// set emails(Set<String> emails) {
+///   emailUsers(emails);
+///   if (names is ObservableSet<String>) {
+///     emails.changes.listen(updateEmailList);
+///   }
+/// }
+/// ```
 ///
-/// *See [MapDiffer] to manually diff two lists instead*
+/// *See [SetDiffer] to manually diff two lists instead*
 abstract class ObservableSet<E>
     implements Observable<SetChangeRecord<E>>, Set<E> {
   /// Create a new empty observable set.
@@ -64,8 +64,7 @@ abstract class ObservableSet<E>
   }
 }
 
-class _DelegatingObservableSet<E>
-    extends DelegatingSet<E>
+class _DelegatingObservableSet<E> extends DelegatingSet<E>
     with ChangeNotifier<SetChangeRecord<E>>
     implements ObservableSet<E> {
   _DelegatingObservableSet(Set<E> set) : super(set);
@@ -99,7 +98,7 @@ class _DelegatingObservableSet<E>
 
   @override
   void removeAll(Iterable<Object> values) {
-    values.forEach(remove);
+    values.toList().forEach(remove);
   }
 
   @override

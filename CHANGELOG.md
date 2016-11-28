@@ -1,3 +1,7 @@
+## 0.20.0
+
+* Add `ObservableSet`, `SetChangeRecord`, and `SetDiffer`
+
 ## 0.19.0
 
 * Refactor and deprecate `ObservableMap`-specific API
