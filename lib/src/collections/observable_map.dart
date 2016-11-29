@@ -25,6 +25,9 @@ import 'package:observable/observable.dart';
 ///
 /// *See [MapDiffer] to manually diff two lists instead*
 abstract class ObservableMap<K, V> implements Map<K, V>, Observable {
+  /// An empty observable map that never has changes.
+  static const ObservableMap EMPTY = const _ObservableUnmodifiableMap(const {});
+
   /// Creates a new observable map.
   factory ObservableMap() {
     return new _ObservableDelegatingMap(new HashMap<K, V>());
@@ -70,6 +73,17 @@ abstract class ObservableMap<K, V> implements Map<K, V>, Observable {
   /// Creates a new observable map wrapping [other].
   @Deprecated('Use ObservableMap.delegate for API consistency')
   factory ObservableMap.spy(Map<K, V> other) = ObservableMap<K, V>.delegate;
+
+  /// Create a new unmodifiable map from [map].
+  ///
+  /// [ObservableMap.changes] always returns an empty stream, and mutating or
+  /// adding change records throws an [UnsupportedError].
+  factory ObservableMap.unmodifiable(Map<K, V> map) {
+    if (map is! UnmodifiableMapView<K, V>) {
+      map = new Map<K, V>.unmodifiable(map);
+    }
+    return new _ObservableUnmodifiableMap(map);
+  }
 }
 
 class _ObservableDelegatingMap<K, V> extends DelegatingMap<K, V>
@@ -182,4 +196,41 @@ class _ObservableDelegatingMap<K, V> extends DelegatingMap<K, V>
     notifyPropertyChange(#length, oldLength, 0);
     super.clear();
   }
+}
+
+class _ObservableUnmodifiableMap<K, V> extends DelegatingMap<K, V>
+    implements ObservableMap<K, V> {
+  const _ObservableUnmodifiableMap(Map<K, V> map) : super(map);
+
+  @override
+  Stream<List<ChangeRecord>> get changes => const Stream.empty();
+
+  @override
+  bool deliverChanges() => false;
+
+  // TODO: implement hasObservers
+  @override
+  final bool hasObservers = false;
+
+  @override
+  void notifyChange([ChangeRecord change]) {
+    throw new UnsupportedError('Not modifiable');
+  }
+
+  @override
+  /*=T*/ notifyPropertyChange/*<T>*/(
+    Symbol field,
+    /*=T*/
+    oldValue,
+    /*=T*/
+    newValue,
+  ) {
+    throw new UnsupportedError('Not modifiable');
+  }
+
+  @override
+  void observed() {}
+
+  @override
+  void unobserved() {}
 }

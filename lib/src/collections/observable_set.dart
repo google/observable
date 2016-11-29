@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:async';
 import 'dart:collection';
 
 import 'package:collection/collection.dart';
@@ -25,6 +26,11 @@ import 'package:observable/observable.dart';
 /// *See [SetDiffer] to manually diff two lists instead*
 abstract class ObservableSet<E>
     implements Observable<SetChangeRecord<E>>, Set<E> {
+  /// An empty observable set that never has changes.
+  static const ObservableSet EMPTY = const _UnmodifiableObservableSet(
+    const _UnmodifiableEmptySet(),
+  );
+
   /// Create a new empty observable set.
   factory ObservableSet() => new _DelegatingObservableSet<E>(new HashSet<E>());
 
@@ -61,6 +67,17 @@ abstract class ObservableSet<E>
   /// Creates a new observable map using a [SplayTreeSet].
   factory ObservableSet.sorted() {
     return new _DelegatingObservableSet<E>(new SplayTreeSet<E>());
+  }
+
+  /// Create a new unmodifiable set from [set].
+  ///
+  /// [ObservableSet.changes] always returns an empty stream, and mutating or
+  /// adding change records throws an [UnsupportedError].
+  factory ObservableSet.unmodifiable(Set<E> set) {
+    if (set is! UnmodifiableSetView<E>) {
+      set = new UnmodifiableSetView<E>(set);
+    }
+    return new _UnmodifiableObservableSet(set);
   }
 }
 
@@ -115,4 +132,87 @@ class _DelegatingObservableSet<E> extends DelegatingSet<E>
   void retainWhere(bool test(E element)) {
     removeWhere((e) => !test(e));
   }
+}
+
+class _UnmodifiableEmptySet<E> extends IterableBase<E> implements Set<E> {
+  const _UnmodifiableEmptySet();
+
+  @override
+  bool add(E value) => false;
+
+  @override
+  void addAll(Iterable<E> elements) {}
+
+  @override
+  void clear() {}
+
+  @override
+  bool containsAll(Iterable<Object> other) => other.isEmpty;
+
+  @override
+  Set<E> difference(Set<Object> other) => other.toSet();
+
+  @override
+  Set<E> intersection(Set<Object> other) => this;
+
+  @override
+  Iterator<E> get iterator => const <E>[].iterator;
+
+  @override
+  E lookup(Object object) => null;
+
+  @override
+  bool remove(Object value) => false;
+
+  @override
+  void removeAll(Iterable<Object> elements) {}
+
+  @override
+  void removeWhere(bool test(E element)) {}
+
+  @override
+  void retainAll(Iterable<Object> elements) {}
+
+  @override
+  void retainWhere(bool test(E element)) {}
+
+  @override
+  Set<E> union(Set<E> other) => other.toSet();
+}
+
+class _UnmodifiableObservableSet<E> extends DelegatingSet<E>
+    implements ObservableSet<E> {
+  const _UnmodifiableObservableSet(Set<E> set) : super(set);
+
+  @override
+  Stream<List<SetChangeRecord<E>>> get changes => const Stream.empty();
+
+  @override
+  bool deliverChanges() => false;
+
+  // TODO: implement hasObservers
+  @override
+  final bool hasObservers = false;
+
+  @override
+  void notifyChange([ChangeRecord change]) {
+    throw new UnsupportedError('Not modifiable');
+  }
+
+  @override
+  /*=T*/ notifyPropertyChange/*<T>*/(
+    Symbol field,
+    /*=T*/
+    oldValue,
+    /*=T*/
+    newValue,
+  ) {
+    throw new UnsupportedError('Not modifiable');
+  }
+
+  @override
+  void observed() {}
+
+  @override
+  void unobserved() {}
 }
