@@ -108,7 +108,7 @@ class _ObservableDelegatingMap<K, V> extends DelegatingMap<K, V>
   @override
   void notifyChange([ChangeRecord change]) {
     if (change is MapChangeRecord && change.oldValue == change.newValue) {
-      return;  
+      return;
     }
     _allChanges.notifyChange(change);
   }
