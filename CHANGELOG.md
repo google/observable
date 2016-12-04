@@ -1,3 +1,8 @@
+## 0.20.2
+
+* Bug fix: Avoid emitting a no-op `MapChangeRecord`
+* Bug fix: Restore `ObservableList.discardListChanges` functionality
+
 ## 0.20.1
 
 * Add `Observable<List|Set|Map>.unmodifiable` for immutable collections
