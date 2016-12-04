@@ -10,6 +10,11 @@ import 'internal.dart';
 import 'observable.dart';
 import 'records.dart';
 
+// Temporarily exists to keep 'discard changes' API working for now.
+void internalDiscardChanges(ChangeNotifier changeNotifier) {
+  changeNotifier._queue = null;
+}
+
 /// Supplies [changes] and various hooks to implement [Observable].
 ///
 /// May use [notifyChange] to queue a change record; they are asynchronously

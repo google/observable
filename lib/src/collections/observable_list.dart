@@ -6,6 +6,7 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:observable/observable.dart';
+import 'package:observable/src/change_notifier.dart';
 import 'package:observable/src/differs.dart';
 
 /// A [List] that broadcasts [changes] to subscribers for efficient mutations.
@@ -167,7 +168,7 @@ class _ObservableDelegatingList<E> extends DelegatingList<E>
 
   @override
   void discardListChanges() {
-    // This used to do something, but now we just make it a no-op.
+    internalDiscardChanges(_listChanges);
   }
 
   @override
