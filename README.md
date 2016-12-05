@@ -2,11 +2,11 @@ Support for detecting and being notified when an object is mutated.
 
 An observable, simply put, is a continuous stream of events over time.
 
-##### What's for
+### What's for
 
 You can use this library to process asynchronous streams of data for logging, data binding or custom changes to them. You can think of it as the former TC39 proposal Object.observe() feature that got deprecated.
 
-##### How
+### How
 
 There are two general ways to detect changes:
 
