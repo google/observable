@@ -13,7 +13,7 @@ import 'package:test/test.dart';
 /// to happen in the next microtask:
 ///
 ///     future.then(newMicrotask).then(...)
-newMicrotask(_) => new Future.value();
+Future newMicrotask() => new Future.value();
 
 // TODO(jmesserly): use matchers when we have a way to compare ChangeRecords.
 // For now just use the toString.

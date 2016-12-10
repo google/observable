@@ -9,18 +9,16 @@ import 'package:test/test.dart';
 
 import 'observable_test_utils.dart';
 
-main() => observableTests();
-
-void observableTests() {
+void main() {
   // Track the subscriptions so we can clean them up in tearDown.
-  List subs;
+  List<StreamSubscription> subs;
 
   setUp(() {
-    subs = [];
+    subs = <StreamSubscription>[];
   });
 
-  tearDown(() {
-    for (var sub in subs) sub.cancel();
+  tearDown(() async {
+    for (var sub in subs) await sub.cancel();
   });
 
   test('no observers', () {
@@ -83,7 +81,7 @@ void observableTests() {
     t.value = 42;
   });
 
-  test('async processing model', () {
+  test('async processing model', () async {
     var t = createModel(123);
     var records = [];
     subs.add(t.changes.listen((r) {
@@ -93,15 +91,16 @@ void observableTests() {
     t.value = 42;
     expectChanges(records, [], reason: 'changes delived async');
 
-    return new Future(() {
-      expectPropertyChanges(records, 2);
-      records.clear();
+    await newMicrotask();
 
-      t.value = 777;
-      expectChanges(records, [], reason: 'changes delived async');
-    }).then(newMicrotask).then((_) {
-      expectPropertyChanges(records, 1);
-    });
+    expectPropertyChanges(records, 2);
+    records.clear();
+
+    t.value = 777;
+    expectChanges(records, [], reason: 'changes delived async');
+
+    await newMicrotask();
+    expectPropertyChanges(records, 1);
   });
 
   test('cancel listening', () {

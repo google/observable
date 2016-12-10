@@ -9,9 +9,7 @@ import 'package:test/test.dart';
 
 import 'observable_test_utils.dart';
 
-main() => _runTests();
-
-_runTests() {
+void main() {
   // TODO(jmesserly): need all standard Map API tests.
 
   StreamSubscription sub;
