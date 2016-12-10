@@ -1,8 +1,7 @@
 language: dart
-
+sudo: false
 dart:
+  - stable
   - dev
-  # Currently requires a dev-branch in order to use properly.
-  # - stable
-
+  - 1.21.0
 script: ./tool/presubmit.sh
