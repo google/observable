@@ -4,4 +4,7 @@ dart:
   - stable
   - dev
   - 1.21.0
+env:
+  - TEST_PLATFORM=vm
+  - TEST_PLATFORM=firefox
 script: ./tool/presubmit.sh

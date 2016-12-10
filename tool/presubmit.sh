@@ -26,4 +26,13 @@ echo "PASSED"
 # Fail on anything that fails going forward.
 set -e
 
+THE_COMMAND="pub run test -p $TEST_PLATFORM"
+if [ $TEST_PLATFORM == 'firefox' ]; then
+  export DISPLAY=:99.0
+  sh -e /etc/init.d/xvfb start
+  t=0; until (xdpyinfo -display :99 &> /dev/null || test $t -gt 10); do sleep 1; let t=$t+1; done
+fi
+echo $THE_COMMAND
+exec $THE_COMMAND
+
 pub run test
