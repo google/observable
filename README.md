@@ -1,12 +1,16 @@
 Support for detecting and being notified when an object is mutated.
 
-An observable, simply put, is a continuous stream of events over time.
+An observable is a way to be notified of a continuous stream of events over time.
 
-### What's for
+Some suggested uses for this library:
 
-You can use this library to process asynchronous streams of data for logging, data binding or custom changes to them. You can think of it as the former TC39 proposal Object.observe() feature that got deprecated.
+* Observe objects for changes, and log when a change occurs
+* Optimize for observable collections in your own APIs and libraries instead of diffing
+* Implement simple data-binding by listening to streams
 
-### How
+You may want to look at the former TC39 proposal [Observe.observe](https://github.com/tc39/proposal-observable), which was deprecated.
+
+### Usage
 
 There are two general ways to detect changes:
 
@@ -21,13 +25,25 @@ Operations on Lists:
 import 'package:observable/observable.dart';
 
 void main() {
-  // .addAll()
-  final list = new ObservableList<String>()
-    ..addAll(['a', 'b', 'c']); // ['a', 'b', 'c']
+  var changes;
 
-  // .fillRange()
-  final list2 = new ObservableList<String>(5)
-    ..fillRange(0, 5, 'a'); // ['a', 'a', 'a', 'a', 'a']
+  ObservableList<String> list = new ObservableList<String>.from(['a', 'b', 'c']);
+  StreamSubscription sub = list.listChanges.listen((c) => changes = c);
+
+  ListChangeRecord _delta(
+    int index, {
+    List removed: const [],
+    int addedCount: 0,
+  }) {
+    return new ListChangeRecord(
+      list,
+      index,
+      removed: removed,
+      addedCount: addedCount,
+    );
+  }
+
+  list.insertAll(1, ['y', 'z']); // changes == [_delta(1, addedCount: 2)]
 }
 ```
 
