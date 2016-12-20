@@ -1,3 +1,7 @@
+## 0.20.3
+
+* Bug fix: Avoid emitting an empty list via `ObservableList.listChanges`
+
 ## 0.20.2
 
 * Bug fix: Avoid emitting a no-op `MapChangeRecord`

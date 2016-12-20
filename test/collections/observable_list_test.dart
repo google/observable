@@ -310,6 +310,61 @@ _runObservableListTests() {
 
 // These are tests we will remove after deprecations occur.
 _runDeprecatedTests() {
+  group('listChanges stream', () {
+    Completer<List<ListChangeRecord>> completer;
+    ObservableList<String> list;
+    List<String> previousState;
+    StreamSubscription sub;
+
+    Future next() {
+      completer = new Completer<List<ListChangeRecord>>.sync();
+      return completer.future;
+    }
+
+    Future<Null> expectChanges(List<ListChangeRecord> changes) {
+      // Applying these change records in order should make the new list.
+      for (final change in changes) {
+        change.apply(previousState);
+      }
+      expect(list, previousState);
+
+      // If these fail, it might be safe to update if optimized/changed.
+      return next().then((actualChanges) {
+        expect(actualChanges, changes);
+      });
+    }
+
+    setUp(() {
+      previousState = ['a', 'b', 'c'];
+      list = new ObservableList<String>.from(previousState);
+      sub = list.listChanges.listen((c) {
+        if (completer?.isCompleted == false) {
+          completer.complete(c.toList());
+        }
+        previousState = list.toList();
+      });
+    });
+
+    tearDown(() => sub.cancel());
+
+    test('updates when an index changes', () async {
+      list[0] = 'd';
+      await expectChanges([
+        new ListChangeRecord.replace(list, 0, ['a']),
+      ]);
+    });
+
+    test('should not emit an empty list', () async {
+      // This is optimized into a no-op.
+      list[0] = 'd';
+      list[0] = 'a';
+      next().then((_) {
+        fail('Should not emit change records');
+      });
+      await new Future.value();
+    });
+  });
+
   group('length changes', () {
     Completer<List<ListChangeRecord>> completer;
     ObservableList<String> list;

@@ -217,7 +217,9 @@ class _ObservableDelegatingList<E> extends DelegatingList<E>
 
   @override
   Stream<List<ListChangeRecord<E>>> get listChanges {
-    return _listChanges.changes.map((r) => projectListSplices(this, r));
+    return _listChanges.changes
+        .map((r) => projectListSplices(this, r))
+        .where((c) => c.isNotEmpty);
   }
 
   @override
