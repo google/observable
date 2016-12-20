@@ -53,8 +53,6 @@ abstract class Observable<C extends ChangeRecord> {
   ///
   /// Returns `true` if changes were emitted.
   @Deprecated('Use ChangeNotifier instead to have this method available')
-  // REMOVE IGNORE when https://github.com/dart-lang/observable/issues/10
-  // ignore: invalid_use_of_protected_member
   bool deliverChanges() => _delegate.deliverChanges();
 
   /// Notify that the [field] name of this object has been changed.
