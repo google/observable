@@ -1,3 +1,7 @@
+## 0.20.4
+
+* Bug fix: Additional fix around `ObservableList.listChanges`
+
 ## 0.20.3
 
 * Bug fix: Avoid emitting an empty list via `ObservableList.listChanges`
