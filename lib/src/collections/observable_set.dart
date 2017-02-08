@@ -156,7 +156,7 @@ class _UnmodifiableEmptySet<E> extends IterableBase<E> implements Set<E> {
   Set<E> intersection(Set<Object> other) => this;
 
   @override
-  Iterator<E> get iterator => const <E>[].iterator;
+  Iterator<E> get iterator => const <Null>[].iterator;
 
   @override
   E lookup(Object object) => null;
