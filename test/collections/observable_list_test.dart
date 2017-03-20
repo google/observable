@@ -129,7 +129,7 @@ _runListTests() {
 // These are the tests we will keep after deprecations occur.
 _runObservableListTests() {
   group('content changes', () {
-    Completer<List<ListChangeRecord>> completer;
+    Completer<List<ChangeRecord>> completer;
     List<String> previousState;
 
     ObservableList<String> list;
@@ -366,7 +366,7 @@ _runDeprecatedTests() {
   });
 
   group('length changes', () {
-    Completer<List<ListChangeRecord>> completer;
+    Completer<List<ChangeRecord>> completer;
     ObservableList<String> list;
     Stream<List<ChangeRecord>> stream;
     StreamSubscription sub;

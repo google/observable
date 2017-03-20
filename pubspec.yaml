@@ -1,5 +1,5 @@
 name: observable
-version: 0.20.4
+version: 0.20.5-dev
 author: Dart Team <misc@dartlang.org>
 description: Support for marking objects as observable
 homepage: https://github.com/dart-lang/observable
