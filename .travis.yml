@@ -4,7 +4,27 @@ dart:
   - stable
   - dev
   - 1.22.1
-env:
-  - TEST_PLATFORM=vm
-  - TEST_PLATFORM=firefox
-script: ./tool/presubmit.sh
+addons:
+  # otherwise a number of tests in test/security/html_sanitizer_test.dart fail
+  firefox: "latest"
+dart_task:
+  - test: --platform vm
+  # Disable parallelism on Firefox (-j 1)
+  # Causes flakiness – need to investigate
+  - test: --platform firefox -j 1
+matrix:
+  include:
+    # Only validate formatting using the dev release
+    # Formatted with 1.23.0-dev.10.0 which has (good) changes since 1.22.1
+    - dart: dev
+      dart_task: dartfmt
+    # Only care about being analyzer clean for dev and stable
+    - dart: dev
+      dart_task:
+        dartanalyzer: --fatal-warnings lib
+    - dart: stable
+      dart_task:
+        dartanalyzer: --fatal-warnings lib
+cache:
+  directories:
+    - $HOME/.pub-cache
