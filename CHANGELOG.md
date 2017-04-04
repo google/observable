@@ -1,3 +1,7 @@
+## 0.20.4+1
+
+* Support the latest release of `pkg/quiver`.
+
 ## 0.20.4
 
 * Bug fix: Additional fix around `ObservableList.listChanges`
