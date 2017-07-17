@@ -22,10 +22,11 @@ void main() {
     model = null;
   });
 
-  _delta(i, r, a) => new ListChangeRecord(model, i, removed: r, addedCount: a);
+  _delta(int i, List r, int a) =>
+      new ListChangeRecord(model, i, removed: r, addedCount: a);
 
   test('sequential adds', () async {
-    model = toObservable([]);
+    model = toObservable([]) as ObservableList;
     model.add(0);
 
     var summary;
@@ -40,7 +41,7 @@ void main() {
   });
 
   test('List Splice Truncate And Expand With Length', () async {
-    model = toObservable(['a', 'b', 'c', 'd', 'e']);
+    model = toObservable(['a', 'b', 'c', 'd', 'e']) as ObservableList;
 
     var summary;
     sub = model.listChanges.listen((r) => summary = r);
@@ -60,7 +61,7 @@ void main() {
   });
 
   group('List deltas can be applied', () {
-    Future applyAndCheckDeltas(model, copy, Future changes) async {
+    Future applyAndCheckDeltas(model, List copy, Future changes) async {
       var summary = await changes;
       // apply deltas to the copy
       for (ListChangeRecord delta in summary) {
@@ -71,7 +72,7 @@ void main() {
     }
 
     test('Contained', () async {
-      var model = toObservable(['a', 'b']);
+      var model = toObservable(['a', 'b']) as ObservableList;
       var copy = model.toList();
       var changes = model.listChanges.first;
 
@@ -84,7 +85,7 @@ void main() {
     });
 
     test('Delete Empty', () async {
-      var model = toObservable([1]);
+      var model = toObservable([1]) as ObservableList;
       var copy = model.toList();
       var changes = model.listChanges.first;
 
@@ -95,7 +96,7 @@ void main() {
     });
 
     test('Right Non Overlap', () async {
-      var model = toObservable(['a', 'b', 'c', 'd']);
+      var model = toObservable(['a', 'b', 'c', 'd']) as ObservableList;
       var copy = model.toList();
       var changes = model.listChanges.first;
 
@@ -108,7 +109,7 @@ void main() {
     });
 
     test('Left Non Overlap', () async {
-      var model = toObservable(['a', 'b', 'c', 'd']);
+      var model = toObservable(['a', 'b', 'c', 'd']) as ObservableList;
       var copy = model.toList();
       var changes = model.listChanges.first;
 
@@ -121,7 +122,7 @@ void main() {
     });
 
     test('Right Adjacent', () async {
-      var model = toObservable(['a', 'b', 'c', 'd']);
+      var model = toObservable(['a', 'b', 'c', 'd']) as ObservableList;
       var copy = model.toList();
       var changes = model.listChanges.first;
 
@@ -134,7 +135,7 @@ void main() {
     });
 
     test('Left Adjacent', () async {
-      var model = toObservable(['a', 'b', 'c', 'd']);
+      var model = toObservable(['a', 'b', 'c', 'd']) as ObservableList;
       var copy = model.toList();
       var changes = model.listChanges.first;
 
@@ -148,7 +149,7 @@ void main() {
     });
 
     test('Right Overlap', () async {
-      var model = toObservable(['a', 'b', 'c', 'd']);
+      var model = toObservable(['a', 'b', 'c', 'd']) as ObservableList;
       var copy = model.toList();
       var changes = model.listChanges.first;
 
@@ -161,7 +162,7 @@ void main() {
     });
 
     test('Left Overlap', () async {
-      var model = toObservable(['a', 'b', 'c', 'd']);
+      var model = toObservable(['a', 'b', 'c', 'd']) as ObservableList;
       var copy = model.toList();
       var changes = model.listChanges.first;
 
@@ -176,7 +177,7 @@ void main() {
     });
 
     test('Prefix And Suffix One In', () async {
-      var model = toObservable(['a', 'b', 'c', 'd']);
+      var model = toObservable(['a', 'b', 'c', 'd']) as ObservableList;
       var copy = model.toList();
       var changes = model.listChanges.first;
 
@@ -187,7 +188,7 @@ void main() {
     });
 
     test('Remove First', () async {
-      var model = toObservable([16, 15, 15]);
+      var model = toObservable([16, 15, 15]) as ObservableList;
       var copy = model.toList();
       var changes = model.listChanges.first;
 
@@ -197,7 +198,7 @@ void main() {
     });
 
     test('Update Remove', () async {
-      var model = toObservable(['a', 'b', 'c', 'd']);
+      var model = toObservable(['a', 'b', 'c', 'd']) as ObservableList;
       var copy = model.toList();
       var changes = model.listChanges.first;
 
@@ -210,7 +211,7 @@ void main() {
     });
 
     test('Remove Mid List', () async {
-      var model = toObservable(['a', 'b', 'c', 'd']);
+      var model = toObservable(['a', 'b', 'c', 'd']) as ObservableList;
       var copy = model.toList();
       var changes = model.listChanges.first;
 
@@ -221,7 +222,8 @@ void main() {
   });
 
   group('edit distance', () {
-    Future assertEditDistance(orig, Future changes, expectedDist) async {
+    Future assertEditDistance(
+        orig, Future<List<ListChangeRecord>> changes, expectedDist) async {
       var summary = await changes;
       var actualDistance = 0;
       for (var delta in summary) {
@@ -232,14 +234,15 @@ void main() {
     }
 
     test('add items', () async {
-      var model = toObservable([]);
+      var model = toObservable([]) as ObservableList;
       var changes = model.listChanges.first;
       model.addAll([1, 2, 3]);
       await assertEditDistance(model, changes, 3);
     });
 
     test('trunacte and add, sharing a contiguous block', () async {
-      var model = toObservable(['x', 'x', 'x', 'x', '1', '2', '3']);
+      var model =
+          toObservable(['x', 'x', 'x', 'x', '1', '2', '3']) as ObservableList;
       var changes = model.listChanges.first;
       model.length = 0;
       model.addAll(['1', '2', '3', 'y', 'y', 'y', 'y']);
@@ -247,7 +250,7 @@ void main() {
     });
 
     test('truncate and add, sharing a discontiguous block', () async {
-      var model = toObservable(['1', '2', '3', '4', '5']);
+      var model = toObservable(['1', '2', '3', '4', '5']) as ObservableList;
       var changes = model.listChanges.first;
       model.length = 0;
       model.addAll(['a', '2', 'y', 'y', '4', '5', 'z', 'z']);
@@ -255,7 +258,7 @@ void main() {
     });
 
     test('insert at beginning and end', () async {
-      var model = toObservable([2, 3, 4]);
+      var model = toObservable([2, 3, 4]) as ObservableList;
       var changes = model.listChanges.first;
       model.insert(0, 5);
       model[2] = 6;

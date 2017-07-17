@@ -60,13 +60,13 @@ class ChangeNotifier<C extends ChangeRecord> implements Observable<C> {
   @override
   @mustCallSuper
   bool deliverChanges() {
-    List<ChangeRecord> changes;
+    List<C> changes;
     if (_scheduled && hasObservers) {
       if (_queue != null) {
         changes = freezeInDevMode(_queue);
         _queue = null;
       } else {
-        changes = ChangeRecord.ANY;
+        changes = <C>[];
       }
       _scheduled = false;
       _changes.add(changes);

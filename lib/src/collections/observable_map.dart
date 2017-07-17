@@ -14,14 +14,15 @@ import 'package:observable/observable.dart';
 /// efficient to notify _when_ something has changed, instead of constantly
 /// diffing lists to find a single change (like an updated key-value). You may
 /// accept an observable map to be notified of mutations:
-///     ```
-///     set grades(Map<String, int> grades) {
-///       buildBook(grades);
-///       if (names is ObservableMap<String, int>) {
-///         grades.changes.listen(updateBook);
-///       }
-///     }
-///     ```
+///
+/// ```dart
+/// set grades(Map<String, int> grades) {
+///   buildBook(grades);
+///   if (names is ObservableMap<String, int>) {
+///     grades.changes.listen(updateBook);
+///   }
+/// }
+/// ```
 ///
 /// *See [MapDiffer] to manually diff two lists instead*
 abstract class ObservableMap<K, V> implements Map<K, V>, Observable {
@@ -88,7 +89,7 @@ abstract class ObservableMap<K, V> implements Map<K, V>, Observable {
 
 class _ObservableDelegatingMap<K, V> extends DelegatingMap<K, V>
     implements ObservableMap<K, V> {
-  final _allChanges = new ChangeNotifier();
+  final _allChanges = new ChangeNotifier<ChangeRecord>();
 
   _ObservableDelegatingMap(Map<K, V> map) : super(map);
 
