@@ -21,10 +21,15 @@ matrix:
     # Only care about being analyzer clean for dev and stable
     - dart: dev
       dart_task:
-        dartanalyzer: --fatal-warnings lib
+        dartanalyzer: --fatal-warnings .
     - dart: stable
       dart_task:
-        dartanalyzer: --fatal-warnings lib
+        dartanalyzer: --fatal-warnings .
+
+# Only building master means that we don't run two builds for each pull request.
+branches:
+  only: [master]
+
 cache:
   directories:
     - $HOME/.pub-cache
