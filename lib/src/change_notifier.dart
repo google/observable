@@ -66,7 +66,7 @@ class ChangeNotifier<C extends ChangeRecord> implements Observable<C> {
         changes = freezeInDevMode(_queue);
         _queue = null;
       } else {
-        changes = <C>[];
+        changes = [];
       }
       _scheduled = false;
       _changes.add(changes);

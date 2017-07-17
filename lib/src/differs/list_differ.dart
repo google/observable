@@ -206,7 +206,7 @@ List<ListChangeRecord/*<E>*/ > _calcSplices/*<E>*/(
   oldEnd -= suffixCount;
 
   if (currentEnd - currentStart == 0 && oldEnd - oldStart == 0) {
-    return <ListChangeRecord<E>>[];
+    return [];
   }
 
   if (currentStart == currentEnd) {

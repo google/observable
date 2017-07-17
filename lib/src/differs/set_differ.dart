@@ -17,7 +17,7 @@ class SetDiffer<E> implements Differ<Set<E>> {
   @override
   List<SetChangeRecord<E>> diff(Set<E> oldValue, Set<E> newValue) {
     if (identical(oldValue, newValue)) {
-      return <SetChangeRecord<E>>[];
+      return [];
     }
     final changes = <SetChangeRecord<E>>[];
     for (final added in newValue.difference(oldValue)) {
