@@ -8,8 +8,8 @@ import 'dart:math' as math;
 
 import 'package:collection/collection.dart';
 
-import 'records.dart';
 import 'internal.dart';
+import 'records.dart';
 
 part 'differs/list_differ.dart';
 part 'differs/map_differ.dart';

@@ -17,6 +17,7 @@ linter:
     - await_only_futures
     - camel_case_types
     - comment_references
+    - directives_ordering
     - empty_catches
     - empty_constructor_bodies
     - hash_and_equals
