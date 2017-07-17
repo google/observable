@@ -71,12 +71,10 @@ abstract class Observable<C extends ChangeRecord> {
   /// If you are using a typed `implements/extends Observable<C>`, it is illegal
   /// to call this method - will throw an [UnsupportedError] when called.
   @Deprecated('Use PropertyChangeNotifier')
-  /*=T*/ notifyPropertyChange/*<T>*/(
+  T notifyPropertyChange<T>(
     Symbol field,
-    /*=T*/
-    oldValue,
-    /*=T*/
-    newValue,
+    T oldValue,
+    T newValue,
   ) {
     if (hasObservers && oldValue != newValue && _supportsPropertyChanges) {
       notifyChange(

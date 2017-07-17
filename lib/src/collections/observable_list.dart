@@ -186,12 +186,10 @@ class _ObservableDelegatingList<E> extends DelegatingList<E>
   }
 
   @override
-  /*=T*/ notifyPropertyChange/*<T>*/(
+  T notifyPropertyChange<T>(
     Symbol field,
-    /*=T*/
-    oldValue,
-    /*=T*/
-    newValue,
+    T oldValue,
+    T newValue,
   ) {
     if (oldValue != newValue) {
       _propChanges.notifyChange(
@@ -505,12 +503,10 @@ class _ObservableUnmodifiableList<E> extends DelegatingList<E>
   }
 
   @override
-  /*=T*/ notifyPropertyChange/*<T>*/(
+  T notifyPropertyChange<T>(
     Symbol field,
-    /*=T*/
-    oldValue,
-    /*=T*/
-    newValue,
+    T oldValue,
+    T newValue,
   ) {
     throw new UnsupportedError('Not modifiable');
   }
