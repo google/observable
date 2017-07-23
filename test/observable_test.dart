@@ -198,7 +198,7 @@ expectPropertyChanges(records, int number) {
   }
 }
 
-createModel(int number) => new ObservableSubclass(number);
+ObservableSubclass createModel(int number) => new ObservableSubclass(number);
 
 class ObservableSubclass<T> extends PropertyChangeNotifier {
   ObservableSubclass([T initialValue]) : _value = initialValue;

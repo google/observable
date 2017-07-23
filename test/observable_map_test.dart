@@ -26,7 +26,7 @@ void main() {
     List<ChangeRecord> changes;
 
     setUp(() {
-      map = toObservable({'a': 1, 'b': 2, 'c': 3});
+      map = toObservable({'a': 1, 'b': 2, 'c': 3}) as ObservableMap;
       changes = null;
       sub = map.changes.listen((records) {
         changes = getPropertyChangeRecords(records, #length);
@@ -93,7 +93,7 @@ void main() {
     List<ChangeRecord> changes;
 
     setUp(() {
-      map = toObservable({'a': 1, 'b': 2, 'c': 3});
+      map = toObservable({'a': 1, 'b': 2, 'c': 3}) as ObservableMap;
       changes = null;
       sub = map.changes.listen((records) {
         changes =
@@ -194,7 +194,7 @@ void main() {
     ObservableMap map;
 
     setUp(() {
-      map = toObservable({'a': 1, 'b': 2});
+      map = toObservable({'a': 1, 'b': 2}) as ObservableMap;
       records = null;
       map.changes.first.then((r) => records = r);
     });
