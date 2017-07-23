@@ -128,7 +128,7 @@ class PropertyChangeNotifier extends ChangeNotifier<PropertyChangeRecord> {
   ) {
     if (hasObservers && oldValue != newValue) {
       notifyChange(
-        new PropertyChangeRecord/*<T>*/(
+        new PropertyChangeRecord<T>(
           this,
           field,
           oldValue,

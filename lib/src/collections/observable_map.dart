@@ -122,7 +122,7 @@ class _ObservableDelegatingMap<K, V> extends DelegatingMap<K, V>
   ) {
     if (oldValue != newValue) {
       _allChanges.notifyChange(
-        new PropertyChangeRecord/*<T>*/(this, field, oldValue, newValue),
+        new PropertyChangeRecord<T>(this, field, oldValue, newValue),
       );
     }
     return newValue;
