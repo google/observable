@@ -102,12 +102,10 @@ class ChangeNotifier<C extends ChangeRecord> implements Observable<C> {
   @Deprecated('Exists to make migrations off Observable easier')
   @override
   @protected
-  /*=T*/ notifyPropertyChange/*<T>*/(
+  T notifyPropertyChange<T>(
     Symbol field,
-    /*=T*/
-    oldValue,
-    /*=T*/
-    newValue,
+    T oldValue,
+    T newValue,
   ) {
     throw new UnsupportedError('Not supported by ChangeNotifier');
   }
@@ -123,16 +121,14 @@ class ChangeNotifier<C extends ChangeRecord> implements Observable<C> {
 ///     with ChangeNotifier<PropertyChangeRecord>, PropertyChangeMixin
 class PropertyChangeNotifier extends ChangeNotifier<PropertyChangeRecord> {
   @override
-  /*=T*/ notifyPropertyChange/*<T>*/(
+  T notifyPropertyChange<T>(
     Symbol field,
-    /*=T*/
-    oldValue,
-    /*=T*/
-    newValue,
+    T oldValue,
+    T newValue,
   ) {
     if (hasObservers && oldValue != newValue) {
       notifyChange(
-        new PropertyChangeRecord/*<T>*/(
+        new PropertyChangeRecord<T>(
           this,
           field,
           oldValue,
