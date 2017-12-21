@@ -442,7 +442,7 @@ List<ListChangeRecord<E>> _createInitialSplices<E>(
 List<ListChangeRecord<E>> projectListSplices<E>(
   List<E> list,
   List<ListChangeRecord<E>> records, [
-  Equality<E> equality = const DefaultEquality<E>(),
+  Equality<E> equality = const DefaultEquality(),
 ]) {
   if (records.length <= 1) return records;
   final splices = <ListChangeRecord<E>>[];
