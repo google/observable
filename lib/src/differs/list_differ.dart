@@ -18,7 +18,7 @@ class ListDiffer<E> implements Differ<List<E>> {
 
   @override
   List<ListChangeRecord<E>> diff(List<E> e1, List<E> e2) {
-    return _calcSplices/*<E>*/(
+    return _calcSplices<E>(
       e2,
       _equality,
       0,
@@ -48,11 +48,11 @@ enum _Edit {
 // With 1-edit updates, the shortest path would be just to update all seven
 // characters. With 2-edit updates, we delete 4, leave 3, and add 4. This
 // leaves the substring '123' intact.
-List<List<int>> _calcEditDistance/*<E>*/(
-  List/*<E>*/ current,
+List<List<int>> _calcEditDistance<E>(
+  List<E> current,
   int currentStart,
   int currentEnd,
-  List/*<E>*/ old,
+  List<E> old,
   int oldStart,
   int oldEnd,
 ) {
@@ -134,10 +134,10 @@ Iterable<_Edit> _spliceOperationsFromEditDistances(List<List<int>> distances) {
   return edits.reversed;
 }
 
-int _sharedPrefix/*<E>*/(
-  Equality/*<E>*/ equality,
-  List/*<E>*/ e1,
-  List/*<E>*/ e2,
+int _sharedPrefix<E>(
+  Equality<E> equality,
+  List<E> e1,
+  List<E> e2,
   int searchLength,
 ) {
   for (var i = 0; i < searchLength; i++) {
@@ -148,10 +148,10 @@ int _sharedPrefix/*<E>*/(
   return searchLength;
 }
 
-int _sharedSuffix/*<E>*/(
-  Equality/*<E>*/ equality,
-  List/*<E>*/ e1,
-  List/*<E>*/ e2,
+int _sharedSuffix<E>(
+  Equality<E> equality,
+  List<E> e1,
+  List<E> e2,
   int searchLength,
 ) {
   var index1 = e1.length;
@@ -171,12 +171,12 @@ int _sharedSuffix/*<E>*/(
 // Complexity: O(l * p)
 //   l: The length of the current array
 //   p: The length of the old array
-List<ListChangeRecord/*<E>*/ > _calcSplices/*<E>*/(
-  List/*<E>*/ current,
-  Equality/*<E>*/ equality,
+List<ListChangeRecord<E>> _calcSplices<E>(
+  List<E> current,
+  Equality<E> equality,
   int currentStart,
   int currentEnd,
-  List/*<E>*/ old,
+  List<E> old,
   int oldStart,
   int oldEnd,
 ) {
@@ -212,7 +212,7 @@ List<ListChangeRecord/*<E>*/ > _calcSplices/*<E>*/(
   if (currentStart == currentEnd) {
     final spliceRemoved = old.sublist(oldStart, oldEnd);
     return [
-      new ListChangeRecord/*<E>*/ .remove(
+      new ListChangeRecord<E>.remove(
         current,
         currentStart,
         spliceRemoved,
@@ -221,7 +221,7 @@ List<ListChangeRecord/*<E>*/ > _calcSplices/*<E>*/(
   }
   if (oldStart == oldEnd) {
     return [
-      new ListChangeRecord/*<E>*/ .add(
+      new ListChangeRecord<E>.add(
         current,
         currentStart,
         currentEnd - currentStart,
@@ -241,17 +241,17 @@ List<ListChangeRecord/*<E>*/ > _calcSplices/*<E>*/(
   );
 
   var spliceIndex = -1;
-  var spliceRemovals = /*<E>*/ [];
+  var spliceRemovals = <E>[];
   var spliceAddedCount = 0;
 
   bool hasSplice() => spliceIndex != -1;
   void resetSplice() {
     spliceIndex = -1;
-    spliceRemovals = /*<E>*/ [];
+    spliceRemovals = <E>[];
     spliceAddedCount = 0;
   }
 
-  var splices = <ListChangeRecord/*<E>*/ >[];
+  var splices = <ListChangeRecord<E>>[];
 
   var index = currentStart;
   var oldIndex = oldStart;
@@ -259,7 +259,7 @@ List<ListChangeRecord/*<E>*/ > _calcSplices/*<E>*/(
     switch (op) {
       case _Edit.leave:
         if (hasSplice()) {
-          splices.add(new ListChangeRecord/*<E>*/(
+          splices.add(new ListChangeRecord<E>(
             current,
             spliceIndex,
             removed: spliceRemovals,
@@ -296,7 +296,7 @@ List<ListChangeRecord/*<E>*/ > _calcSplices/*<E>*/(
     }
   }
   if (hasSplice()) {
-    splices.add(new ListChangeRecord/*<E>*/(
+    splices.add(new ListChangeRecord<E>(
       current,
       spliceIndex,
       removed: spliceRemovals,
@@ -304,7 +304,7 @@ List<ListChangeRecord/*<E>*/ > _calcSplices/*<E>*/(
     ));
   }
   assert(() {
-    splices = new List<ListChangeRecord/*<E>*/ >.unmodifiable(splices);
+    splices = new List<ListChangeRecord<E>>.unmodifiable(splices);
     return true;
   });
   return splices;
@@ -314,9 +314,9 @@ int _intersect(int start1, int end1, int start2, int end2) {
   return math.min(end1, end2) - math.max(start1, start2);
 }
 
-void _mergeSplices/*<E>*/(
-  List<ListChangeRecord/*<E>*/ > splices,
-  ListChangeRecord/*<E>*/ record,
+void _mergeSplices<E>(
+  List<ListChangeRecord<E>> splices,
+  ListChangeRecord<E> record,
 ) {
   var spliceIndex = record.index;
   var spliceRemoved = record.removed;
@@ -331,7 +331,7 @@ void _mergeSplices/*<E>*/(
   // - then continues and updates the subsequent splices with any offset diff.
   for (var i = 0; i < splices.length; i++) {
     var current = splices[i];
-    current = splices[i] = new ListChangeRecord/*<E>*/(
+    current = splices[i] = new ListChangeRecord<E>(
       current.object,
       current.index + insertionOffset,
       removed: current.removed,
@@ -386,7 +386,7 @@ void _mergeSplices/*<E>*/(
       inserted = true;
       splices.insert(
         i,
-        new ListChangeRecord/*<E>*/(
+        new ListChangeRecord<E>(
           record.object,
           spliceIndex,
           removed: spliceRemoved,
@@ -395,7 +395,7 @@ void _mergeSplices/*<E>*/(
       );
       i++;
       final offset = spliceAdded - spliceRemoved.length;
-      current = splices[i] = new ListChangeRecord/*<E>*/(
+      current = splices[i] = new ListChangeRecord<E>(
         current.object,
         current.index + offset,
         removed: current.removed,
@@ -405,7 +405,7 @@ void _mergeSplices/*<E>*/(
     }
   }
   if (!inserted) {
-    splices.add(new ListChangeRecord/*<E>*/(
+    splices.add(new ListChangeRecord<E>(
       record.object,
       spliceIndex,
       removed: spliceRemoved,
@@ -414,11 +414,11 @@ void _mergeSplices/*<E>*/(
   }
 }
 
-List<ListChangeRecord/*<E>*/ > _createInitialSplices/*<E>*/(
-  List/*<E>*/ list,
-  List<ListChangeRecord/*<E>*/ > records,
+List<ListChangeRecord<E>> _createInitialSplices<E>(
+  List<E> list,
+  List<ListChangeRecord<E>> records,
 ) {
-  final splices = <ListChangeRecord/*<E>*/ >[];
+  final splices = <ListChangeRecord<E>>[];
   for (var i = 0; i < records.length; i++) {
     _mergeSplices(splices, records[i]);
   }
@@ -439,13 +439,13 @@ List<ListChangeRecord/*<E>*/ > _createInitialSplices/*<E>*/(
 // Here, we inserted some records and then removed some of them.
 // If someone processed these records naively, they would "play back" the
 // insert incorrectly, because those items will be shifted.
-List<ListChangeRecord/*<E>*/ > projectListSplices/*<E>*/(
-  List/*<E>*/ list,
-  List<ListChangeRecord/*<E>*/ > records, [
-  Equality/*<E>*/ equality = const DefaultEquality/*<E>*/(),
+List<ListChangeRecord<E>> projectListSplices<E>(
+  List<E> list,
+  List<ListChangeRecord<E>> records, [
+  Equality<E> equality = const DefaultEquality(),
 ]) {
   if (records.length <= 1) return records;
-  final splices = <ListChangeRecord/*<E>*/ >[];
+  final splices = <ListChangeRecord<E>>[];
   final initialSplices = _createInitialSplices(list, records);
   for (final splice in initialSplices) {
     if (splice.addedCount == 1 && splice.removed.length == 1) {

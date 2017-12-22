@@ -39,10 +39,10 @@ abstract class ObservableList<E> implements List<E>, Observable {
   /// known usage is in `package:template_binding` - it will be upgraded before
   /// removing this method.
   @Deprecated('Use ListChangeRecord#apply instead')
-  static void applyChangeRecords/*<T>*/(
-    List/*<T>*/ previous,
-    List/*<T>*/ current,
-    List<ListChangeRecord/*<T>*/ > changes,
+  static void applyChangeRecords<T>(
+    List<T> previous,
+    List<T> current,
+    List<ListChangeRecord<T>> changes,
   ) {
     if (identical(previous, current)) {
       throw new ArgumentError("Can't use same list for previous and current");
@@ -58,11 +58,11 @@ abstract class ObservableList<E> implements List<E>, Observable {
   ///
   /// This was moved into `ListDiffer.diff`.
   @Deprecated('Use `ListDiffer.diff` instead')
-  static List<ListChangeRecord/*<T>*/ > calculateChangeRecords/*<T>*/(
-    List/*<T>*/ previous,
-    List/*<T>*/ current,
+  static List<ListChangeRecord<T>> calculateChangeRecords<T>(
+    List<T> previous,
+    List<T> current,
   ) {
-    return const ListDiffer/*<T>*/().diff(previous, current);
+    return const ListDiffer<T>().diff(previous, current);
   }
 
   /// Creates an observable list of the given [length].
@@ -186,16 +186,14 @@ class _ObservableDelegatingList<E> extends DelegatingList<E>
   }
 
   @override
-  /*=T*/ notifyPropertyChange/*<T>*/(
+  T notifyPropertyChange<T>(
     Symbol field,
-    /*=T*/
-    oldValue,
-    /*=T*/
-    newValue,
+    T oldValue,
+    T newValue,
   ) {
     if (oldValue != newValue) {
       _propChanges.notifyChange(
-        new PropertyChangeRecord/*<T>*/(this, field, oldValue, newValue),
+        new PropertyChangeRecord<T>(this, field, oldValue, newValue),
       );
     }
     return newValue;
@@ -505,12 +503,10 @@ class _ObservableUnmodifiableList<E> extends DelegatingList<E>
   }
 
   @override
-  /*=T*/ notifyPropertyChange/*<T>*/(
+  T notifyPropertyChange<T>(
     Symbol field,
-    /*=T*/
-    oldValue,
-    /*=T*/
-    newValue,
+    T oldValue,
+    T newValue,
   ) {
     throw new UnsupportedError('Not modifiable');
   }

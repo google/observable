@@ -114,16 +114,14 @@ class _ObservableDelegatingMap<K, V> extends DelegatingMap<K, V>
   }
 
   @override
-  /*=T*/ notifyPropertyChange/*<T>*/(
+  T notifyPropertyChange<T>(
     Symbol field,
-    /*=T*/
-    oldValue,
-    /*=T*/
-    newValue,
+    T oldValue,
+    T newValue,
   ) {
     if (oldValue != newValue) {
       _allChanges.notifyChange(
-        new PropertyChangeRecord/*<T>*/(this, field, oldValue, newValue),
+        new PropertyChangeRecord<T>(this, field, oldValue, newValue),
       );
     }
     return newValue;
@@ -221,12 +219,10 @@ class _ObservableUnmodifiableMap<K, V> extends DelegatingMap<K, V>
   }
 
   @override
-  /*=T*/ notifyPropertyChange/*<T>*/(
+  T notifyPropertyChange<T>(
     Symbol field,
-    /*=T*/
-    oldValue,
-    /*=T*/
-    newValue,
+    T oldValue,
+    T newValue,
   ) {
     throw new UnsupportedError('Not modifiable');
   }
