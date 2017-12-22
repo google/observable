@@ -418,7 +418,7 @@ List<ListChangeRecord<E>> _createInitialSplices<E>(
   List<E> list,
   List<ListChangeRecord<E>> records,
 ) {
-  final splices = <ListChangeRecord<E> >[];
+  final splices = <ListChangeRecord<E>>[];
   for (var i = 0; i < records.length; i++) {
     _mergeSplices(splices, records[i]);
   }
