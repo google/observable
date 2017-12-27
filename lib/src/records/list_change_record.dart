@@ -120,7 +120,8 @@ class ListChangeRecord<E> implements ChangeRecord {
 
   @override
   int get hashCode {
-    return hash4(object, index, addedCount, const ListEquality().hash(removed));
+    return quiver.hash4(
+        object, index, addedCount, const ListEquality().hash(removed));
   }
 
   @override

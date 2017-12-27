@@ -37,7 +37,7 @@ class PropertyChangeRecord<T> implements ChangeRecord {
   }
 
   @override
-  int get hashCode => hash4(object, name, oldValue, newValue);
+  int get hashCode => quiver.hash4(object, name, oldValue, newValue);
 
   @override
   String toString() => ''
