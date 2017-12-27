@@ -6,6 +6,9 @@ part of observable.src.records;
 
 /// A [ChangeRecord] that denotes adding, removing, or updating a map.
 class MapChangeRecord<K, V> implements ChangeRecord {
+  /// Signifies no changes occurred.
+  static const NONE = const <MapChangeRecord>[];
+
   /// The map key that changed.
   final K key;
 
