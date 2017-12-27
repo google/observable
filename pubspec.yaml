@@ -8,6 +8,6 @@ environment:
 dependencies:
   collection: '^1.11.0'
   meta: '^1.0.4'
-  quiver: '>=0.24.0 <0.26.0'
+  quiver: '>=0.24.0 <0.27.0'
 dev_dependencies:
   test: '^0.12.17'

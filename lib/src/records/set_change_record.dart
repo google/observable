@@ -32,7 +32,7 @@ class SetChangeRecord<E> implements ChangeRecord {
       o is SetChangeRecord<E> && element == o.element && isRemove == o.isRemove;
 
   @override
-  int get hashCode => hash2(element, isRemove);
+  int get hashCode => quiver.hash2(element, isRemove);
 
   @override
   String toString() {

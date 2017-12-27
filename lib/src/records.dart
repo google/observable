@@ -5,7 +5,7 @@
 library observable.src.records;
 
 import 'package:collection/collection.dart';
-import 'package:quiver/core.dart';
+import 'package:quiver/core.dart' as quiver;
 
 import 'internal.dart';
 

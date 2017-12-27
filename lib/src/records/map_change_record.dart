@@ -65,7 +65,7 @@ class MapChangeRecord<K, V> implements ChangeRecord {
 
   @override
   int get hashCode {
-    return hashObjects([
+    return quiver.hashObjects([
       key,
       oldValue,
       newValue,
