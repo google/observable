@@ -1,3 +1,10 @@
+## 0.20.4+2
+
+* Some minor type fixes for strict runtimes (and Dart 2.0), namely:
+  * PropertyChangeNotifier merely `extends
+    ChangeNotifier` rather than `extends ChangeNotifier<PropertyChangeRecord>`.
+  * Introduce new `ListChangeRecord.NONE` and `MapChangeRecord.NONE`.
+
 ## 0.20.4+1
 
 * Support the latest release of `pkg/quiver`.
