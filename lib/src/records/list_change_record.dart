@@ -12,6 +12,9 @@ part of observable.src.records;
 /// the final list positions to figure out which item was added - this removes
 /// the need to incur costly GC on the most common operation (adding).
 class ListChangeRecord<E> implements ChangeRecord {
+  /// Signifies no changes occurred.
+  static const NONE = const <ListChangeRecord>[];
+
   /// How many elements were added at [index] (after removing elements).
   final int addedCount;
 

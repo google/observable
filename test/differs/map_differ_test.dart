@@ -13,7 +13,7 @@ main() {
       final map = new Map<String, String>.fromIterable(
         new Iterable.generate(10, (i) => '$i'),
       );
-      expect(diff(map, map), ChangeRecord.NONE);
+      expect(diff(map, map), MapChangeRecord.NONE);
     });
 
     test('should emit no changes for maps with identical content', () {
@@ -23,7 +23,7 @@ main() {
       final map2 = new Map<String, String>.fromIterable(
         new Iterable.generate(10, (i) => '$i'),
       );
-      expect(diff(map1, map2), ChangeRecord.NONE);
+      expect(diff(map1, map2), MapChangeRecord.NONE);
     });
 
     test('should detect insertions', () {

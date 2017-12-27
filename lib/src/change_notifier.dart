@@ -119,7 +119,7 @@ class ChangeNotifier<C extends ChangeRecord> implements Observable<C> {
 /// [PropertyChangeNotifier] may be extended or used as a delegate. To use as
 /// a mixin, instead use with [PropertyChangeMixin]:
 ///     with ChangeNotifier<PropertyChangeRecord>, PropertyChangeMixin
-class PropertyChangeNotifier extends ChangeNotifier<PropertyChangeRecord> {
+class PropertyChangeNotifier extends ChangeNotifier {
   @override
   T notifyPropertyChange<T>(
     Symbol field,
