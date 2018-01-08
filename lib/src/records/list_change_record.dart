@@ -95,7 +95,7 @@ class ListChangeRecord<E> implements ChangeRecord {
         throw new ArgumentError('Invalid `addedCount`: $addedCount');
       }
       return true;
-    });
+    }());
   }
 
   /// Returns whether [reference] index was changed in this operation.

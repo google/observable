@@ -7,6 +7,6 @@ List<E> freezeInDevMode<E>(List<E> list) {
   assert(() {
     list = new List<E>.unmodifiable(list);
     return true;
-  });
+  }());
   return list;
 }
