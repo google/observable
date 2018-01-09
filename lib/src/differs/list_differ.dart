@@ -306,7 +306,7 @@ List<ListChangeRecord<E>> _calcSplices<E>(
   assert(() {
     splices = new List<ListChangeRecord<E>>.unmodifiable(splices);
     return true;
-  });
+  }());
   return splices;
 }
 
