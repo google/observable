@@ -1,3 +1,7 @@
+## 0.20.4+3
+
+* Support the latest release of `pkg/quiver` (0.27).
+
 ## 0.20.4+2
 
 * Support the latest release of `pkg/quiver` (0.26).
