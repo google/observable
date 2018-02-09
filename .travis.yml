@@ -3,12 +3,13 @@ sudo: false
 dart:
   - stable
   - dev
-  - 1.22.0
+  - 1.23.0
 addons:
   # otherwise a number of tests in test/security/html_sanitizer_test.dart fail
   firefox: "latest"
 dart_task:
   - dartanalyzer: --fatal-warnings .
+  - dartfmt
   - test: --platform vm
   # Disable parallelism on Firefox (-j 1)
   # Causes flakiness – need to investigate
