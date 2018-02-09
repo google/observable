@@ -12,19 +12,21 @@ import 'observable_test_utils.dart';
 // This file contains code ported from:
 // https://github.com/rafaelw/ChangeSummary/blob/master/tests/test.js
 
-// TODO(jmesserly): port or write array fuzzer tests
-void main() {
-  StreamSubscription sub;
-  ObservableList model;
+main() => listChangeTests();
 
-  tearDown(() async {
-    await sub?.cancel();
+// TODO(jmesserly): port or write array fuzzer tests
+listChangeTests() {
+  StreamSubscription sub;
+  var model;
+
+  tearDown(() {
+    sub?.cancel();
     model = null;
   });
 
   _delta(i, r, a) => new ListChangeRecord(model, i, removed: r, addedCount: a);
 
-  test('sequential adds', () async {
+  test('sequential adds', () {
     model = toObservable([]);
     model.add(0);
 
@@ -35,42 +37,46 @@ void main() {
     model.add(2);
 
     expect(summary, null);
-    await newMicrotask();
-    expectChanges(summary, [_delta(1, [], 2)]);
+    return new Future(() {
+      expectChanges(summary, [_delta(1, [], 2)]);
+      expect(summary[0].added, [1, 2]);
+      expect(summary[0].removed, []);
+    });
   });
 
-  test('List Splice Truncate And Expand With Length', () async {
+  test('List Splice Truncate And Expand With Length', () {
     model = toObservable(['a', 'b', 'c', 'd', 'e']);
 
     var summary;
     sub = model.listChanges.listen((r) => summary = r);
 
     model.length = 2;
-
-    await newMicrotask();
-    expectChanges(summary, [
-      _delta(2, ['c', 'd', 'e'], 0)
-    ]);
-    summary = null;
-    model.length = 5;
-
-    await newMicrotask();
-
-    expectChanges(summary, [_delta(2, [], 3)]);
+    return new Future(() {
+      expectChanges(summary, [
+        _delta(2, ['c', 'd', 'e'], 0)
+      ]);
+      expect(summary[0].added, []);
+      expect(summary[0].removed, ['c', 'd', 'e']);
+      summary = null;
+      model.length = 5;
+    }).then(newMicrotask).then((_) {
+      expectChanges(summary, [_delta(2, [], 3)]);
+      expect(summary[0].added, [null, null, null]);
+      expect(summary[0].removed, []);
+    });
   });
 
   group('List deltas can be applied', () {
-    Future applyAndCheckDeltas(model, copy, Future changes) async {
-      var summary = await changes;
-      // apply deltas to the copy
-      for (ListChangeRecord delta in summary) {
-        delta.apply(copy);
-      }
+    applyAndCheckDeltas(model, copy, changes) => changes.then((summary) {
+          // apply deltas to the copy
+          for (ListChangeRecord delta in summary) {
+            delta.apply(copy);
+          }
 
-      expect('$copy', '$model', reason: 'summary $summary');
-    }
+          expect('$copy', '$model', reason: 'summary $summary');
+        });
 
-    test('Contained', () async {
+    test('Contained', () {
       var model = toObservable(['a', 'b']);
       var copy = model.toList();
       var changes = model.listChanges.first;
@@ -80,10 +86,10 @@ void main() {
       model.removeRange(1, 3);
       model.insert(1, 'f');
 
-      await applyAndCheckDeltas(model, copy, changes);
+      return applyAndCheckDeltas(model, copy, changes);
     });
 
-    test('Delete Empty', () async {
+    test('Delete Empty', () {
       var model = toObservable([1]);
       var copy = model.toList();
       var changes = model.listChanges.first;
@@ -91,10 +97,10 @@ void main() {
       model.removeAt(0);
       model.insertAll(0, ['a', 'b', 'c']);
 
-      await applyAndCheckDeltas(model, copy, changes);
+      return applyAndCheckDeltas(model, copy, changes);
     });
 
-    test('Right Non Overlap', () async {
+    test('Right Non Overlap', () {
       var model = toObservable(['a', 'b', 'c', 'd']);
       var copy = model.toList();
       var changes = model.listChanges.first;
@@ -104,10 +110,10 @@ void main() {
       model.removeRange(2, 3);
       model.insertAll(2, ['f', 'g']);
 
-      await applyAndCheckDeltas(model, copy, changes);
+      return applyAndCheckDeltas(model, copy, changes);
     });
 
-    test('Left Non Overlap', () async {
+    test('Left Non Overlap', () {
       var model = toObservable(['a', 'b', 'c', 'd']);
       var copy = model.toList();
       var changes = model.listChanges.first;
@@ -117,10 +123,10 @@ void main() {
       model.removeRange(0, 1);
       model.insert(0, 'e');
 
-      await applyAndCheckDeltas(model, copy, changes);
+      return applyAndCheckDeltas(model, copy, changes);
     });
 
-    test('Right Adjacent', () async {
+    test('Right Adjacent', () {
       var model = toObservable(['a', 'b', 'c', 'd']);
       var copy = model.toList();
       var changes = model.listChanges.first;
@@ -130,10 +136,10 @@ void main() {
       model.removeRange(2, 3);
       model.insertAll(0, ['f', 'g']);
 
-      await applyAndCheckDeltas(model, copy, changes);
+      return applyAndCheckDeltas(model, copy, changes);
     });
 
-    test('Left Adjacent', () async {
+    test('Left Adjacent', () {
       var model = toObservable(['a', 'b', 'c', 'd']);
       var copy = model.toList();
       var changes = model.listChanges.first;
@@ -144,10 +150,10 @@ void main() {
       model.removeAt(1);
       model.insertAll(1, ['f', 'g']);
 
-      await applyAndCheckDeltas(model, copy, changes);
+      return applyAndCheckDeltas(model, copy, changes);
     });
 
-    test('Right Overlap', () async {
+    test('Right Overlap', () {
       var model = toObservable(['a', 'b', 'c', 'd']);
       var copy = model.toList();
       var changes = model.listChanges.first;
@@ -157,10 +163,10 @@ void main() {
       model.removeAt(1);
       model.insertAll(1, ['f', 'g']);
 
-      await applyAndCheckDeltas(model, copy, changes);
+      return applyAndCheckDeltas(model, copy, changes);
     });
 
-    test('Left Overlap', () async {
+    test('Left Overlap', () {
       var model = toObservable(['a', 'b', 'c', 'd']);
       var copy = model.toList();
       var changes = model.listChanges.first;
@@ -172,10 +178,10 @@ void main() {
       model.insertAll(1, ['h', 'i', 'j']);
       // a [h i j] f g d
 
-      await applyAndCheckDeltas(model, copy, changes);
+      return applyAndCheckDeltas(model, copy, changes);
     });
 
-    test('Prefix And Suffix One In', () async {
+    test('Prefix And Suffix One In', () {
       var model = toObservable(['a', 'b', 'c', 'd']);
       var copy = model.toList();
       var changes = model.listChanges.first;
@@ -183,20 +189,20 @@ void main() {
       model.insert(0, 'z');
       model.add('z');
 
-      await applyAndCheckDeltas(model, copy, changes);
+      return applyAndCheckDeltas(model, copy, changes);
     });
 
-    test('Remove First', () async {
+    test('Remove First', () {
       var model = toObservable([16, 15, 15]);
       var copy = model.toList();
       var changes = model.listChanges.first;
 
       model.removeAt(0);
 
-      await applyAndCheckDeltas(model, copy, changes);
+      return applyAndCheckDeltas(model, copy, changes);
     });
 
-    test('Update Remove', () async {
+    test('Update Remove', () {
       var model = toObservable(['a', 'b', 'c', 'd']);
       var copy = model.toList();
       var changes = model.listChanges.first;
@@ -206,61 +212,60 @@ void main() {
       model[0] = 'h';
       model.removeAt(1);
 
-      await applyAndCheckDeltas(model, copy, changes);
+      return applyAndCheckDeltas(model, copy, changes);
     });
 
-    test('Remove Mid List', () async {
+    test('Remove Mid List', () {
       var model = toObservable(['a', 'b', 'c', 'd']);
       var copy = model.toList();
       var changes = model.listChanges.first;
 
       model.removeAt(2);
 
-      await applyAndCheckDeltas(model, copy, changes);
+      return applyAndCheckDeltas(model, copy, changes);
     });
   });
 
   group('edit distance', () {
-    Future assertEditDistance(orig, Future changes, expectedDist) async {
-      var summary = await changes;
-      var actualDistance = 0;
-      for (var delta in summary) {
-        actualDistance += delta.addedCount + delta.removed.length;
-      }
+    assertEditDistance(orig, changes, expectedDist) => changes.then((summary) {
+          var actualDistance = 0;
+          for (var delta in summary) {
+            actualDistance += delta.addedCount + delta.removed.length;
+          }
 
-      expect(actualDistance, expectedDist);
-    }
+          expect(actualDistance, expectedDist);
+        });
 
-    test('add items', () async {
+    test('add items', () {
       var model = toObservable([]);
       var changes = model.listChanges.first;
       model.addAll([1, 2, 3]);
-      await assertEditDistance(model, changes, 3);
+      return assertEditDistance(model, changes, 3);
     });
 
-    test('trunacte and add, sharing a contiguous block', () async {
+    test('trunacte and add, sharing a contiguous block', () {
       var model = toObservable(['x', 'x', 'x', 'x', '1', '2', '3']);
       var changes = model.listChanges.first;
       model.length = 0;
       model.addAll(['1', '2', '3', 'y', 'y', 'y', 'y']);
-      await assertEditDistance(model, changes, 8);
+      return assertEditDistance(model, changes, 8);
     });
 
-    test('truncate and add, sharing a discontiguous block', () async {
+    test('truncate and add, sharing a discontiguous block', () {
       var model = toObservable(['1', '2', '3', '4', '5']);
       var changes = model.listChanges.first;
       model.length = 0;
       model.addAll(['a', '2', 'y', 'y', '4', '5', 'z', 'z']);
-      await assertEditDistance(model, changes, 7);
+      return assertEditDistance(model, changes, 7);
     });
 
-    test('insert at beginning and end', () async {
+    test('insert at beginning and end', () {
       var model = toObservable([2, 3, 4]);
       var changes = model.listChanges.first;
       model.insert(0, 5);
       model[2] = 6;
       model.add(7);
-      await assertEditDistance(model, changes, 4);
+      return assertEditDistance(model, changes, 4);
     });
   });
 }

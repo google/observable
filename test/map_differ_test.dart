@@ -1,7 +1,3 @@
-// Copyright (c) 2016, the Dart project authors.  Please see the AUTHORS file
-// for details. All rights reserved. Use of this source code is governed by a
-// BSD-style license that can be found in the LICENSE file.
-
 import 'package:observable/observable.dart';
 import 'package:test/test.dart';
 
@@ -13,7 +9,7 @@ main() {
       final map = new Map<String, String>.fromIterable(
         new Iterable.generate(10, (i) => '$i'),
       );
-      expect(diff(map, map), MapChangeRecord.NONE);
+      expect(diff(map, map), isEmpty);
     });
 
     test('should emit no changes for maps with identical content', () {
@@ -23,7 +19,7 @@ main() {
       final map2 = new Map<String, String>.fromIterable(
         new Iterable.generate(10, (i) => '$i'),
       );
-      expect(diff(map1, map2), MapChangeRecord.NONE);
+      expect(diff(map1, map2), isEmpty);
     });
 
     test('should detect insertions', () {
@@ -75,7 +71,7 @@ main() {
   });
 
   group('$MapChangeRecord', () {
-    test('should replay an insertion', () {
+    test('should reply an insertion', () {
       final map1 = {
         'key-a': 'value-a',
         'key-b': 'value-b',

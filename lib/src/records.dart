@@ -5,14 +5,13 @@
 library observable.src.records;
 
 import 'package:collection/collection.dart';
-import 'package:quiver/core.dart' as quiver;
+import 'package:quiver/core.dart';
 
 import 'internal.dart';
 
 part 'records/list_change_record.dart';
 part 'records/map_change_record.dart';
 part 'records/property_change_record.dart';
-part 'records/set_change_record.dart';
 
 /// Result of a change to an observed object.
 class ChangeRecord {

@@ -206,7 +206,7 @@ List<ListChangeRecord<E>> _calcSplices<E>(
   oldEnd -= suffixCount;
 
   if (currentEnd - currentStart == 0 && oldEnd - oldStart == 0) {
-    return ListChangeRecord.NONE;
+    return const [];
   }
 
   if (currentStart == currentEnd) {
@@ -440,10 +440,9 @@ List<ListChangeRecord<E>> _createInitialSplices<E>(
 // If someone processed these records naively, they would "play back" the
 // insert incorrectly, because those items will be shifted.
 List<ListChangeRecord<E>> projectListSplices<E>(
-  List<E> list,
-  List<ListChangeRecord<E>> records, [
-  Equality<E> equality = const DefaultEquality(),
-]) {
+    List<E> list, List<ListChangeRecord<E>> records,
+    [Equality<E> equality]) {
+  equality ??= new DefaultEquality<E>();
   if (records.length <= 1) return records;
   final splices = <ListChangeRecord<E>>[];
   final initialSplices = _createInitialSplices(list, records);

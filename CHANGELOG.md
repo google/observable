@@ -1,3 +1,12 @@
+## 0.21.0
+
+### Breaking Changes
+
+Version 0.21.0 reverts to version 0.17.0+1 with fixes to support Dart 2.
+Versions 0.18, 0.19, and 0.20 were effectively unsupported. This resolves the
+fork that happened at version 0.18 and development can now be supported by the
+authors.
+
 ## 0.20.4+3
 
 * Support the latest release of `pkg/quiver` (0.27).

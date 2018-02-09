@@ -26,20 +26,6 @@ class PropertyChangeRecord<T> implements ChangeRecord {
   );
 
   @override
-  bool operator ==(Object o) {
-    if (o is PropertyChangeRecord<T>) {
-      return identical(object, o.object) &&
-          name == o.name &&
-          oldValue == o.oldValue &&
-          newValue == o.newValue;
-    }
-    return false;
-  }
-
-  @override
-  int get hashCode => quiver.hash4(object, name, oldValue, newValue);
-
-  @override
   String toString() => ''
       '#<$PropertyChangeRecord $name from $oldValue to: $newValue';
 }
