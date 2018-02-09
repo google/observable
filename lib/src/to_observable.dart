@@ -7,7 +7,8 @@ library observable.src.to_observable;
 import 'dart:collection';
 
 import 'observable.dart' show Observable;
-import 'collections.dart' show ObservableList, ObservableMap;
+import 'observable_list.dart' show ObservableList;
+import 'observable_map.dart' show ObservableMap;
 
 /// Converts the [Iterable] or [Map] to an [ObservableList] or [ObservableMap],
 /// respectively. This is a convenience function to make it easier to convert

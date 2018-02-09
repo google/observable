@@ -6,9 +6,6 @@ part of observable.src.records;
 
 /// A [ChangeRecord] that denotes adding, removing, or updating a map.
 class MapChangeRecord<K, V> implements ChangeRecord {
-  /// Signifies no changes occurred.
-  static const NONE = const <MapChangeRecord>[];
-
   /// The map key that changed.
   final K key;
 
@@ -68,7 +65,7 @@ class MapChangeRecord<K, V> implements ChangeRecord {
 
   @override
   int get hashCode {
-    return quiver.hashObjects([
+    return hashObjects([
       key,
       oldValue,
       newValue,
@@ -80,6 +77,6 @@ class MapChangeRecord<K, V> implements ChangeRecord {
   @override
   String toString() {
     final kind = isInsert ? 'insert' : isRemove ? 'remove' : 'set';
-    return '#<MapChangeRecord $kind $key from $oldValue to $newValue>';
+    return '#<MapChangeRecord $kind $key from $oldValue to $newValue';
   }
 }

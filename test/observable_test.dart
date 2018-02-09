@@ -9,16 +9,23 @@ import 'package:test/test.dart';
 
 import 'observable_test_utils.dart';
 
-void main() {
+main() => observableTests();
+
+void observableTests() {
   // Track the subscriptions so we can clean them up in tearDown.
-  List<StreamSubscription> subs;
+  List subs;
 
   setUp(() {
-    subs = <StreamSubscription>[];
+    subs = [];
   });
 
-  tearDown(() async {
-    for (var sub in subs) await sub.cancel();
+  tearDown(() {
+    for (var sub in subs) sub.cancel();
+  });
+
+  test('handle future result', () {
+    var callback = expectAsync(() {});
+    return new Future(callback);
   });
 
   test('no observers', () {
@@ -41,7 +48,7 @@ void main() {
     var t = createModel(123);
     int called = 0;
 
-    subs.add(t.changes.listen(expectAsync1((records) {
+    subs.add(t.changes.listen(expectAsync((records) {
       called++;
       expectPropertyChanges(records, 2);
     })));
@@ -55,7 +62,7 @@ void main() {
     var t = createModel(123);
     int called = 0;
 
-    subs.add(t.changes.listen(expectAsync1((records) {
+    subs.add(t.changes.listen(expectAsync((records) {
       called++;
       expectPropertyChanges(records, 1);
       if (called == 1) {
@@ -74,14 +81,14 @@ void main() {
       expectPropertyChanges(records, 2);
     }
 
-    subs.add(t.changes.listen(expectAsync1(verifyRecords)));
-    subs.add(t.changes.listen(expectAsync1(verifyRecords)));
+    subs.add(t.changes.listen(expectAsync(verifyRecords)));
+    subs.add(t.changes.listen(expectAsync(verifyRecords)));
 
     t.value = 41;
     t.value = 42;
   });
 
-  test('async processing model', () async {
+  test('async processing model', () {
     var t = createModel(123);
     var records = [];
     subs.add(t.changes.listen((r) {
@@ -91,22 +98,21 @@ void main() {
     t.value = 42;
     expectChanges(records, [], reason: 'changes delived async');
 
-    await newMicrotask();
+    return new Future(() {
+      expectPropertyChanges(records, 2);
+      records.clear();
 
-    expectPropertyChanges(records, 2);
-    records.clear();
-
-    t.value = 777;
-    expectChanges(records, [], reason: 'changes delived async');
-
-    await newMicrotask();
-    expectPropertyChanges(records, 1);
+      t.value = 777;
+      expectChanges(records, [], reason: 'changes delived async');
+    }).then(newMicrotask).then((_) {
+      expectPropertyChanges(records, 1);
+    });
   });
 
   test('cancel listening', () {
     var t = createModel(123);
     var sub;
-    sub = t.changes.listen(expectAsync1((records) {
+    sub = t.changes.listen(expectAsync((records) {
       expectPropertyChanges(records, 1);
       sub.cancel();
       t.value = 777;
@@ -117,12 +123,12 @@ void main() {
   test('cancel and reobserve', () {
     var t = createModel(123);
     var sub;
-    sub = t.changes.listen(expectAsync1((records) {
+    sub = t.changes.listen(expectAsync((records) {
       expectPropertyChanges(records, 1);
       sub.cancel();
 
       scheduleMicrotask(() {
-        subs.add(t.changes.listen(expectAsync1((records) {
+        subs.add(t.changes.listen(expectAsync((records) {
           expectPropertyChanges(records, 1);
         })));
         t.value = 777;

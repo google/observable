@@ -17,7 +17,7 @@ class MapDiffer<K, V> implements Differ<Map<K, V>> {
   @override
   List<MapChangeRecord<K, V>> diff(Map<K, V> oldValue, Map<K, V> newValue) {
     if (identical(oldValue, newValue)) {
-      return MapChangeRecord.NONE;
+      return const [];
     }
     final changes = <MapChangeRecord<K, V>>[];
     oldValue.forEach((oldK, oldV) {

@@ -22,7 +22,7 @@ abstract class Observable<C extends ChangeRecord> {
   final ChangeNotifier<C> _delegate = new ChangeNotifier<C>();
 
   // Whether Observable was not given a type.
-  final bool _supportsPropertyChanges = PropertyChangeRecord is C;
+  final bool _isNotGeneric = C == dynamic || C == ChangeRecord;
 
   /// Emits a list of changes when the state of the object changes.
   ///
@@ -53,6 +53,8 @@ abstract class Observable<C extends ChangeRecord> {
   ///
   /// Returns `true` if changes were emitted.
   @Deprecated('Use ChangeNotifier instead to have this method available')
+  // REMOVE IGNORE when https://github.com/dart-lang/observable/issues/10
+  // ignore: invalid_use_of_protected_member
   bool deliverChanges() => _delegate.deliverChanges();
 
   /// Notify that the [field] name of this object has been changed.
@@ -76,15 +78,21 @@ abstract class Observable<C extends ChangeRecord> {
     T oldValue,
     T newValue,
   ) {
-    if (hasObservers && oldValue != newValue && _supportsPropertyChanges) {
-      notifyChange(
-        new PropertyChangeRecord(
-          this,
-          field,
-          oldValue,
-          newValue,
-        ) as C,
-      );
+    if (hasObservers && oldValue != newValue) {
+      if (_isNotGeneric) {
+        notifyChange(
+          new PropertyChangeRecord(
+            this,
+            field,
+            oldValue,
+            newValue,
+          ) as C,
+        );
+      } else {
+        // Internal specific patch: Just do nothing.
+        //
+        // Generic typed Observable does not support.
+      }
     }
     return newValue;
   }

@@ -5,15 +5,10 @@
 library observable;
 
 export 'src/change_notifier.dart' show ChangeNotifier, PropertyChangeNotifier;
-export 'src/collections.dart' show ObservableList, ObservableMap, ObservableSet;
-export 'src/differs.dart'
-    show Differ, EqualityDiffer, ListDiffer, MapDiffer, SetDiffer;
+export 'src/differs.dart' show Differ, EqualityDiffer, ListDiffer, MapDiffer;
 export 'src/records.dart'
-    show
-        ChangeRecord,
-        ListChangeRecord,
-        MapChangeRecord,
-        PropertyChangeRecord,
-        SetChangeRecord;
+    show ChangeRecord, ListChangeRecord, MapChangeRecord, PropertyChangeRecord;
 export 'src/observable.dart';
+export 'src/observable_list.dart';
+export 'src/observable_map.dart';
 export 'src/to_observable.dart';

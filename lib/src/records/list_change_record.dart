@@ -12,9 +12,6 @@ part of observable.src.records;
 /// the final list positions to figure out which item was added - this removes
 /// the need to incur costly GC on the most common operation (adding).
 class ListChangeRecord<E> implements ChangeRecord {
-  /// Signifies no changes occurred.
-  static const NONE = const <ListChangeRecord>[];
-
   /// How many elements were added at [index] (after removing elements).
   final int addedCount;
 
@@ -70,7 +67,9 @@ class ListChangeRecord<E> implements ChangeRecord {
 
   /// What elements were added to [object].
   Iterable<E> get added {
-    return addedCount == 0 ? const [] : object.getRange(index, addedCount);
+    return addedCount == 0
+        ? const []
+        : object.getRange(index, index + addedCount);
   }
 
   /// Apply this change record to [list].
@@ -123,8 +122,7 @@ class ListChangeRecord<E> implements ChangeRecord {
 
   @override
   int get hashCode {
-    return quiver.hash4(
-        object, index, addedCount, const ListEquality().hash(removed));
+    return hash4(object, index, addedCount, const ListEquality().hash(removed));
   }
 
   @override
