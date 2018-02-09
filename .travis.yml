@@ -3,6 +3,7 @@ sudo: false
 dart:
   - stable
   - dev
+  - 1.19.0
 addons:
   # otherwise a number of tests in test/security/html_sanitizer_test.dart fail
   firefox: "latest"
