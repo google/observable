@@ -3,9 +3,64 @@
 ### Breaking Changes
 
 Version 0.21.0 reverts to version 0.17.0+1 with fixes to support Dart 2.
-Versions 0.18, 0.19, and 0.20 were effectively unsupported. This resolves the
-fork that happened at version 0.18 and development can now be supported by the
-authors.
+Versions 0.18, 0.19, and 0.20 were not used by the package authors and 
+effectively unsupported. This resolves the fork that happened at version 0.18 
+and development can now be supported by the authors.
+
+#### Reverted Changes
+
+(From 0.20.1)
+* Revert add `Observable<List|Set|Map>.unmodifiable` for immutable collections
+* Revert add `Observable<List|Set|Map>.EMPTY` for empty immutable collections
+  * This can be used as an optimization for libraries that always need to return
+    an observable collection, but don't want to allocate a new instance to 
+    represent an empty immutable.
+
+(From 0.20.0)
+* Revert add `ObservableSet`, `SetChangeRecord`, and `SetDiffer`
+
+(From 0.19.0)
+* Revert refactor and deprecate `ObservableMap`-specific API
+    * `ObservableMap` no longer emits `#keys` and `#values` change records
+    * `ObservableMap.spy` is deprecated, becomes `.delegate` instead
+* Revert Potentially breaking: `ObservableMap` may no longer be extended
+
+Revert considered deprecated to be notified of `length` changes.
+
+(From 0.18.0)
+* Revert refactor and deprecate `ObservableList`-specific API
+    * `ObservableList.applyChangeRecords`
+    * `ObservableList.calculateChangeRecords`
+    * `ObservableList.withLength`
+    * `ObservableList.deliverListChanges`
+    * `ObservableList.discardListChanges`
+    * `ObservableList.hasListChanges`
+    * `ObservableList.listChanges`
+    * `ObservableList.notifyListChange`
+* Revert potentially breaking: `ObservableList` may no longer be extended
+
+Revert considered deprecated to be notified of `length`, `isEmpty` and 
+`isNotEmpty` `PropertyChangeRecord`s on `ObservableList`
+
+#### Changes Applied on top of version 0.17.0+1
+(With internal change numbers)
+
+* Flip deliverChanges from `@protected` to `@visibleForTesting`. cl/147029982
+* Fix a typing bug in observable when running with DDC: `ChangeRecord.NONE`
+  creates a `List<ChangeRecord>`, while the call sites expect a
+  `List<ListChangeRecord>` or `List<MapChangeRecord>`, respectively.
+  cl/155201160
+* Fix `Observable._isNotGeneric` check. cl/162282107
+* Fix issue with type in deliverChanges. cl/162493576
+* Stop using the comment syntax for generics. cl/163224019
+* Fix ListChangeRecord's added getter. Add checks for the added and removed
+  getters in listChangeTests. cl/169261086.
+* Migrate observable to real generic method syntax. cl/170239122
+* Fix only USES_DYNAMIC_AS_BOTTOM error in observable. cl/179946618
+* Cherry pick https://github.com/dart-lang/observable/pull/46.
+* Stub out Dart 2 core lib changes in ObservableMap.
+* Removed `Observable{List|Map}.NONE` (not Dart2 compatible).
+* Fix issue with type in `ObservableList._notifyListChange`. cl/182284033
 
 ## 0.20.4+3
 
