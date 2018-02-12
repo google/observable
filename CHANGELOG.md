@@ -3,8 +3,8 @@
 ### Breaking Changes
 
 Version 0.21.0 reverts to version 0.17.0+1 with fixes to support Dart 2.
-Versions 0.18, 0.19, and 0.20 were not used by the package authors and 
-effectively unsupported. This resolves the fork that happened at version 0.18 
+Versions 0.18, 0.19, and 0.20 were not used by the package authors and
+effectively unsupported. This resolves the fork that happened at version 0.18
 and development can now be supported by the authors.
 
 #### Reverted Changes
@@ -13,7 +13,7 @@ and development can now be supported by the authors.
 * Revert add `Observable<List|Set|Map>.unmodifiable` for immutable collections
 * Revert add `Observable<List|Set|Map>.EMPTY` for empty immutable collections
   * This can be used as an optimization for libraries that always need to return
-    an observable collection, but don't want to allocate a new instance to 
+    an observable collection, but don't want to allocate a new instance to
     represent an empty immutable.
 
 (From 0.20.0)
@@ -39,7 +39,7 @@ Revert considered deprecated to be notified of `length` changes.
     * `ObservableList.notifyListChange`
 * Revert potentially breaking: `ObservableList` may no longer be extended
 
-Revert considered deprecated to be notified of `length`, `isEmpty` and 
+Revert considered deprecated to be notified of `length`, `isEmpty` and
 `isNotEmpty` `PropertyChangeRecord`s on `ObservableList`
 
 #### Changes Applied on top of version 0.17.0+1
