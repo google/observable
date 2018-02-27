@@ -9,7 +9,7 @@ import 'package:test/test.dart';
 
 import 'observable_test_utils.dart';
 
-main() => observableTests();
+void main() => observableTests();
 
 void observableTests() {
   // Track the subscriptions so we can clean them up in tearDown.
