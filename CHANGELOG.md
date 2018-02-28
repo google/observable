@@ -1,3 +1,7 @@
+## 0.21.0+1-dev
+
+* Updated one of observable's tests to comply with dart 2 voidness semantics
+
 ## 0.21.0
 
 ### Breaking Changes
@@ -61,10 +65,6 @@ Revert considered deprecated to be notified of `length`, `isEmpty` and
 * Stub out Dart 2 core lib changes in ObservableMap.
 * Removed `Observable{List|Map}.NONE` (not Dart2 compatible).
 * Fix issue with type in `ObservableList._notifyListChange`. cl/182284033
-
-## 0.21.0+1-dev
-
-* Updated one of observable's tests to comply with dart 2 voidness semantics
 
 ## 0.20.4+3
 
