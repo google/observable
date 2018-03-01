@@ -1,6 +1,9 @@
-## 0.21.0+1-dev
+## 0.21.1-dev
 
-* Updated one of observable's tests to comply with dart 2 voidness semantics
+* Updated one test to comply with Dart 2 voidness semantics.
+* Fix Dart 2 runtime cast failure in `toObservable()`.
+* Loosen `ObservableList.from()` to take `Iterable`, not `Iterable<T>`. This
+  matches `List.from()` and avoids some unnecessary cast failures.
 
 ## 0.21.0
 

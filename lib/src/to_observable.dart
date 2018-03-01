@@ -6,6 +6,8 @@ library observable.src.to_observable;
 
 import 'dart:collection';
 
+import 'package:dart_internal/extract_type_arguments.dart';
+
 import 'observable.dart' show Observable;
 import 'observable_list.dart' show ObservableList;
 import 'observable_map.dart' show ObservableMap;
@@ -30,22 +32,47 @@ toObservable(dynamic value, {bool deep: true}) =>
 
 dynamic _toObservableShallow(dynamic value) {
   if (value is Observable) return value;
-  if (value is Map) return new ObservableMap.from(value);
-  if (value is Iterable) return new ObservableList.from(value);
+
+  if (value is Map) {
+    return extractMapTypeArguments(value, <K, V>() {
+      var result = new ObservableMap<K, V>.createFromType(value);
+      value.forEach((k, v) {
+        result[_toObservableDeep(k)] = _toObservableDeep(v);
+      });
+      return result;
+    });
+  }
+
+  if (value is Iterable) {
+    return extractIterableTypeArgument(
+        value, <T>() => new ObservableList<T>.from(value));
+  }
+
   return value;
 }
 
 dynamic _toObservableDeep(dynamic value) {
   if (value is Observable) return value;
+
   if (value is Map) {
-    var result = new ObservableMap.createFromType(value);
-    value.forEach((k, v) {
-      result[_toObservableDeep(k)] = _toObservableDeep(v);
+    return extractMapTypeArguments(value, <K, V>() {
+      var result = new ObservableMap<K, V>.createFromType(value);
+      value.forEach((k, v) {
+        result[_toObservableDeep(k)] = _toObservableDeep(v);
+      });
+      return result;
     });
-    return result;
   }
+
   if (value is Iterable) {
-    return new ObservableList.from(value.map(_toObservableDeep));
+    return extractIterableTypeArgument(value, <T>() {
+      var result = new ObservableList<T>();
+      for (var element in value) {
+        result.add(_toObservableDeep(element));
+      }
+      return result;
+    });
   }
+
   return value;
 }

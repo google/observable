@@ -42,8 +42,7 @@ class ObservableList<E> extends ListBase<E> with Observable {
 
   /// Creates an observable list with the elements of [other]. The order in
   /// the list will be the order provided by the iterator of [other].
-  factory ObservableList.from(Iterable<E> other) =>
-      new ObservableList<E>()..addAll(other);
+  ObservableList.from(Iterable other) : _list = new List<E>.from(other);
 
   /// The stream of summarized list changes, delivered asynchronously.
   ///
