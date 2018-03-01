@@ -1,4 +1,4 @@
-## 0.21.1-dev
+## 0.21.1
 
 * Updated one test to comply with Dart 2 voidness semantics.
 * Fix Dart 2 runtime cast failure in `toObservable()`.
