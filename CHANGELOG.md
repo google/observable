@@ -1,3 +1,7 @@
+## 0.21.1+1-dev
+
+* Remove use of `Maps`, for better compatibility with Dart 2.
+
 ## 0.21.1
 
 * Updated one test to comply with Dart 2 voidness semantics.
