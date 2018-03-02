@@ -152,7 +152,7 @@ class ObservableMap<K, V> extends Observable implements Map<K, V> {
   void forEach(void f(K key, V value)) => _map.forEach(f);
 
   @override
-  String toString() => Maps.mapToString(this);
+  String toString() => MapBase.mapToString(this);
 
   @override
   // TODO: Dart 2.0 requires this method to be implemented.
