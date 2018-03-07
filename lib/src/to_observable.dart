@@ -34,13 +34,8 @@ dynamic _toObservableShallow(dynamic value) {
   if (value is Observable) return value;
 
   if (value is Map) {
-    return extractMapTypeArguments(value, <K, V>() {
-      var result = new ObservableMap<K, V>.createFromType(value);
-      value.forEach((k, v) {
-        result[_toObservableDeep(k)] = _toObservableDeep(v);
-      });
-      return result;
-    });
+    return extractMapTypeArguments(
+        value, <K, V>() => new ObservableMap<K, V>.from(value));
   }
 
   if (value is Iterable) {
