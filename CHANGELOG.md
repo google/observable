@@ -1,5 +1,6 @@
-## 0.21.1+1-dev
+## 0.21.2
 
+* Fix `toObservable(deep: false)` to be shallow again.
 * Remove use of `Maps`, for better compatibility with Dart 2.
 
 ## 0.21.1
