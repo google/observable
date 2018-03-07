@@ -1,3 +1,7 @@
+## 0.21.2
+
+* Fix `toObservable(deep: false)` to be shallow again.
+
 ## 0.21.1
 
 * Updated one test to comply with Dart 2 voidness semantics.
