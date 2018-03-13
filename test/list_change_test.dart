@@ -90,7 +90,7 @@ listChangeTests() {
     });
 
     test('Delete Empty', () {
-      var model = toObservable([1]);
+      var model = toObservable(<dynamic>[1]);
       var copy = model.toList();
       var changes = model.listChanges.first;
 
