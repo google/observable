@@ -1,4 +1,4 @@
-## 0.21.3-dev
+## 0.21.3
 
 * Support Dart 2 collection methods where previously threw `UnimplementedError`.
 
