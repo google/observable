@@ -1,3 +1,7 @@
+## 0.21.3
+
+* Support Dart 2 collection methods where previously threw `UnimplementedError`.
+
 ## 0.21.2
 
 * Fix `toObservable(deep: false)` to be shallow again.
