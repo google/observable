@@ -155,65 +155,37 @@ class ObservableMap<K, V> extends Observable implements Map<K, V> {
   String toString() => MapBase.mapToString(this);
 
   @override
-  // TODO: Dart 2.0 requires this method to be implemented.
-  // ignore: override_on_non_overriding_method
-  Map<K2, V2> cast<K2, V2>() {
-    throw new UnimplementedError("cast");
+  Map<K2, V2> cast<K2, V2>() => _map.cast<K2, V2>();
+
+  @override
+  Map<K2, V2> retype<K2, V2>() => _map.retype<K2, V2>();
+
+  @override
+  Iterable<MapEntry<K, V>> get entries => _map.entries;
+
+  @override
+  void addEntries(Iterable<MapEntry<K, V>> entries) {
+    _map.addEntries(entries);
   }
 
   @override
-  // TODO: Dart 2.0 requires this method to be implemented.
-  // ignore: override_on_non_overriding_method
-  Map<K2, V2> retype<K2, V2>() {
-    throw new UnimplementedError("retype");
+  Map<K2, V2> map<K2, V2>(MapEntry<K2, V2> transform(K key, V value)) {
+    return _map.map(transform);
   }
 
   @override
-  // TODO: Dart 2.0 requires this method to be implemented.
-  // ignore: override_on_non_overriding_getter
-  Iterable<Null> get entries {
-    // Change Iterable<Null> to Iterable<MapEntry<K, V>> when
-    // the MapEntry class has been added.
-    throw new UnimplementedError("entries");
-  }
-
-  @override
-  // TODO: Dart 2.0 requires this method to be implemented.
-  // ignore: override_on_non_overriding_method
-  void addEntries(Iterable<Object> entries) {
-    // Change Iterable<Object> to Iterable<MapEntry<K, V>> when
-    // the MapEntry class has been added.
-    throw new UnimplementedError("addEntries");
-  }
-
-  @override
-  // TODO: Dart 2.0 requires this method to be implemented.
-  // ignore: override_on_non_overriding_method
-  Map<K2, V2> map<K2, V2>(Object transform(K key, V value)) {
-    // Change Object to MapEntry<K2, V2> when
-    // the MapEntry class has been added.
-    throw new UnimplementedError("map");
-  }
-
-  @override
-  // TODO: Dart 2.0 requires this method to be implemented.
-  // ignore: override_on_non_overriding_method
   V update(K key, V update(V value), {V ifAbsent()}) {
-    throw new UnimplementedError("update");
+    return _map.update(key, update, ifAbsent: ifAbsent);
   }
 
   @override
-  // TODO: Dart 2.0 requires this method to be implemented.
-  // ignore: override_on_non_overriding_method
   void updateAll(V update(K key, V value)) {
-    throw new UnimplementedError("updateAll");
+    return _map.updateAll(update);
   }
 
   @override
-  // TODO: Dart 2.0 requires this method to be implemented.
-  // ignore: override_on_non_overriding_method
   void removeWhere(bool test(K key, V value)) {
-    throw new UnimplementedError("removeWhere");
+    return _map.removeWhere(test);
   }
 
   // Note: we don't really have a reasonable old/new value to use here.
