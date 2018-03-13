@@ -155,10 +155,17 @@ class ObservableMap<K, V> extends Observable implements Map<K, V> {
   String toString() => MapBase.mapToString(this);
 
   @override
-  Map<K2, V2> cast<K2, V2>() => _map.cast<K2, V2>();
+  ObservableMap<K2, V2> cast<K2, V2>() {
+    if (this is ObservableMap<K2, V2>) {
+      return this as ObservableMap<K2, V2>;
+    }
+    return new ObservableMap.createFromType(_map.cast<K2, V2>());
+  }
 
   @override
-  Map<K2, V2> retype<K2, V2>() => _map.retype<K2, V2>();
+  ObservableMap<K2, V2> retype<K2, V2>() {
+    return new ObservableMap.createFromType(_map.retype<K2, V2>());
+  }
 
   @override
   Iterable<MapEntry<K, V>> get entries => _map.entries;
@@ -179,14 +186,10 @@ class ObservableMap<K, V> extends Observable implements Map<K, V> {
   }
 
   @override
-  void updateAll(V update(K key, V value)) {
-    return _map.updateAll(update);
-  }
+  void updateAll(V update(K key, V value)) => _map.updateAll(update);
 
   @override
-  void removeWhere(bool test(K key, V value)) {
-    return _map.removeWhere(test);
-  }
+  void removeWhere(bool test(K key, V value)) => _map.removeWhere(test);
 
   // Note: we don't really have a reasonable old/new value to use here.
   // But this should fix "keys" and "values" in templates with minimal overhead.
