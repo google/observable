@@ -1,3 +1,10 @@
+## 0.22.0
+
+* Added `ObservableMap.castFrom`, similar to `Map.castFrom`.
+
+* Fixed a bug where `ObservableMap`'s `cast` and `retype` function would create
+  a new empty instance instead of a forwarding instance.
+
 ## 0.21.3
 
 * Support Dart 2 collection methods where previously threw `UnimplementedError`.

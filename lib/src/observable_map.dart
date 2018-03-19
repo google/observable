@@ -20,6 +20,39 @@ import 'to_observable.dart';
 /// removed, or replaced, then observers that are listening to [changes]
 /// will be notified.
 class ObservableMap<K, V> extends Observable implements Map<K, V> {
+  /*
+     * Adapts [source] to be a `Map<K2, V2>`.
+   *
+   * Any time the set would produce a key or value that is not a [K2] or [V2],
+   * the access will throw.
+   *
+   * Any time [K2] key or [V2] value is attempted added into the adapted map,
+   * the store will throw unless the key is also an instance of [K] and
+   * the value is also an instance of [V].
+   *
+   * If all accessed entries of [source] are have [K2] keys and [V2] values
+   * and if all entries added to the returned map have [K] keys and [V]] values,
+   * then the returned map can be used as a `Map<K2, V2>`.
+   */
+
+  /// Adapts [source] to be a `ObservableMap<K2, V2>`.
+  ///
+  /// Any time the map would produce a key or value that is not a [K2] or [V2]
+  /// the access will throw.
+  ///
+  /// Any time [K2] key or [V2] value is attempted added into the adapted map,
+  /// the store will throw unless the key is also an instance of [K] and the
+  /// value is also an instance of [V].
+  ///
+  /// If all accessed entries of [source] have [K2] keys and [V2] values and if
+  /// all entries added to the returned map have [K] keys and [V] values, then
+  /// the returned map can be used as a `Map<K2, V2>`.
+  static ObservableMap<K2, V2> castFrom<K, V, K2, V2>(
+    ObservableMap<K, V> source,
+  ) {
+    return new ObservableMap<K2, V2>.spy(source._map.cast<K2, V2>());
+  }
+
   final Map<K, V> _map;
 
   /// Creates an observable map.
@@ -159,12 +192,12 @@ class ObservableMap<K, V> extends Observable implements Map<K, V> {
     if (this is ObservableMap<K2, V2>) {
       return this as ObservableMap<K2, V2>;
     }
-    return new ObservableMap.createFromType(_map.cast<K2, V2>());
+    return ObservableMap.castFrom<K, V, K2, V2>(this);
   }
 
   @override
   ObservableMap<K2, V2> retype<K2, V2>() {
-    return new ObservableMap.createFromType(_map.retype<K2, V2>());
+    return ObservableMap.castFrom<K, V, K2, V2>(this);
   }
 
   @override
