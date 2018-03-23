@@ -1,4 +1,4 @@
-## 0.23.0
+## 0.22.1
 
 * Added `ObservableList.castFrom`, similar to `List.castFrom`.
 
