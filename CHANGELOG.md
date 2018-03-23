@@ -1,3 +1,10 @@
+## 0.23.0
+
+* Added `ObservableList.castFrom`, similar to `List.castFrom`.
+
+* Changed `ObservableList`'s `cast` and `retype` function to create a forwarding
+  instance of `ObservableList` instead of an instance of `List`.
+
 ## 0.22.0
 
 * Added `ObservableMap.castFrom`, similar to `Map.castFrom`.
