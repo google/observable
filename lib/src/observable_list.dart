@@ -15,6 +15,20 @@ import 'observable.dart' show Observable;
 /// removed, or replaced, then observers that are listening to [changes]
 /// will be notified.
 class ObservableList<E> extends ListBase<E> with Observable {
+  /// Adapts [source] to be a `ObservableList<T>`.
+  ///
+  /// Any time the list would produce an element that is not a [T],
+  /// the element access will throw.
+  ///
+  /// Any time a [T] value is attempted stored into the adapted list,
+  /// the store will throw unless the value is also an instance of [S].
+  ///
+  /// If all accessed elements of [source] are actually instances of [T],
+  /// and if all elements stored into the returned list are actually instance
+  /// of [S], then the returned list can be used as a `ObservableList<T>`.
+  static ObservableList<T> castFrom<S, T>(ObservableList<S> source) =>
+      new ObservableList<T>._spy(source._list.cast<T>());
+
   List<ListChangeRecord<E>> _listRecords;
 
   StreamController<List<ListChangeRecord<E>>> _listChanges;
@@ -43,6 +57,41 @@ class ObservableList<E> extends ListBase<E> with Observable {
   /// Creates an observable list with the elements of [other]. The order in
   /// the list will be the order provided by the iterator of [other].
   ObservableList.from(Iterable other) : _list = new List<E>.from(other);
+
+  ObservableList._spy(List<E> other) : _list = other;
+
+  /// Returns a view of this list as a list of [T] instances, if necessary.
+  ///
+  /// If this list is already a `ObservableList<T>`, it is returned unchanged.
+  ///
+  /// If this list contains only instances of [T], all read operations
+  /// will work correctly. If any operation tries to access an element
+  /// that is not an instance of [T], the access will throw instead.
+  ///
+  /// Elements added to the list (e.g., by using [add] or [addAll])
+  /// must be instance of [T] to be valid arguments to the adding function,
+  /// and they must be instances of [E] as well to be accepted by
+  /// this list as well.
+  @override
+  ObservableList<T> cast<T>() {
+    if (this is ObservableList<T>) {
+      return this as ObservableList<T>;
+    }
+    return retype<T>();
+  }
+
+  /// Returns a view of this list as a list of [T] instances.
+  ///
+  /// If this list contains only instances of [T], all read operations
+  /// will work correctly. If any operation tries to access an element
+  /// that is not an instance of [T], the access will throw instead.
+  ///
+  /// Elements added to the list (e.g., by using [add] or [addAll])
+  /// must be instance of [T] to be valid arguments to the adding function,
+  /// and they must be instances of [E] as well to be accepted by
+  /// this list as well.
+  @override
+  ObservableList<T> retype<T>() => ObservableList.castFrom<E, T>(this);
 
   /// The stream of summarized list changes, delivered asynchronously.
   ///
