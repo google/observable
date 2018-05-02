@@ -303,7 +303,7 @@ class ObservableList<E> extends ListBase<E> with Observable {
 
   void _notifyListChange(
     int index, {
-    List<E> removed: const [],
+    List<E> removed,
     int addedCount: 0,
   }) {
     if (!hasListObservers) return;

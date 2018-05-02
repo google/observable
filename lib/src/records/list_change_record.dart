@@ -27,15 +27,16 @@ class ListChangeRecord<E> implements ChangeRecord {
   factory ListChangeRecord(
     List<E> object,
     int index, {
-    List<E> removed: const [],
+    List<E> removed,
     int addedCount: 0,
   }) {
-    return new ListChangeRecord._(object, index, removed, addedCount);
+    return new ListChangeRecord._(
+        object, index, removed ?? new UnmodifiableListView([]), addedCount);
   }
 
   /// Records an `add` operation at `object[index]` of [addedCount] elements.
   ListChangeRecord.add(this.object, this.index, this.addedCount)
-      : removed = const [] {
+      : removed = new UnmodifiableListView([]) {
     _assertValidState();
   }
 
