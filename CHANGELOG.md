@@ -1,3 +1,7 @@
+## 0.22.1+1
+
+* Fixes for Dart2 runtime type errors.
+
 ## 0.22.1
 
 * Added `ObservableList.castFrom`, similar to `List.castFrom`.
