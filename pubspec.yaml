@@ -1,5 +1,5 @@
 name: observable
-version: 0.22.1+1
+version: 0.22.1+2
 author: Dart Team <misc@dartlang.org>
 description: Support for marking objects as observable
 homepage: https://github.com/dart-lang/observable
@@ -9,7 +9,7 @@ dependencies:
   collection: '^1.11.0'
   dart_internal: '^0.1.1'
   meta: '^1.0.4'
-  quiver: '>=0.24.0 <0.29.0'
+  quiver: '>=0.24.0 <0.30.0'
 dev_dependencies:
   dart_style: '^1.0.9'
   build_runner: ^0.7.11
