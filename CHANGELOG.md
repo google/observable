@@ -1,3 +1,7 @@
+## 0.22.1+2
+
+* Widen dependency on quiver to include v0.29.
+
 ## 0.22.1+1
 
 * Fixes for Dart2 runtime type errors.
