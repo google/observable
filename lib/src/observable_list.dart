@@ -60,9 +60,7 @@ class ObservableList<E> extends ListBase<E> with Observable {
 
   ObservableList._spy(List<E> other) : _list = other;
 
-  /// Returns a view of this list as a list of [T] instances, if necessary.
-  ///
-  /// If this list is already a `ObservableList<T>`, it is returned unchanged.
+  /// Returns a view of this list as a list of [T] instances.
   ///
   /// If this list contains only instances of [T], all read operations
   /// will work correctly. If any operation tries to access an element
@@ -73,12 +71,7 @@ class ObservableList<E> extends ListBase<E> with Observable {
   /// and they must be instances of [E] as well to be accepted by
   /// this list as well.
   @override
-  ObservableList<T> cast<T>() {
-    if (this is ObservableList<T>) {
-      return this as ObservableList<T>;
-    }
-    return retype<T>();
-  }
+  ObservableList<T> cast<T>() => ObservableList.castFrom<E, T>(this);
 
   /// Returns a view of this list as a list of [T] instances.
   ///
@@ -91,7 +84,8 @@ class ObservableList<E> extends ListBase<E> with Observable {
   /// and they must be instances of [E] as well to be accepted by
   /// this list as well.
   @override
-  ObservableList<T> retype<T>() => ObservableList.castFrom<E, T>(this);
+  // ignore: override_on_non_overriding_method
+  ObservableList<T> retype<T>() => cast<T>();
 
   /// The stream of summarized list changes, delivered asynchronously.
   ///
