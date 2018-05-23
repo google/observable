@@ -174,13 +174,11 @@ class ObservableMap<K, V> extends Observable implements Map<K, V> {
 
   @override
   ObservableMap<K2, V2> cast<K2, V2>() {
-    if (this is ObservableMap<K2, V2>) {
-      return this as ObservableMap<K2, V2>;
-    }
     return ObservableMap.castFrom<K, V, K2, V2>(this);
   }
 
   @override
+  // ignore: override_on_non_overriding_method
   ObservableMap<K2, V2> retype<K2, V2>() {
     return ObservableMap.castFrom<K, V, K2, V2>(this);
   }
