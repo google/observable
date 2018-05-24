@@ -177,6 +177,7 @@ class ObservableMap<K, V> extends Observable implements Map<K, V> {
     return ObservableMap.castFrom<K, V, K2, V2>(this);
   }
 
+  @deprecated
   @override
   // ignore: override_on_non_overriding_method
   ObservableMap<K2, V2> retype<K2, V2>() {
