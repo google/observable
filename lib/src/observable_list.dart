@@ -83,6 +83,7 @@ class ObservableList<E> extends ListBase<E> with Observable {
   /// must be instance of [T] to be valid arguments to the adding function,
   /// and they must be instances of [E] as well to be accepted by
   /// this list as well.
+  @deprecated
   @override
   // ignore: override_on_non_overriding_method
   ObservableList<T> retype<T>() => cast<T>();

@@ -1,3 +1,9 @@
+## 0.22.1+3
+
+Update implementations of the `cast()` and the deprecated `retype()` methods.
+* The `retype()` method on List and Map is deprecated and will be removed.
+* The `cast()` method should do what the `retype()` method did.
+
 ## 0.22.1+2
 
 * Widen dependency on quiver to include v0.29.
