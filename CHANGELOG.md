@@ -1,3 +1,7 @@
+## 0.22.1+4-dev
+
+* Bump and widen dev dependencies on build packages.
+
 ## 0.22.1+3
 
 Update implementations of the `cast()` and the deprecated `retype()` methods.
