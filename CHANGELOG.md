@@ -1,4 +1,6 @@
-## 0.22.1+4-dev
+## 0.22.1+4
+
+* Support Dart 2 stable.
 
 * Bump and widen dev dependencies on build packages.
 

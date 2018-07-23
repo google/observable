@@ -24,7 +24,7 @@ void observableTests() {
   });
 
   test('handle future result', () {
-    var callback = expectAsync(() {});
+    var callback = expectAsync0(() {});
     return new Future(callback);
   });
 
@@ -48,7 +48,7 @@ void observableTests() {
     var t = createModel(123);
     int called = 0;
 
-    subs.add(t.changes.listen(expectAsync((records) {
+    subs.add(t.changes.listen(expectAsync1((records) {
       called++;
       expectPropertyChanges(records, 2);
     })));
@@ -62,7 +62,7 @@ void observableTests() {
     var t = createModel(123);
     int called = 0;
 
-    subs.add(t.changes.listen(expectAsync((records) {
+    subs.add(t.changes.listen(expectAsync1((records) {
       called++;
       expectPropertyChanges(records, 1);
       if (called == 1) {
@@ -81,8 +81,8 @@ void observableTests() {
       expectPropertyChanges(records, 2);
     }
 
-    subs.add(t.changes.listen(expectAsync(verifyRecords)));
-    subs.add(t.changes.listen(expectAsync(verifyRecords)));
+    subs.add(t.changes.listen(expectAsync1(verifyRecords)));
+    subs.add(t.changes.listen(expectAsync1(verifyRecords)));
 
     t.value = 41;
     t.value = 42;
@@ -112,7 +112,7 @@ void observableTests() {
   test('cancel listening', () {
     var t = createModel(123);
     var sub;
-    sub = t.changes.listen(expectAsync((records) {
+    sub = t.changes.listen(expectAsync1((records) {
       expectPropertyChanges(records, 1);
       sub.cancel();
       t.value = 777;
@@ -123,12 +123,12 @@ void observableTests() {
   test('cancel and reobserve', () {
     var t = createModel(123);
     var sub;
-    sub = t.changes.listen(expectAsync((records) {
+    sub = t.changes.listen(expectAsync1((records) {
       expectPropertyChanges(records, 1);
       sub.cancel();
 
       scheduleMicrotask(() {
-        subs.add(t.changes.listen(expectAsync((records) {
+        subs.add(t.changes.listen(expectAsync1((records) {
           expectPropertyChanges(records, 1);
         })));
         t.value = 777;
