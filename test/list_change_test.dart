@@ -15,7 +15,7 @@ import 'observable_test_utils.dart';
 main() => listChangeTests();
 
 // TODO(jmesserly): port or write array fuzzer tests
-listChangeTests() {
+void listChangeTests() {
   StreamSubscription sub;
   var model;
 
@@ -24,13 +24,15 @@ listChangeTests() {
     model = null;
   });
 
-  _delta(i, r, a) => new ListChangeRecord(model, i, removed: r, addedCount: a);
+  ListChangeRecord<E> _delta<E>(int i, List<E> r, int a,
+          {ObservableList<E> typedModel}) =>
+      ListChangeRecord(typedModel ?? model, i, removed: r, addedCount: a);
 
   test('sequential adds', () {
-    model = toObservable([]);
+    final model = ObservableList();
     model.add(0);
 
-    var summary;
+    List<ListChangeRecord> summary;
     sub = model.listChanges.listen((r) => summary = r);
 
     model.add(1);
@@ -38,29 +40,29 @@ listChangeTests() {
 
     expect(summary, null);
     return new Future(() {
-      expectChanges(summary, [_delta(1, [], 2)]);
+      expect(summary, [_delta(1, [], 2, typedModel: model)]);
       expect(summary[0].added, [1, 2]);
       expect(summary[0].removed, []);
     });
   });
 
   test('List Splice Truncate And Expand With Length', () {
-    model = toObservable(['a', 'b', 'c', 'd', 'e']);
+    final model = ObservableList<String>.from(['a', 'b', 'c', 'd', 'e']);
 
-    var summary;
+    List<ListChangeRecord<String>> summary;
     sub = model.listChanges.listen((r) => summary = r);
 
     model.length = 2;
     return new Future(() {
-      expectChanges(summary, [
-        _delta(2, ['c', 'd', 'e'], 0)
+      expect(summary, [
+        _delta(2, ['c', 'd', 'e'], 0, typedModel: model)
       ]);
       expect(summary[0].added, []);
       expect(summary[0].removed, ['c', 'd', 'e']);
       summary = null;
       model.length = 5;
     }).then(newMicrotask).then((_) {
-      expectChanges(summary, [_delta(2, [], 3)]);
+      expect(summary, [_delta(2, [], 3, typedModel: model)]);
       expect(summary[0].added, [null, null, null]);
       expect(summary[0].removed, []);
     });

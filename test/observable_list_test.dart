@@ -43,7 +43,7 @@ _runTests() {
       list.add(4);
       expect(list, [1, 2, 3, 4]);
       return new Future(() {
-        expectChanges(changes, [_lengthChange(3, 4)]);
+        expect(changes, changeMatchers([_lengthChange(3, 4)]));
       });
     });
 
@@ -52,7 +52,7 @@ _runTests() {
       expect(list, orderedEquals([1, 3]));
 
       return new Future(() {
-        expectChanges(changes, [_lengthChange(3, 2)]);
+        expect(changes, changeMatchers([_lengthChange(3, 2)]));
       });
     });
 
@@ -61,7 +61,8 @@ _runTests() {
       list.removeRange(1, 3);
       expect(list, [1, 4]);
       return new Future(() {
-        expectChanges(changes, [_lengthChange(3, 4), _lengthChange(4, 2)]);
+        expect(changes,
+            changeMatchers([_lengthChange(3, 4), _lengthChange(4, 2)]));
       });
     });
 
@@ -70,7 +71,8 @@ _runTests() {
       list.removeWhere((e) => e == 2);
       expect(list, [1, 3]);
       return new Future(() {
-        expectChanges(changes, [_lengthChange(3, 4), _lengthChange(4, 2)]);
+        expect(changes,
+            changeMatchers([_lengthChange(3, 4), _lengthChange(4, 2)]));
       });
     });
 
@@ -78,7 +80,7 @@ _runTests() {
       list.length = 5;
       expect(list, [1, 2, 3, null, null]);
       return new Future(() {
-        expectChanges(changes, [_lengthChange(3, 5)]);
+        expect(changes, changeMatchers([_lengthChange(3, 5)]));
       });
     });
 
@@ -86,7 +88,7 @@ _runTests() {
       list[2] = 9000;
       expect(list, [1, 2, 9000]);
       return new Future(() {
-        expectChanges(changes, null);
+        expect(changes, null);
       });
     });
 
@@ -94,7 +96,7 @@ _runTests() {
       list.clear();
       expect(list, []);
       return new Future(() {
-        expectChanges(changes, [_lengthChange(3, 0)]);
+        expect(changes, changeMatchers([_lengthChange(3, 0)]));
       });
     });
   });
@@ -116,7 +118,7 @@ _runTests() {
       list.add(4);
       expect(list, [1, 2, 3, 4]);
       return new Future(() {
-        expectChanges(changes, []);
+        expect(changes, []);
       });
     });
 
@@ -124,7 +126,7 @@ _runTests() {
       list[1] = 777;
       expect(list, [1, 777, 3]);
       return new Future(() {
-        expectChanges(changes, [
+        expect(changes, [
           _change(1, addedCount: 1, removed: [2])
         ]);
       });
@@ -134,7 +136,7 @@ _runTests() {
       list[2] = 9000;
       expect(list, [1, 2, 9000]);
       return new Future(() {
-        expectChanges(changes, []);
+        expect(changes, []);
       });
     });
 
@@ -143,7 +145,7 @@ _runTests() {
       list[1] = 42;
       expect(list, [1, 42, 3]);
       return new Future(() {
-        expectChanges(changes, [
+        expect(changes, [
           _change(1, addedCount: 1, removed: [2]),
         ]);
       });
@@ -153,7 +155,7 @@ _runTests() {
       list.length = 2;
       expect(list, [1, 2]);
       return new Future(() {
-        expectChanges(changes, []);
+        expect(changes, []);
       });
     });
 
@@ -161,7 +163,7 @@ _runTests() {
       list.length = 1;
       expect(list, [1]);
       return new Future(() {
-        expectChanges(changes, [
+        expect(changes, [
           _change(1, removed: [2, 3])
         ]);
       });
@@ -172,7 +174,7 @@ _runTests() {
       list.add(42);
       expect(list, [1, 42]);
       return new Future(() {
-        expectChanges(changes, [
+        expect(changes, [
           _change(1, removed: [2, 3], addedCount: 1)
         ]);
       });
@@ -183,7 +185,7 @@ _runTests() {
       list.add(2);
       expect(list, [1, 2]);
       return new Future(() {
-        expectChanges(changes, []);
+        expect(changes, []);
       });
     });
   });
@@ -220,8 +222,8 @@ _runTests() {
       expect(copy, orderedEquals([1, 2, 3, 1, 3, 4]));
       return new Future(() {
         // no change from read-only operators
-        expectChanges(propRecords, null);
-        expectChanges(listRecords, null);
+        expect(propRecords, null);
+        expect(listRecords, null);
       });
     });
 
@@ -231,11 +233,13 @@ _runTests() {
       expect(list, orderedEquals([1, 2, 3, 1, 3, 4, 5, 6]));
 
       return new Future(() {
-        expectChanges(propRecords, [
-          _lengthChange(6, 7),
-          _lengthChange(7, 8),
-        ]);
-        expectChanges(listRecords, [_change(6, addedCount: 2)]);
+        expect(
+            propRecords,
+            changeMatchers([
+              _lengthChange(6, 7),
+              _lengthChange(7, 8),
+            ]));
+        expect(listRecords, [_change(6, addedCount: 2)]);
       });
     });
 
@@ -244,8 +248,8 @@ _runTests() {
       expect(list, orderedEquals([1, 4, 3, 1, 3, 4]));
 
       return new Future(() {
-        expectChanges(propRecords, null);
-        expectChanges(listRecords, [
+        expect(propRecords, null);
+        expect(listRecords, [
           _change(1, addedCount: 1, removed: [2])
         ]);
       });
@@ -256,8 +260,8 @@ _runTests() {
       expect(list, orderedEquals([1, 2, 3, 1, 3]));
 
       return new Future(() {
-        expectChanges(propRecords, [_lengthChange(6, 5)]);
-        expectChanges(listRecords, [
+        expect(propRecords, changeMatchers([_lengthChange(6, 5)]));
+        expect(listRecords, [
           _change(5, removed: [4])
         ]);
       });
@@ -268,8 +272,8 @@ _runTests() {
       expect(list, orderedEquals([1, 3, 4]));
 
       return new Future(() {
-        expectChanges(propRecords, [_lengthChange(6, 3)]);
-        expectChanges(listRecords, [
+        expect(propRecords, changeMatchers([_lengthChange(6, 3)]));
+        expect(listRecords, [
           _change(1, removed: [2, 3, 1])
         ]);
       });
@@ -280,8 +284,8 @@ _runTests() {
       expect(list, orderedEquals([1, 2, 1, 4]));
 
       return new Future(() {
-        expectChanges(propRecords, [_lengthChange(6, 4)]);
-        expectChanges(listRecords, [
+        expect(propRecords, changeMatchers([_lengthChange(6, 4)]));
+        expect(listRecords, [
           _change(2, removed: [3]),
           _change(3, removed: [3])
         ]);
@@ -293,8 +297,8 @@ _runTests() {
       expect(list, orderedEquals([1, 1, 2, 3, 3, 4]));
 
       return new Future(() {
-        expectChanges(propRecords, null);
-        expectChanges(listRecords, [
+        expect(propRecords, null);
+        expect(listRecords, [
           _change(1, addedCount: 1),
           _change(4, removed: [1])
         ]);
@@ -320,12 +324,14 @@ _runTests() {
       expect(list, []);
 
       return new Future(() {
-        expectChanges(propRecords, [
-          _lengthChange(6, 0),
-          new PropertyChangeRecord(list, #isEmpty, false, true),
-          new PropertyChangeRecord(list, #isNotEmpty, true, false),
-        ]);
-        expectChanges(listRecords, [
+        expect(
+            propRecords,
+            changeMatchers([
+              _lengthChange(6, 0),
+              PropertyChangeRecord<bool>(list, #isEmpty, false, true),
+              PropertyChangeRecord<bool>(list, #isNotEmpty, true, false),
+            ]));
+        expect(listRecords, [
           _change(0, removed: [1, 2, 3, 1, 3, 4])
         ]);
       });
@@ -335,8 +341,8 @@ _runTests() {
 
 ObservableList<int> list;
 
-PropertyChangeRecord _lengthChange(int oldValue, int newValue) =>
-    new PropertyChangeRecord(list, #length, oldValue, newValue);
+PropertyChangeRecord<int> _lengthChange(int oldValue, int newValue) =>
+    new PropertyChangeRecord<int>(list, #length, oldValue, newValue);
 
 _change(int index, {List removed: const [], int addedCount: 0}) =>
     new ListChangeRecord(list, index, removed: removed, addedCount: addedCount);

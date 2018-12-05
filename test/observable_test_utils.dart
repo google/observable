@@ -15,10 +15,15 @@ import 'package:test/test.dart';
 ///     future.then(newMicrotask).then(...)
 newMicrotask(_) => new Future.value();
 
-// TODO(jmesserly): use matchers when we have a way to compare ChangeRecords.
-// For now just use the toString.
-void expectChanges(actual, expected, {String reason}) =>
-    expect('$actual', '$expected', reason: reason);
+void expectChanges(List<ChangeRecord> actual, List<ChangeRecord> expected,
+    {String reason}) {
+  expect(actual, _EqualsMatcher(expected), reason: reason);
+}
+
+void expectNotChanges(List<ChangeRecord> actual, ChangeRecords expectedNot,
+    {String reason}) {
+  expect(actual, isNot(_EqualsMatcher(expectedNot)), reason: reason);
+}
 
 List<ListChangeRecord> getListChangeRecords(
         List<ListChangeRecord> changes, int index) =>
@@ -28,3 +33,43 @@ List<PropertyChangeRecord> getPropertyChangeRecords(
         List<ChangeRecord> changes, Symbol property) =>
     new List.from(changes.where(
         (ChangeRecord c) => c is PropertyChangeRecord && c.name == property));
+
+List<Matcher> changeMatchers(List<ChangeRecord> changes) => changes
+    .map((r) =>
+        r is PropertyChangeRecord ? _PropertyChangeMatcher(r) : equals(r))
+    .toList();
+
+// Custom equality matcher is required, otherwise expect() infers ChangeRecords
+// to be an iterable and does a deep comparison rather than use the == operator.
+class _EqualsMatcher<ValueType> extends Matcher {
+  final ValueType _expected;
+
+  _EqualsMatcher(this._expected);
+
+  @override
+  Description describe(Description description) =>
+      description.addDescriptionOf(_expected);
+
+  @override
+  bool matches(dynamic item, Map matchState) =>
+      item is ChangeRecords && _expected == item;
+}
+
+class _PropertyChangeMatcher<ValueType> extends Matcher {
+  final PropertyChangeRecord<ValueType> _expected;
+
+  _PropertyChangeMatcher(this._expected);
+
+  @override
+  Description describe(Description description) =>
+      description.addDescriptionOf(_expected);
+
+  @override
+  bool matches(dynamic other, Map matchState) =>
+      identical(_expected, other) ||
+      other is PropertyChangeRecord &&
+          _expected.runtimeType == other.runtimeType &&
+          _expected.name == other.name &&
+          _expected.oldValue == other.oldValue &&
+          _expected.newValue == other.newValue;
+}
