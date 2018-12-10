@@ -41,7 +41,7 @@ _runTests() {
       map['d'] = 4;
       expect(map, {'a': 1, 'b': 2, 'c': 3, 'd': 4});
       return new Future(() {
-        expectChanges(changes, [_lengthChange(map, 3, 4)]);
+        expect(changes, changeMatchers([_lengthChange(map, 3, 4)]));
       });
     });
 
@@ -49,7 +49,7 @@ _runTests() {
       map.putIfAbsent('d', () => 4);
       expect(map, {'a': 1, 'b': 2, 'c': 3, 'd': 4});
       return new Future(() {
-        expectChanges(changes, [_lengthChange(map, 3, 4)]);
+        expect(changes, changeMatchers([_lengthChange(map, 3, 4)]));
       });
     });
 
@@ -58,10 +58,12 @@ _runTests() {
       map.remove('a');
       expect(map, {'b': 2});
       return new Future(() {
-        expectChanges(changes, [
-          _lengthChange(map, 3, 2),
-          _lengthChange(map, 2, 1),
-        ]);
+        expect(
+            changes,
+            changeMatchers([
+              _lengthChange(map, 3, 2),
+              _lengthChange(map, 2, 1),
+            ]));
       });
     });
 
@@ -69,7 +71,7 @@ _runTests() {
       map.remove('d');
       expect(map, {'a': 1, 'b': 2, 'c': 3});
       return new Future(() {
-        expectChanges(changes, null);
+        expect(changes, null);
       });
     });
 
@@ -77,7 +79,7 @@ _runTests() {
       map['c'] = 9000;
       expect(map, {'a': 1, 'b': 2, 'c': 9000});
       return new Future(() {
-        expectChanges(changes, []);
+        expect(changes, []);
       });
     });
 
@@ -85,7 +87,7 @@ _runTests() {
       map.clear();
       expect(map, {});
       return new Future(() {
-        expectChanges(changes, [_lengthChange(map, 3, 0)]);
+        expect(changes, changeMatchers([_lengthChange(map, 3, 0)]));
       });
     });
   });
@@ -109,7 +111,7 @@ _runTests() {
       map.putIfAbsent('d', () => 4);
       expect(map, {'a': 1, 'b': 2, 'c': 3, 'd': 4});
       return new Future(() {
-        expectChanges(changes, []);
+        expect(changes, []);
       });
     });
 
@@ -117,7 +119,7 @@ _runTests() {
       map['b'] = null;
       expect(map, {'a': 1, 'b': null, 'c': 3});
       return new Future(() {
-        expectChanges(changes, [_changeKey('b', 2, null)]);
+        expect(changes, [_changeKey('b', 2, null)]);
       });
     });
 
@@ -125,7 +127,7 @@ _runTests() {
       map['b'] = 777;
       expect(map, {'a': 1, 'b': 777, 'c': 3});
       return new Future(() {
-        expectChanges(changes, [_changeKey('b', 2, 777)]);
+        expect(changes, [_changeKey('b', 2, 777)]);
       });
     });
 
@@ -133,7 +135,7 @@ _runTests() {
       map.putIfAbsent('b', () => 1234);
       expect(map, {'a': 1, 'b': 2, 'c': 3});
       return new Future(() {
-        expectChanges(changes, null);
+        expect(changes, null);
       });
     });
 
@@ -141,7 +143,7 @@ _runTests() {
       map['c'] = 9000;
       expect(map, {'a': 1, 'b': 2, 'c': 9000});
       return new Future(() {
-        expectChanges(changes, []);
+        expect(changes, []);
       });
     });
 
@@ -150,7 +152,7 @@ _runTests() {
       map['b'] = 42;
       expect(map, {'a': 1, 'b': 42, 'c': 3});
       return new Future(() {
-        expectChanges(changes, [
+        expect(changes, [
           _changeKey('b', 2, 9001),
           _changeKey('b', 9001, 42),
         ]);
@@ -161,7 +163,7 @@ _runTests() {
       map.remove('a');
       expect(map, {'b': 2, 'c': 3});
       return new Future(() {
-        expectChanges(changes, []);
+        expect(changes, []);
       });
     });
 
@@ -169,7 +171,7 @@ _runTests() {
       map.remove('b');
       expect(map, {'a': 1, 'c': 3});
       return new Future(() {
-        expectChanges(changes, [_removeKey('b', 2)]);
+        expect(changes, [_removeKey('b', 2)]);
       });
     });
 
@@ -178,7 +180,7 @@ _runTests() {
       map['b'] = 2;
       expect(map, {'a': 1, 'b': 2, 'c': 3});
       return new Future(() {
-        expectChanges(changes, [
+        expect(changes, [
           _removeKey('b', 2),
           _insertKey('b', 2),
         ]);
@@ -305,12 +307,14 @@ _runTests() {
       expect(map, {'a': 1, 'b': 2, 'c': 3});
 
       return new Future(() {
-        expectChanges(records, [
-          _lengthChange(map, 2, 3),
-          _insertKey('c', 3),
-          _propChange(map, #keys),
-          _propChange(map, #values),
-        ]);
+        expect(
+            records,
+            changeMatchers([
+              _lengthChange(map, 2, 3),
+              _insertKey('c', 3),
+              _propChange(map, #keys),
+              _propChange(map, #values),
+            ]));
       });
     });
 
@@ -322,14 +326,16 @@ _runTests() {
       expect(map, {'a': 42, 'b': 2, 'c': 3});
 
       return new Future(() {
-        expectChanges(records, [
-          _changeKey('a', 1, 42),
-          _propChange(map, #values),
-          _lengthChange(map, 2, 3),
-          _insertKey('c', 3),
-          _propChange(map, #keys),
-          _propChange(map, #values),
-        ]);
+        expect(
+            records,
+            changeMatchers([
+              _changeKey('a', 1, 42),
+              _propChange(map, #values),
+              _lengthChange(map, 2, 3),
+              _insertKey('c', 3),
+              _propChange(map, #keys),
+              _propChange(map, #values),
+            ]));
       });
     });
 
@@ -338,12 +344,14 @@ _runTests() {
       expect(map, {'a': 1});
 
       return new Future(() {
-        expectChanges(records, [
-          _removeKey('b', 2),
-          _lengthChange(map, 2, 1),
-          _propChange(map, #keys),
-          _propChange(map, #values),
-        ]);
+        expect(
+            records,
+            changeMatchers([
+              _removeKey('b', 2),
+              _lengthChange(map, 2, 1),
+              _propChange(map, #keys),
+              _propChange(map, #values),
+            ]));
       });
     });
 
@@ -352,13 +360,15 @@ _runTests() {
       expect(map, {});
 
       return new Future(() {
-        expectChanges(records, [
-          _removeKey('a', 1),
-          _removeKey('b', 2),
-          _lengthChange(map, 2, 0),
-          _propChange(map, #keys),
-          _propChange(map, #values),
-        ]);
+        expect(
+            records,
+            changeMatchers([
+              _removeKey('a', 1),
+              _removeKey('b', 2),
+              _lengthChange(map, 2, 0),
+              _propChange(map, #keys),
+              _propChange(map, #values),
+            ]));
       });
     });
   });
@@ -379,13 +389,15 @@ _runTests() {
   });
 }
 
-_lengthChange(map, int oldValue, int newValue) =>
-    new PropertyChangeRecord(map, #length, oldValue, newValue);
+PropertyChangeRecord<int> _lengthChange(map, int oldValue, int newValue) =>
+    PropertyChangeRecord<int>(map, #length, oldValue, newValue);
 
-_changeKey(key, old, newValue) => new MapChangeRecord(key, old, newValue);
+MapChangeRecord _changeKey(key, old, newValue) =>
+    MapChangeRecord(key, old, newValue);
 
 _insertKey(key, newValue) => new MapChangeRecord.insert(key, newValue);
 
 _removeKey(key, oldValue) => new MapChangeRecord.remove(key, oldValue);
 
-_propChange(map, prop) => new PropertyChangeRecord(map, prop, null, null);
+PropertyChangeRecord<Null> _propChange(map, prop) =>
+    new PropertyChangeRecord<Null>(map, prop, null, null);

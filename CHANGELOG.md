@@ -1,3 +1,10 @@
+## 0.22.1+5
+
+Fix generic type error that occurs when using ChangeNotifier with a subclass of ChangeRecord.
+Previously, calling `notifyChanges()` on `class Foo with ChangeNotifier<CustomChangeRecord> {}`
+would throw a type error. Now, the `changes` stream emits a custom `ChangeRecords` class that
+implements the `List` interface. This change is backwards compatible.
+
 ## 0.22.1+4
 
 * Support Dart 2 stable.
