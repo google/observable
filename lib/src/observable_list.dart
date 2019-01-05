@@ -127,9 +127,13 @@ class ObservableList<E> extends ListBase<E> with Observable {
 
   bool get hasListObservers => _listChanges != null && _listChanges.hasListener;
 
+  /// May override to be notified when [listChanges] is first observed.
+  @protected
   @mustCallSuper
   void listObserved() {}
 
+  /// May override to be notified when [listChanges] is no longer observed.
+  @protected
   @mustCallSuper
   void listUnobserved() {}
 
