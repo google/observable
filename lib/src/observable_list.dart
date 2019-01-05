@@ -7,6 +7,8 @@ library observable.src.observable_list;
 import 'dart:async';
 import 'dart:collection' show ListBase, UnmodifiableListView;
 
+import 'package:meta/meta.dart';
+
 import 'differs.dart';
 import 'records.dart';
 import 'observable.dart' show Observable;
@@ -113,8 +115,10 @@ class ObservableList<E> extends ListBase<E> with Observable {
       // TODO(jmesserly): split observed/unobserved notions?
       _listChanges = new StreamController.broadcast(
         sync: true,
+        onListen: listObserved,
         onCancel: () {
           _listChanges = null;
+          listUnobserved();
         },
       );
     }
@@ -122,6 +126,12 @@ class ObservableList<E> extends ListBase<E> with Observable {
   }
 
   bool get hasListObservers => _listChanges != null && _listChanges.hasListener;
+
+  @mustCallSuper
+  void listObserved() {}
+
+  @mustCallSuper
+  void listUnobserved() {}
 
   @override
   int get length => _list.length;

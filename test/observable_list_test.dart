@@ -337,6 +337,17 @@ _runTests() {
       });
     });
   });
+
+  test('observed / unobserved', () {
+    final list = _QuantumList();
+    expect(list, []);
+
+    final subscription = list.listChanges.listen(null);
+    expect(list, ['observed']);
+
+    subscription.cancel();
+    expect(list, ['observed', 'unobserved']);
+  });
 }
 
 ObservableList<int> list;
@@ -346,3 +357,17 @@ PropertyChangeRecord<int> _lengthChange(int oldValue, int newValue) =>
 
 _change(int index, {List removed: const [], int addedCount: 0}) =>
     new ListChangeRecord(list, index, removed: removed, addedCount: addedCount);
+
+class _QuantumList extends ObservableList<String> {
+  @override
+  void listObserved() {
+    super.listObserved();
+    add('observed');
+  }
+
+  @override
+  void listUnobserved() {
+    super.listUnobserved();
+    add('unobserved');
+  }
+}
