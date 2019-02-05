@@ -1,4 +1,4 @@
-## HEAD
+## 0.22.2
 
 * Add `toObservableList` and `toObservableMap`, better typed versions of
   `toObservable`.
