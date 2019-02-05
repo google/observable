@@ -1,3 +1,8 @@
+## HEAD
+
+* Add `toObservableList` and `toObservableMap`, better typed versions of
+  `toObservable`.
+
 ## 0.22.1+5
 
 Fix generic type error that occurs when using ChangeNotifier with a subclass of
