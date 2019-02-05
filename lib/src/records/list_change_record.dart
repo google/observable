@@ -28,7 +28,7 @@ class ListChangeRecord<E> implements ChangeRecord {
     List<E> object,
     int index, {
     List<E> removed,
-    int addedCount: 0,
+    int addedCount = 0,
   }) {
     return new ListChangeRecord._(
         object, index, removed ?? new UnmodifiableListView([]), addedCount);

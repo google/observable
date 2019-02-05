@@ -299,7 +299,7 @@ class ObservableList<E> extends ListBase<E> with Observable {
   void _notifyListChange(
     int index, {
     List<E> removed,
-    int addedCount: 0,
+    int addedCount = 0,
   }) {
     if (!hasListObservers) return;
     if (_listRecords == null) {
