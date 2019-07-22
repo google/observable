@@ -40,7 +40,7 @@ _runTests() {
     test('add item changes length', () {
       map['d'] = 4;
       expect(map, {'a': 1, 'b': 2, 'c': 3, 'd': 4});
-      return new Future(() {
+      return Future(() {
         expect(changes, changeMatchers([_lengthChange(map, 3, 4)]));
       });
     });
@@ -48,7 +48,7 @@ _runTests() {
     test('putIfAbsent changes length', () {
       map.putIfAbsent('d', () => 4);
       expect(map, {'a': 1, 'b': 2, 'c': 3, 'd': 4});
-      return new Future(() {
+      return Future(() {
         expect(changes, changeMatchers([_lengthChange(map, 3, 4)]));
       });
     });
@@ -57,7 +57,7 @@ _runTests() {
       map.remove('c');
       map.remove('a');
       expect(map, {'b': 2});
-      return new Future(() {
+      return Future(() {
         expect(
             changes,
             changeMatchers([
@@ -70,7 +70,7 @@ _runTests() {
     test('remove non-existent item does not change length', () {
       map.remove('d');
       expect(map, {'a': 1, 'b': 2, 'c': 3});
-      return new Future(() {
+      return Future(() {
         expect(changes, null);
       });
     });
@@ -78,7 +78,7 @@ _runTests() {
     test('set existing item does not change length', () {
       map['c'] = 9000;
       expect(map, {'a': 1, 'b': 2, 'c': 9000});
-      return new Future(() {
+      return Future(() {
         expect(changes, []);
       });
     });
@@ -86,7 +86,7 @@ _runTests() {
     test('clear changes length', () {
       map.clear();
       expect(map, {});
-      return new Future(() {
+      return Future(() {
         expect(changes, changeMatchers([_lengthChange(map, 3, 0)]));
       });
     });
@@ -110,7 +110,7 @@ _runTests() {
     test('putIfAbsent new item does not change existing item', () {
       map.putIfAbsent('d', () => 4);
       expect(map, {'a': 1, 'b': 2, 'c': 3, 'd': 4});
-      return new Future(() {
+      return Future(() {
         expect(changes, []);
       });
     });
@@ -118,7 +118,7 @@ _runTests() {
     test('set item to null', () {
       map['b'] = null;
       expect(map, {'a': 1, 'b': null, 'c': 3});
-      return new Future(() {
+      return Future(() {
         expect(changes, [_changeKey('b', 2, null)]);
       });
     });
@@ -126,7 +126,7 @@ _runTests() {
     test('set item to value', () {
       map['b'] = 777;
       expect(map, {'a': 1, 'b': 777, 'c': 3});
-      return new Future(() {
+      return Future(() {
         expect(changes, [_changeKey('b', 2, 777)]);
       });
     });
@@ -134,7 +134,7 @@ _runTests() {
     test('putIfAbsent does not change if already there', () {
       map.putIfAbsent('b', () => 1234);
       expect(map, {'a': 1, 'b': 2, 'c': 3});
-      return new Future(() {
+      return Future(() {
         expect(changes, null);
       });
     });
@@ -142,7 +142,7 @@ _runTests() {
     test('change a different item', () {
       map['c'] = 9000;
       expect(map, {'a': 1, 'b': 2, 'c': 9000});
-      return new Future(() {
+      return Future(() {
         expect(changes, []);
       });
     });
@@ -151,7 +151,7 @@ _runTests() {
       map['b'] = 9001;
       map['b'] = 42;
       expect(map, {'a': 1, 'b': 42, 'c': 3});
-      return new Future(() {
+      return Future(() {
         expect(changes, [
           _changeKey('b', 2, 9001),
           _changeKey('b', 9001, 42),
@@ -162,7 +162,7 @@ _runTests() {
     test('remove other items', () {
       map.remove('a');
       expect(map, {'b': 2, 'c': 3});
-      return new Future(() {
+      return Future(() {
         expect(changes, []);
       });
     });
@@ -170,7 +170,7 @@ _runTests() {
     test('remove the item', () {
       map.remove('b');
       expect(map, {'a': 1, 'c': 3});
-      return new Future(() {
+      return Future(() {
         expect(changes, [_removeKey('b', 2)]);
       });
     });
@@ -179,7 +179,7 @@ _runTests() {
       map.remove('b');
       map['b'] = 2;
       expect(map, {'a': 1, 'b': 2, 'c': 3});
-      return new Future(() {
+      return Future(() {
         expect(changes, [
           _removeKey('b', 2),
           _insertKey('b', 2),
@@ -213,7 +213,7 @@ _runTests() {
     test('add item changes keys/values', () {
       map['d'] = 4;
       expect(map, {'a': 1, 'b': 2, 'c': 3, 'd': 4});
-      return new Future(() {
+      return Future(() {
         expect(keysChanged, 1);
         expect(valuesChanged, 1);
       });
@@ -222,7 +222,7 @@ _runTests() {
     test('putIfAbsent changes keys/values', () {
       map.putIfAbsent('d', () => 4);
       expect(map, {'a': 1, 'b': 2, 'c': 3, 'd': 4});
-      return new Future(() {
+      return Future(() {
         expect(keysChanged, 1);
         expect(valuesChanged, 1);
       });
@@ -232,7 +232,7 @@ _runTests() {
       map.remove('c');
       map.remove('a');
       expect(map, {'b': 2});
-      return new Future(() {
+      return Future(() {
         expect(keysChanged, 2);
         expect(valuesChanged, 2);
       });
@@ -241,7 +241,7 @@ _runTests() {
     test('remove non-existent item does not change keys/values', () {
       map.remove('d');
       expect(map, {'a': 1, 'b': 2, 'c': 3});
-      return new Future(() {
+      return Future(() {
         expect(keysChanged, 0);
         expect(valuesChanged, 0);
       });
@@ -250,7 +250,7 @@ _runTests() {
     test('set existing item does not change keys', () {
       map['c'] = 9000;
       expect(map, {'a': 1, 'b': 2, 'c': 9000});
-      return new Future(() {
+      return Future(() {
         expect(keysChanged, 0);
         expect(valuesChanged, 1);
       });
@@ -259,7 +259,7 @@ _runTests() {
     test('clear changes keys/values', () {
       map.clear();
       expect(map, {});
-      return new Future(() {
+      return Future(() {
         expect(keysChanged, 1);
         expect(valuesChanged, 1);
       });
@@ -290,7 +290,7 @@ _runTests() {
       var copy = {};
       map.forEach((k, v) => copy[k] = v);
       expect(copy, {'a': 1, 'b': 2});
-      return new Future(() {
+      return Future(() {
         // no change from read-only operators
         expect(records, null);
 
@@ -306,7 +306,7 @@ _runTests() {
       map.putIfAbsent('c', () => 3);
       expect(map, {'a': 1, 'b': 2, 'c': 3});
 
-      return new Future(() {
+      return Future(() {
         expect(
             records,
             changeMatchers([
@@ -325,7 +325,7 @@ _runTests() {
       map['c'] = 3;
       expect(map, {'a': 42, 'b': 2, 'c': 3});
 
-      return new Future(() {
+      return Future(() {
         expect(
             records,
             changeMatchers([
@@ -343,7 +343,7 @@ _runTests() {
       map.remove('b');
       expect(map, {'a': 1});
 
-      return new Future(() {
+      return Future(() {
         expect(
             records,
             changeMatchers([
@@ -359,7 +359,7 @@ _runTests() {
       map.clear();
       expect(map, {});
 
-      return new Future(() {
+      return Future(() {
         expect(
             records,
             changeMatchers([
@@ -379,7 +379,7 @@ _runTests() {
 
     setUp(() {
       delegate = {};
-      map = new ObservableMap.spy(delegate);
+      map = ObservableMap.spy(delegate);
     });
 
     test('[]=', () {
@@ -395,9 +395,9 @@ PropertyChangeRecord<int> _lengthChange(map, int oldValue, int newValue) =>
 MapChangeRecord _changeKey(key, old, newValue) =>
     MapChangeRecord(key, old, newValue);
 
-_insertKey(key, newValue) => new MapChangeRecord.insert(key, newValue);
+_insertKey(key, newValue) => MapChangeRecord.insert(key, newValue);
 
-_removeKey(key, oldValue) => new MapChangeRecord.remove(key, oldValue);
+_removeKey(key, oldValue) => MapChangeRecord.remove(key, oldValue);
 
 PropertyChangeRecord<Null> _propChange(map, prop) =>
-    new PropertyChangeRecord<Null>(map, prop, null, null);
+    PropertyChangeRecord<Null>(map, prop, null, null);

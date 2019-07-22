@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// ignore_for_file: deprecated_member_use_from_same_package
 library observable.src.observable_map;
 
 import 'dart:collection';
@@ -35,19 +36,19 @@ class ObservableMap<K, V> extends Observable implements Map<K, V> {
   static ObservableMap<K2, V2> castFrom<K, V, K2, V2>(
     ObservableMap<K, V> source,
   ) {
-    return new ObservableMap<K2, V2>.spy(source._map.cast<K2, V2>());
+    return ObservableMap<K2, V2>.spy(source._map.cast<K2, V2>());
   }
 
   final Map<K, V> _map;
 
   /// Creates an observable map.
-  ObservableMap() : _map = new HashMap<K, V>();
+  ObservableMap() : _map = HashMap<K, V>();
 
   /// Creates a new observable map using a [LinkedHashMap].
-  ObservableMap.linked() : _map = new LinkedHashMap<K, V>();
+  ObservableMap.linked() : _map = LinkedHashMap<K, V>();
 
   /// Creates a new observable map using a [SplayTreeMap].
-  ObservableMap.sorted() : _map = new SplayTreeMap<K, V>();
+  ObservableMap.sorted() : _map = SplayTreeMap<K, V>();
 
   /// Creates an observable map that contains all key value pairs of [other].
   /// It will attempt to use the same backing map type if the other map is a
@@ -57,18 +58,18 @@ class ObservableMap<K, V> extends Observable implements Map<K, V> {
   /// Note this will perform a shallow conversion. If you want a deep conversion
   /// you should use [toObservable].
   factory ObservableMap.from(Map<K, V> other) {
-    return new ObservableMap<K, V>.createFromType(other)..addAll(other);
+    return ObservableMap<K, V>.createFromType(other)..addAll(other);
   }
 
   /// Like [ObservableMap.from], but creates an empty map.
   factory ObservableMap.createFromType(Map<K, V> other) {
     ObservableMap<K, V> result;
     if (other is SplayTreeMap) {
-      result = new ObservableMap<K, V>.sorted();
+      result = ObservableMap<K, V>.sorted();
     } else if (other is LinkedHashMap) {
-      result = new ObservableMap<K, V>.linked();
+      result = ObservableMap<K, V>.linked();
     } else {
-      result = new ObservableMap<K, V>();
+      result = ObservableMap<K, V>();
     }
     return result;
   }
@@ -114,10 +115,10 @@ class ObservableMap<K, V> extends Observable implements Map<K, V> {
 
     if (len != _map.length) {
       notifyPropertyChange(#length, len, _map.length);
-      notifyChange(new MapChangeRecord.insert(key, value));
+      notifyChange(MapChangeRecord.insert(key, value));
       _notifyKeysValuesChanged();
     } else if (oldValue != value) {
-      notifyChange(new MapChangeRecord(key, oldValue, value));
+      notifyChange(MapChangeRecord(key, oldValue, value));
       _notifyValuesChanged();
     }
   }
@@ -135,7 +136,7 @@ class ObservableMap<K, V> extends Observable implements Map<K, V> {
     V result = _map.putIfAbsent(key, ifAbsent);
     if (hasObservers && len != _map.length) {
       notifyPropertyChange(#length, len, _map.length);
-      notifyChange(new MapChangeRecord.insert(key, result));
+      notifyChange(MapChangeRecord.insert(key, result));
       _notifyKeysValuesChanged();
     }
     return result;
@@ -146,7 +147,7 @@ class ObservableMap<K, V> extends Observable implements Map<K, V> {
     int len = _map.length;
     V result = _map.remove(key);
     if (hasObservers && len != _map.length) {
-      notifyChange(new MapChangeRecord.remove(key, result));
+      notifyChange(MapChangeRecord.remove(key, result));
       notifyPropertyChange(#length, len, _map.length);
       _notifyKeysValuesChanged();
     }
@@ -158,7 +159,7 @@ class ObservableMap<K, V> extends Observable implements Map<K, V> {
     int len = _map.length;
     if (hasObservers && len > 0) {
       _map.forEach((key, value) {
-        notifyChange(new MapChangeRecord.remove(key, value));
+        notifyChange(MapChangeRecord.remove(key, value));
       });
       notifyPropertyChange(#length, len, 0);
       _notifyKeysValuesChanged();
@@ -211,11 +212,11 @@ class ObservableMap<K, V> extends Observable implements Map<K, V> {
   // Note: we don't really have a reasonable old/new value to use here.
   // But this should fix "keys" and "values" in templates with minimal overhead.
   void _notifyKeysValuesChanged() {
-    notifyChange(new PropertyChangeRecord(this, #keys, null, null));
+    notifyChange(PropertyChangeRecord(this, #keys, null, null));
     _notifyValuesChanged();
   }
 
   void _notifyValuesChanged() {
-    notifyChange(new PropertyChangeRecord(this, #values, null, null));
+    notifyChange(PropertyChangeRecord(this, #values, null, null));
   }
 }

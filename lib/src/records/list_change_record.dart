@@ -30,13 +30,13 @@ class ListChangeRecord<E> implements ChangeRecord {
     List<E> removed,
     int addedCount = 0,
   }) {
-    return new ListChangeRecord._(
-        object, index, removed ?? new UnmodifiableListView([]), addedCount);
+    return ListChangeRecord._(
+        object, index, removed ?? UnmodifiableListView([]), addedCount);
   }
 
   /// Records an `add` operation at `object[index]` of [addedCount] elements.
   ListChangeRecord.add(this.object, this.index, this.addedCount)
-      : removed = new UnmodifiableListView([]) {
+      : removed = UnmodifiableListView([]) {
     _assertValidState();
   }
 
@@ -83,16 +83,16 @@ class ListChangeRecord<E> implements ChangeRecord {
   void _assertValidState() {
     assert(() {
       if (object == null) {
-        throw new ArgumentError.notNull('object');
+        throw ArgumentError.notNull('object');
       }
       if (index == null) {
-        throw new ArgumentError.notNull('index');
+        throw ArgumentError.notNull('index');
       }
       if (removed == null) {
-        throw new ArgumentError.notNull('removed');
+        throw ArgumentError.notNull('removed');
       }
       if (addedCount == null || addedCount < 0) {
-        throw new ArgumentError('Invalid `addedCount`: $addedCount');
+        throw ArgumentError('Invalid `addedCount`: $addedCount');
       }
       return true;
     }());

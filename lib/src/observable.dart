@@ -19,7 +19,7 @@ import 'records.dart';
 /// - Implement the interface yourself and provide your own implementation
 abstract class Observable<C extends ChangeRecord> {
   // To be removed when https://github.com/dart-lang/observable/issues/10
-  final ChangeNotifier<C> _delegate = new ChangeNotifier<C>();
+  final ChangeNotifier<C> _delegate = ChangeNotifier<C>();
 
   // Whether Observable was not given a type.
   final bool _isNotGeneric = C == dynamic || C == ChangeRecord;
@@ -81,7 +81,7 @@ abstract class Observable<C extends ChangeRecord> {
     if (hasObservers && oldValue != newValue) {
       if (_isNotGeneric) {
         notifyChange(
-          new PropertyChangeRecord(
+          PropertyChangeRecord(
             this,
             field,
             oldValue,

@@ -20,12 +20,14 @@ void observableTests() {
   });
 
   tearDown(() {
-    for (var sub in subs) sub.cancel();
+    for (var sub in subs) {
+      sub.cancel();
+    }
   });
 
   test('handle future result', () {
-    var callback = expectAsync(() {});
-    return new Future(callback);
+    var callback = expectAsync0(() {});
+    return Future(callback);
   });
 
   test('no observers', () {
@@ -48,7 +50,7 @@ void observableTests() {
     var t = createModel(123);
     int called = 0;
 
-    subs.add(t.changes.listen(expectAsync((records) {
+    subs.add(t.changes.listen(expectAsync1((records) {
       called++;
       expectPropertyChanges(records, 2);
     })));
@@ -62,7 +64,7 @@ void observableTests() {
     var t = createModel(123);
     int called = 0;
 
-    subs.add(t.changes.listen(expectAsync((records) {
+    subs.add(t.changes.listen(expectAsync1((records) {
       called++;
       expectPropertyChanges(records, 1);
       if (called == 1) {
@@ -81,8 +83,8 @@ void observableTests() {
       expectPropertyChanges(records, 2);
     }
 
-    subs.add(t.changes.listen(expectAsync(verifyRecords)));
-    subs.add(t.changes.listen(expectAsync(verifyRecords)));
+    subs.add(t.changes.listen(expectAsync1(verifyRecords)));
+    subs.add(t.changes.listen(expectAsync1(verifyRecords)));
 
     t.value = 41;
     t.value = 42;
@@ -98,7 +100,7 @@ void observableTests() {
     t.value = 42;
     expect(records, [], reason: 'changes delived async');
 
-    return new Future(() {
+    return Future(() {
       expectPropertyChanges(records, 2);
       records.clear();
 
@@ -112,7 +114,7 @@ void observableTests() {
   test('cancel listening', () {
     var t = createModel(123);
     var sub;
-    sub = t.changes.listen(expectAsync((records) {
+    sub = t.changes.listen(expectAsync1((records) {
       expectPropertyChanges(records, 1);
       sub.cancel();
       t.value = 777;
@@ -123,12 +125,12 @@ void observableTests() {
   test('cancel and reobserve', () {
     var t = createModel(123);
     var sub;
-    sub = t.changes.listen(expectAsync((records) {
+    sub = t.changes.listen(expectAsync1((records) {
       expectPropertyChanges(records, 1);
       sub.cancel();
 
       scheduleMicrotask(() {
-        subs.add(t.changes.listen(expectAsync((records) {
+        subs.add(t.changes.listen(expectAsync1((records) {
           expectPropertyChanges(records, 1);
         })));
         t.value = 777;
@@ -145,13 +147,13 @@ void observableTests() {
     }));
     t.value = 42;
 
-    return new Future(() {
+    return Future(() {
       expectPropertyChanges(records, 1);
 
       // Verify that mutation operations on the list fail:
 
       expect(() {
-        records[0] = new PropertyChangeRecord(t, #value, 0, 1);
+        records[0] = PropertyChangeRecord(t, #value, 0, 1);
       }, throwsUnsupportedError);
 
       expect(() {
@@ -170,9 +172,9 @@ void observableTests() {
     subs.add(t.changes.listen((r) {
       records.addAll(r);
     }));
-    t.notifyChange(new PropertyChangeRecord(t, #value, 123, 42));
+    t.notifyChange(PropertyChangeRecord(t, #value, 123, 42));
 
-    return new Future(() {
+    return Future(() {
       expectPropertyChanges(records, 1);
       expect(t.value, 123, reason: 'value did not actually change.');
     });
@@ -187,7 +189,7 @@ void observableTests() {
     expect(t.notifyPropertyChange(#value, t.value, 42), 42,
         reason: 'notifyPropertyChange returns newValue');
 
-    return new Future(() {
+    return Future(() {
       expectPropertyChanges(records, 1);
       expect(t.value, 123, reason: 'value did not actually change.');
     });
@@ -204,7 +206,7 @@ expectPropertyChanges(records, int number) {
   }
 }
 
-createModel(int number) => new ObservableSubclass(number);
+createModel(int number) => ObservableSubclass(number);
 
 class ObservableSubclass<T> extends PropertyChangeNotifier {
   ObservableSubclass([T initialValue]) : _value = initialValue;

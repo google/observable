@@ -23,14 +23,14 @@ class MapDiffer<K, V> implements Differ<Map<K, V>> {
     oldValue.forEach((oldK, oldV) {
       final newV = newValue[oldK];
       if (newV == null && !newValue.containsKey(oldK)) {
-        changes.add(new MapChangeRecord<K, V>.remove(oldK, oldV));
+        changes.add(MapChangeRecord<K, V>.remove(oldK, oldV));
       } else if (newV != oldV) {
-        changes.add(new MapChangeRecord<K, V>(oldK, oldV, newV));
+        changes.add(MapChangeRecord<K, V>(oldK, oldV, newV));
       }
     });
     newValue.forEach((newK, newV) {
       if (!oldValue.containsKey(newK)) {
-        changes.add(new MapChangeRecord<K, V>.insert(newK, newV));
+        changes.add(MapChangeRecord<K, V>.insert(newK, newV));
       }
     });
     return freezeInDevMode(changes);

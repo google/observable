@@ -59,11 +59,11 @@ List<List<int>> _calcEditDistance<E>(
   // 'Deletion' columns.
   final rowCount = oldEnd - oldStart + 1;
   final columnCount = currentEnd - currentStart + 1;
-  final distances = new List<List<int>>(rowCount);
+  final distances = List<List<int>>(rowCount);
 
   // 'Addition' rows. Initialize null column.
   for (var i = 0; i < rowCount; i++) {
-    distances[i] = new List<int>(columnCount);
+    distances[i] = List<int>(columnCount);
     distances[i][0] = i;
   }
 
@@ -212,7 +212,7 @@ List<ListChangeRecord<E>> _calcSplices<E>(
   if (currentStart == currentEnd) {
     final spliceRemoved = old.sublist(oldStart, oldEnd);
     return [
-      new ListChangeRecord<E>.remove(
+      ListChangeRecord<E>.remove(
         current,
         currentStart,
         spliceRemoved,
@@ -221,7 +221,7 @@ List<ListChangeRecord<E>> _calcSplices<E>(
   }
   if (oldStart == oldEnd) {
     return [
-      new ListChangeRecord<E>.add(
+      ListChangeRecord<E>.add(
         current,
         currentStart,
         currentEnd - currentStart,
@@ -259,7 +259,7 @@ List<ListChangeRecord<E>> _calcSplices<E>(
     switch (op) {
       case _Edit.leave:
         if (hasSplice()) {
-          splices.add(new ListChangeRecord<E>(
+          splices.add(ListChangeRecord<E>(
             current,
             spliceIndex,
             removed: spliceRemovals,
@@ -296,7 +296,7 @@ List<ListChangeRecord<E>> _calcSplices<E>(
     }
   }
   if (hasSplice()) {
-    splices.add(new ListChangeRecord<E>(
+    splices.add(ListChangeRecord<E>(
       current,
       spliceIndex,
       removed: spliceRemovals,
@@ -304,7 +304,7 @@ List<ListChangeRecord<E>> _calcSplices<E>(
     ));
   }
   assert(() {
-    splices = new List<ListChangeRecord<E>>.unmodifiable(splices);
+    splices = List<ListChangeRecord<E>>.unmodifiable(splices);
     return true;
   }());
   return splices;
@@ -331,7 +331,7 @@ void _mergeSplices<E>(
   // - then continues and updates the subsequent splices with any offset diff.
   for (var i = 0; i < splices.length; i++) {
     var current = splices[i];
-    current = splices[i] = new ListChangeRecord<E>(
+    current = splices[i] = ListChangeRecord<E>(
       current.object,
       current.index + insertionOffset,
       removed: current.removed,
@@ -386,7 +386,7 @@ void _mergeSplices<E>(
       inserted = true;
       splices.insert(
         i,
-        new ListChangeRecord<E>(
+        ListChangeRecord<E>(
           record.object,
           spliceIndex,
           removed: spliceRemoved,
@@ -395,7 +395,7 @@ void _mergeSplices<E>(
       );
       i++;
       final offset = spliceAdded - spliceRemoved.length;
-      current = splices[i] = new ListChangeRecord<E>(
+      current = splices[i] = ListChangeRecord<E>(
         current.object,
         current.index + offset,
         removed: current.removed,
@@ -405,7 +405,7 @@ void _mergeSplices<E>(
     }
   }
   if (!inserted) {
-    splices.add(new ListChangeRecord<E>(
+    splices.add(ListChangeRecord<E>(
       record.object,
       spliceIndex,
       removed: spliceRemoved,
@@ -442,7 +442,7 @@ List<ListChangeRecord<E>> _createInitialSplices<E>(
 List<ListChangeRecord<E>> projectListSplices<E>(
     List<E> list, List<ListChangeRecord<E>> records,
     [Equality<E> equality]) {
-  equality ??= new DefaultEquality<E>();
+  equality ??= DefaultEquality<E>();
   if (records.length <= 1) return records;
   final splices = <ListChangeRecord<E>>[];
   final initialSplices = _createInitialSplices(list, records);

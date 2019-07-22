@@ -5,7 +5,7 @@
 List<E> freezeInDevMode<E>(List<E> list) {
   if (list == null) return const [];
   assert(() {
-    list = new List<E>.unmodifiable(list);
+    list = List<E>.unmodifiable(list);
     return true;
   }());
   return list;
