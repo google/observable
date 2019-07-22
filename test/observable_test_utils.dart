@@ -13,7 +13,7 @@ import 'package:test/test.dart';
 /// to happen in the next microtask:
 ///
 ///     future.then(newMicrotask).then(...)
-newMicrotask(_) => new Future.value();
+newMicrotask(_) => Future.value();
 
 void expectChanges(List<ChangeRecord> actual, List<ChangeRecord> expected,
     {String reason}) {
@@ -27,11 +27,11 @@ void expectNotChanges(List<ChangeRecord> actual, ChangeRecords expectedNot,
 
 List<ListChangeRecord> getListChangeRecords(
         List<ListChangeRecord> changes, int index) =>
-    new List.from(changes.where((ListChangeRecord c) => c.indexChanged(index)));
+    List.from(changes.where((ListChangeRecord c) => c.indexChanged(index)));
 
 List<PropertyChangeRecord> getPropertyChangeRecords(
         List<ChangeRecord> changes, Symbol property) =>
-    new List.from(changes.where(
+    List.from(changes.where(
         (ChangeRecord c) => c is PropertyChangeRecord && c.name == property));
 
 List<Matcher> changeMatchers(List<ChangeRecord> changes) => changes

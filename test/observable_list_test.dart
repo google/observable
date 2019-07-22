@@ -42,7 +42,7 @@ _runTests() {
     test('add changes length', () {
       list.add(4);
       expect(list, [1, 2, 3, 4]);
-      return new Future(() {
+      return Future(() {
         expect(changes, changeMatchers([_lengthChange(3, 4)]));
       });
     });
@@ -51,7 +51,7 @@ _runTests() {
       list.remove(2);
       expect(list, orderedEquals([1, 3]));
 
-      return new Future(() {
+      return Future(() {
         expect(changes, changeMatchers([_lengthChange(3, 2)]));
       });
     });
@@ -60,7 +60,7 @@ _runTests() {
       list.add(4);
       list.removeRange(1, 3);
       expect(list, [1, 4]);
-      return new Future(() {
+      return Future(() {
         expect(changes,
             changeMatchers([_lengthChange(3, 4), _lengthChange(4, 2)]));
       });
@@ -70,7 +70,7 @@ _runTests() {
       list.add(2);
       list.removeWhere((e) => e == 2);
       expect(list, [1, 3]);
-      return new Future(() {
+      return Future(() {
         expect(changes,
             changeMatchers([_lengthChange(3, 4), _lengthChange(4, 2)]));
       });
@@ -79,7 +79,7 @@ _runTests() {
     test('length= changes length', () {
       list.length = 5;
       expect(list, [1, 2, 3, null, null]);
-      return new Future(() {
+      return Future(() {
         expect(changes, changeMatchers([_lengthChange(3, 5)]));
       });
     });
@@ -87,7 +87,7 @@ _runTests() {
     test('[]= does not change length', () {
       list[2] = 9000;
       expect(list, [1, 2, 9000]);
-      return new Future(() {
+      return Future(() {
         expect(changes, null);
       });
     });
@@ -95,7 +95,7 @@ _runTests() {
     test('clear changes length', () {
       list.clear();
       expect(list, []);
-      return new Future(() {
+      return Future(() {
         expect(changes, changeMatchers([_lengthChange(3, 0)]));
       });
     });
@@ -117,7 +117,7 @@ _runTests() {
     test('add does not change existing items', () {
       list.add(4);
       expect(list, [1, 2, 3, 4]);
-      return new Future(() {
+      return Future(() {
         expect(changes, []);
       });
     });
@@ -125,7 +125,7 @@ _runTests() {
     test('[]= changes item', () {
       list[1] = 777;
       expect(list, [1, 777, 3]);
-      return new Future(() {
+      return Future(() {
         expect(changes, [
           _change(1, addedCount: 1, removed: [2])
         ]);
@@ -135,7 +135,7 @@ _runTests() {
     test('[]= on a different item does not fire change', () {
       list[2] = 9000;
       expect(list, [1, 2, 9000]);
-      return new Future(() {
+      return Future(() {
         expect(changes, []);
       });
     });
@@ -144,7 +144,7 @@ _runTests() {
       list[1] = 777;
       list[1] = 42;
       expect(list, [1, 42, 3]);
-      return new Future(() {
+      return Future(() {
         expect(changes, [
           _change(1, addedCount: 1, removed: [2]),
         ]);
@@ -154,7 +154,7 @@ _runTests() {
     test('set length without truncating item means no change', () {
       list.length = 2;
       expect(list, [1, 2]);
-      return new Future(() {
+      return Future(() {
         expect(changes, []);
       });
     });
@@ -162,7 +162,7 @@ _runTests() {
     test('truncate removes item', () {
       list.length = 1;
       expect(list, [1]);
-      return new Future(() {
+      return Future(() {
         expect(changes, [
           _change(1, removed: [2, 3])
         ]);
@@ -173,7 +173,7 @@ _runTests() {
       list.length = 1;
       list.add(42);
       expect(list, [1, 42]);
-      return new Future(() {
+      return Future(() {
         expect(changes, [
           _change(1, removed: [2, 3], addedCount: 1)
         ]);
@@ -184,7 +184,7 @@ _runTests() {
       list.length = 1;
       list.add(2);
       expect(list, [1, 2]);
-      return new Future(() {
+      return Future(() {
         expect(changes, []);
       });
     });
@@ -217,10 +217,10 @@ _runTests() {
       expect(list.indexOf(1, 1), 3);
       expect(list.lastIndexOf(1), 3);
       expect(list.last, 4);
-      var copy = new List<int>();
+      var copy = List<int>();
       list.forEach((int i) => copy.add(i));
       expect(copy, orderedEquals([1, 2, 3, 1, 3, 4]));
-      return new Future(() {
+      return Future(() {
         // no change from read-only operators
         expect(propRecords, null);
         expect(listRecords, null);
@@ -232,7 +232,7 @@ _runTests() {
       list.add(6);
       expect(list, orderedEquals([1, 2, 3, 1, 3, 4, 5, 6]));
 
-      return new Future(() {
+      return Future(() {
         expect(
             propRecords,
             changeMatchers([
@@ -247,7 +247,7 @@ _runTests() {
       list[1] = list.last;
       expect(list, orderedEquals([1, 4, 3, 1, 3, 4]));
 
-      return new Future(() {
+      return Future(() {
         expect(propRecords, null);
         expect(listRecords, [
           _change(1, addedCount: 1, removed: [2])
@@ -259,7 +259,7 @@ _runTests() {
       expect(list.removeLast(), 4);
       expect(list, orderedEquals([1, 2, 3, 1, 3]));
 
-      return new Future(() {
+      return Future(() {
         expect(propRecords, changeMatchers([_lengthChange(6, 5)]));
         expect(listRecords, [
           _change(5, removed: [4])
@@ -271,7 +271,7 @@ _runTests() {
       list.removeRange(1, 4);
       expect(list, orderedEquals([1, 3, 4]));
 
-      return new Future(() {
+      return Future(() {
         expect(propRecords, changeMatchers([_lengthChange(6, 3)]));
         expect(listRecords, [
           _change(1, removed: [2, 3, 1])
@@ -283,7 +283,7 @@ _runTests() {
       list.removeWhere((e) => e == 3);
       expect(list, orderedEquals([1, 2, 1, 4]));
 
-      return new Future(() {
+      return Future(() {
         expect(propRecords, changeMatchers([_lengthChange(6, 4)]));
         expect(listRecords, [
           _change(2, removed: [3]),
@@ -296,7 +296,7 @@ _runTests() {
       list.sort((x, y) => x - y);
       expect(list, orderedEquals([1, 1, 2, 3, 3, 4]));
 
-      return new Future(() {
+      return Future(() {
         expect(propRecords, null);
         expect(listRecords, [
           _change(1, addedCount: 1),
@@ -323,7 +323,7 @@ _runTests() {
       list.clear();
       expect(list, []);
 
-      return new Future(() {
+      return Future(() {
         expect(
             propRecords,
             changeMatchers([
@@ -342,7 +342,7 @@ _runTests() {
 ObservableList<int> list;
 
 PropertyChangeRecord<int> _lengthChange(int oldValue, int newValue) =>
-    new PropertyChangeRecord<int>(list, #length, oldValue, newValue);
+    PropertyChangeRecord<int>(list, #length, oldValue, newValue);
 
 _change(int index, {List removed = const [], int addedCount = 0}) =>
-    new ListChangeRecord(list, index, removed: removed, addedCount: addedCount);
+    ListChangeRecord(list, index, removed: removed, addedCount: addedCount);

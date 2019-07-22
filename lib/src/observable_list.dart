@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// ignore_for_file: deprecated_member_use_from_same_package
 library observable.src.observable_list;
 
 import 'dart:async';
@@ -27,7 +28,7 @@ class ObservableList<E> extends ListBase<E> with Observable {
   /// and if all elements stored into the returned list are actually instance
   /// of [S], then the returned list can be used as a `ObservableList<T>`.
   static ObservableList<T> castFrom<S, T>(ObservableList<S> source) =>
-      new ObservableList<T>._spy(source._list.cast<T>());
+      ObservableList<T>._spy(source._list.cast<T>());
 
   List<ListChangeRecord<E>> _listRecords;
 
@@ -44,7 +45,7 @@ class ObservableList<E> extends ListBase<E> with Observable {
   /// If a [length] argument is supplied, a fixed size list of that
   /// length is created.
   ObservableList([int length])
-      : _list = length != null ? new List<E>(length) : <E>[];
+      : _list = length != null ? List<E>(length) : <E>[];
 
   /// Creates an observable list of the given [length].
   ///
@@ -56,7 +57,7 @@ class ObservableList<E> extends ListBase<E> with Observable {
 
   /// Creates an observable list with the elements of [other]. The order in
   /// the list will be the order provided by the iterator of [other].
-  ObservableList.from(Iterable other) : _list = new List<E>.from(other);
+  ObservableList.from(Iterable other) : _list = List<E>.from(other);
 
   ObservableList._spy(List<E> other) : _list = other;
 
@@ -111,7 +112,7 @@ class ObservableList<E> extends ListBase<E> with Observable {
   Stream<List<ListChangeRecord<E>>> get listChanges {
     if (_listChanges == null) {
       // TODO(jmesserly): split observed/unobserved notions?
-      _listChanges = new StreamController.broadcast(
+      _listChanges = StreamController.broadcast(
         sync: true,
         onCancel: () {
           _listChanges = null;
@@ -234,7 +235,7 @@ class ObservableList<E> extends ListBase<E> with Observable {
   @override
   void insertAll(int index, Iterable<E> iterable) {
     if (index < 0 || index > length) {
-      throw new RangeError.range(index, 0, length);
+      throw RangeError.range(index, 0, length);
     }
     // TODO(floitsch): we can probably detect more cases.
     if (iterable is! List && iterable is! Set) {
@@ -260,7 +261,7 @@ class ObservableList<E> extends ListBase<E> with Observable {
   @override
   void insert(int index, E element) {
     if (index < 0 || index > length) {
-      throw new RangeError.range(index, 0, length);
+      throw RangeError.range(index, 0, length);
     }
     if (index == length) {
       add(element);
@@ -269,7 +270,7 @@ class ObservableList<E> extends ListBase<E> with Observable {
     // We are modifying the length just below the is-check. Without the check
     // Array.copy could throw an exception, leaving the list in a bad state
     // (with a length that has been increased, but without a new element).
-    if (index is! int) throw new ArgumentError(index);
+    if (index is! int) throw ArgumentError(index);
     _list.length++;
     _list.setRange(index + 1, length, this, index);
 
@@ -289,10 +290,10 @@ class ObservableList<E> extends ListBase<E> with Observable {
 
   void _rangeCheck(int start, int end) {
     if (start < 0 || start > this.length) {
-      throw new RangeError.range(start, 0, this.length);
+      throw RangeError.range(start, 0, this.length);
     }
     if (end < start || end > this.length) {
-      throw new RangeError.range(end, start, this.length);
+      throw RangeError.range(end, start, this.length);
     }
   }
 
@@ -306,7 +307,7 @@ class ObservableList<E> extends ListBase<E> with Observable {
       _listRecords = [];
       scheduleMicrotask(deliverListChanges);
     }
-    _listRecords.add(new ListChangeRecord<E>(
+    _listRecords.add(ListChangeRecord<E>(
       this,
       index,
       removed: removed,
@@ -331,7 +332,7 @@ class ObservableList<E> extends ListBase<E> with Observable {
     _listRecords = null;
 
     if (hasListObservers && records.isNotEmpty) {
-      _listChanges.add(new UnmodifiableListView<ListChangeRecord<E>>(records));
+      _listChanges.add(UnmodifiableListView<ListChangeRecord<E>>(records));
       return true;
     }
     return false;
@@ -353,7 +354,7 @@ class ObservableList<E> extends ListBase<E> with Observable {
     List<E> oldValue,
     List<E> newValue,
   ) {
-    return new ListDiffer<E>().diff(oldValue, newValue);
+    return ListDiffer<E>().diff(oldValue, newValue);
   }
 
   /// Updates the [previous] list using the [changeRecords]. For added items,
@@ -361,7 +362,7 @@ class ObservableList<E> extends ListBase<E> with Observable {
   static void applyChangeRecords(List<Object> previous, List<Object> current,
       List<ListChangeRecord> changeRecords) {
     if (identical(previous, current)) {
-      throw new ArgumentError("can't use same list for previous and current");
+      throw ArgumentError("can't use same list for previous and current");
     }
 
     for (ListChangeRecord change in changeRecords) {

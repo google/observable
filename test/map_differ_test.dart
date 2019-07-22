@@ -6,18 +6,18 @@ main() {
     final diff = const MapDiffer<String, String>().diff;
 
     test('should emit no changes for identical maps', () {
-      final map = new Map<String, String>.fromIterable(
-        new Iterable.generate(10, (i) => '$i'),
+      final map = Map<String, String>.fromIterable(
+        Iterable.generate(10, (i) => '$i'),
       );
       expect(diff(map, map), isEmpty);
     });
 
     test('should emit no changes for maps with identical content', () {
-      final map1 = new Map<String, String>.fromIterable(
-        new Iterable.generate(10, (i) => '$i'),
+      final map1 = Map<String, String>.fromIterable(
+        Iterable.generate(10, (i) => '$i'),
       );
-      final map2 = new Map<String, String>.fromIterable(
-        new Iterable.generate(10, (i) => '$i'),
+      final map2 = Map<String, String>.fromIterable(
+        Iterable.generate(10, (i) => '$i'),
       );
       expect(diff(map1, map2), isEmpty);
     });
@@ -33,7 +33,7 @@ main() {
           'key-c': 'value-c',
         }),
         [
-          new MapChangeRecord.insert('key-c', 'value-c'),
+          MapChangeRecord.insert('key-c', 'value-c'),
         ],
       );
     });
@@ -49,7 +49,7 @@ main() {
           'key-b': 'value-b',
         }),
         [
-          new MapChangeRecord.remove('key-c', 'value-c'),
+          MapChangeRecord.remove('key-c', 'value-c'),
         ],
       );
     });
@@ -64,7 +64,7 @@ main() {
           'key-b': 'value-b-new',
         }),
         [
-          new MapChangeRecord('key-b', 'value-b-old', 'value-b-new'),
+          MapChangeRecord('key-b', 'value-b-old', 'value-b-new'),
         ],
       );
     });
@@ -81,7 +81,7 @@ main() {
         'key-b': 'value-b',
         'key-c': 'value-c',
       };
-      new MapChangeRecord.insert('key-c', 'value-c').apply(map1);
+      MapChangeRecord.insert('key-c', 'value-c').apply(map1);
       expect(map1, map2);
     });
 
@@ -95,7 +95,7 @@ main() {
         'key-a': 'value-a',
         'key-b': 'value-b',
       };
-      new MapChangeRecord.remove('key-c', 'value-c').apply(map1);
+      MapChangeRecord.remove('key-c', 'value-c').apply(map1);
       expect(map1, map2);
     });
 
@@ -108,7 +108,7 @@ main() {
         'key-a': 'value-a',
         'key-b': 'value-b-new',
       };
-      new MapChangeRecord('key-b', 'value-b-old', 'value-b-new').apply(map1);
+      MapChangeRecord('key-b', 'value-b-old', 'value-b-new').apply(map1);
       expect(map1, map2);
     });
   });

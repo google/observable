@@ -39,7 +39,7 @@ void listChangeTests() {
     model.add(2);
 
     expect(summary, null);
-    return new Future(() {
+    return Future(() {
       expect(summary, [_delta(1, [], 2, typedModel: model)]);
       expect(summary[0].added, [1, 2]);
       expect(summary[0].removed, []);
@@ -53,7 +53,7 @@ void listChangeTests() {
     sub = model.listChanges.listen((r) => summary = r);
 
     model.length = 2;
-    return new Future(() {
+    return Future(() {
       expect(summary, [
         _delta(2, ['c', 'd', 'e'], 0, typedModel: model)
       ]);

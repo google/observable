@@ -23,7 +23,7 @@ class ChangeNotifier<C extends ChangeRecord> implements Observable<C> {
   /// Changes should produced in order, if significant.
   @override
   Stream<List<C>> get changes {
-    return (_changes ??= new StreamController<List<C>>.broadcast(
+    return (_changes ??= StreamController<List<C>>.broadcast(
       sync: true,
       onListen: observed,
       onCancel: unobserved,
@@ -96,7 +96,7 @@ class ChangeNotifier<C extends ChangeRecord> implements Observable<C> {
     T oldValue,
     T newValue,
   ) {
-    throw new UnsupportedError('Not supported by ChangeNotifier');
+    throw UnsupportedError('Not supported by ChangeNotifier');
   }
 }
 
@@ -117,7 +117,7 @@ class PropertyChangeNotifier extends ChangeNotifier {
   ) {
     if (hasObservers && oldValue != newValue) {
       notifyChange(
-        new PropertyChangeRecord<T>(
+        PropertyChangeRecord<T>(
           this,
           field,
           oldValue,
