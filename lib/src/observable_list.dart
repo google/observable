@@ -110,15 +110,13 @@ class ObservableList<E> extends ListBase<E> with Observable {
   ///
   /// [deliverChanges] can be called to force synchronous delivery.
   Stream<List<ListChangeRecord<E>>> get listChanges {
-    if (_listChanges == null) {
-      // TODO(jmesserly): split observed/unobserved notions?
-      _listChanges = StreamController.broadcast(
-        sync: true,
-        onCancel: () {
-          _listChanges = null;
-        },
-      );
-    }
+    // TODO(jmesserly): split observed/unobserved notions?
+    _listChanges ??= StreamController.broadcast(
+      sync: true,
+      onCancel: () {
+        _listChanges = null;
+      },
+    );
     return _listChanges.stream;
   }
 
@@ -129,7 +127,7 @@ class ObservableList<E> extends ListBase<E> with Observable {
 
   @override
   set length(int value) {
-    int len = _list.length;
+    var len = _list.length;
     if (len == value) return;
 
     // Produce notifications if needed
@@ -150,7 +148,7 @@ class ObservableList<E> extends ListBase<E> with Observable {
 
   @override
   void operator []=(int index, E value) {
-    E oldValue = _list[index];
+    var oldValue = _list[index];
     if (hasListObservers && oldValue != value) {
       _notifyListChange(index, addedCount: 1, removed: [oldValue]);
     }
@@ -175,7 +173,7 @@ class ObservableList<E> extends ListBase<E> with Observable {
     if (iterable is! List && iterable is! Set) {
       iterable = iterable.toList();
     }
-    int length = iterable.length;
+    var length = iterable.length;
     if (hasListObservers && length > 0) {
       _notifyListChange(index,
           addedCount: length, removed: _list.sublist(index, length));
@@ -185,7 +183,7 @@ class ObservableList<E> extends ListBase<E> with Observable {
 
   @override
   void add(E value) {
-    int len = _list.length;
+    var len = _list.length;
     _notifyChangeLength(len, len + 1);
     if (hasListObservers) {
       _notifyListChange(len, addedCount: 1);
@@ -196,12 +194,12 @@ class ObservableList<E> extends ListBase<E> with Observable {
 
   @override
   void addAll(Iterable<E> iterable) {
-    int len = _list.length;
+    var len = _list.length;
     _list.addAll(iterable);
 
     _notifyChangeLength(len, _list.length);
 
-    int added = _list.length - len;
+    var added = _list.length - len;
     if (hasListObservers && added > 0) {
       _notifyListChange(len, addedCount: added);
     }
@@ -209,7 +207,7 @@ class ObservableList<E> extends ListBase<E> with Observable {
 
   @override
   bool remove(Object element) {
-    for (int i = 0; i < this.length; i++) {
+    for (var i = 0; i < length; i++) {
       if (this[i] == element) {
         removeRange(i, i + 1);
         return true;
@@ -221,8 +219,8 @@ class ObservableList<E> extends ListBase<E> with Observable {
   @override
   void removeRange(int start, int end) {
     _rangeCheck(start, end);
-    int rangeLength = end - start;
-    int len = _list.length;
+    var rangeLength = end - start;
+    var len = _list.length;
 
     _notifyChangeLength(len, len - rangeLength);
     if (hasListObservers && rangeLength > 0) {
@@ -241,14 +239,14 @@ class ObservableList<E> extends ListBase<E> with Observable {
     if (iterable is! List && iterable is! Set) {
       iterable = iterable.toList();
     }
-    int insertionLength = iterable.length;
+    var insertionLength = iterable.length;
     // There might be errors after the length change, in which case the list
     // will end up being modified but the operation not complete. Unless we
     // always go through a "toList" we can't really avoid that.
-    int len = _list.length;
+    var len = _list.length;
     _list.length += insertionLength;
 
-    _list.setRange(index + insertionLength, this.length, this, index);
+    _list.setRange(index + insertionLength, length, this, index);
     _list.setAll(index, iterable);
 
     _notifyChangeLength(len, _list.length);
@@ -283,17 +281,17 @@ class ObservableList<E> extends ListBase<E> with Observable {
 
   @override
   E removeAt(int index) {
-    E result = this[index];
+    var result = this[index];
     removeRange(index, index + 1);
     return result;
   }
 
   void _rangeCheck(int start, int end) {
-    if (start < 0 || start > this.length) {
-      throw RangeError.range(start, 0, this.length);
+    if (start < 0 || start > length) {
+      throw RangeError.range(start, 0, length);
     }
-    if (end < start || end > this.length) {
-      throw RangeError.range(end, start, this.length);
+    if (end < start || end > length) {
+      throw RangeError.range(end, start, length);
     }
   }
 
@@ -365,9 +363,9 @@ class ObservableList<E> extends ListBase<E> with Observable {
       throw ArgumentError("can't use same list for previous and current");
     }
 
-    for (ListChangeRecord change in changeRecords) {
-      int addEnd = change.index + change.addedCount;
-      int removeEnd = change.index + change.removed.length;
+    for (var change in changeRecords) {
+      var addEnd = change.index + change.addedCount;
+      var removeEnd = change.index + change.removed.length;
 
       Iterable addedItems = current.getRange(change.index, addEnd);
       previous.replaceRange(change.index, removeEnd, addedItems);

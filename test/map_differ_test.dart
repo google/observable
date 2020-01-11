@@ -1,7 +1,7 @@
 import 'package:observable/observable.dart';
 import 'package:test/test.dart';
 
-main() {
+void main() {
   group('$MapDiffer', () {
     final diff = const MapDiffer<String, String>().diff;
 

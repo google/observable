@@ -42,8 +42,8 @@ class ListChangeRecord<E> implements ChangeRecord {
 
   /// Records a `remove` operation at `object[index]` of [removed] elements.
   ListChangeRecord.remove(this.object, this.index, List<E> removed)
-      : this.removed = freezeInDevMode<E>(removed),
-        this.addedCount = 0 {
+      : removed = freezeInDevMode<E>(removed),
+        addedCount = 0 {
     _assertValidState();
   }
 
@@ -52,8 +52,8 @@ class ListChangeRecord<E> implements ChangeRecord {
   /// If [addedCount] is not specified it defaults to `removed.length`.
   ListChangeRecord.replace(this.object, this.index, List<E> removed,
       [int addedCount])
-      : this.removed = freezeInDevMode<E>(removed),
-        this.addedCount = addedCount ?? removed.length {
+      : removed = freezeInDevMode<E>(removed),
+        addedCount = addedCount ?? removed.length {
     _assertValidState();
   }
 

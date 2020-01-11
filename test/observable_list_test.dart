@@ -9,14 +9,14 @@ import 'package:test/test.dart';
 
 import 'observable_test_utils.dart';
 
-main() => _runTests();
+void main() => _runTests();
 
-_runTests() {
+void _runTests() {
   // TODO(jmesserly): need all standard List API tests.
 
   StreamSubscription sub, sub2;
 
-  sharedTearDown() {
+  void sharedTearDown() {
     list = null;
     sub.cancel();
     if (sub2 != null) {
@@ -217,7 +217,7 @@ _runTests() {
       expect(list.indexOf(1, 1), 3);
       expect(list.lastIndexOf(1), 3);
       expect(list.last, 4);
-      var copy = List<int>();
+      var copy = <int>[];
       list.forEach((int i) => copy.add(i));
       expect(copy, orderedEquals([1, 2, 3, 1, 3, 4]));
       return Future(() {
@@ -344,5 +344,6 @@ ObservableList<int> list;
 PropertyChangeRecord<int> _lengthChange(int oldValue, int newValue) =>
     PropertyChangeRecord<int>(list, #length, oldValue, newValue);
 
-_change(int index, {List removed = const [], int addedCount = 0}) =>
+ListChangeRecord _change(int index,
+        {List removed = const [], int addedCount = 0}) =>
     ListChangeRecord(list, index, removed: removed, addedCount: addedCount);

@@ -30,7 +30,7 @@ import 'observable_map.dart' show ObservableMap;
 /// If a conversion is peformed, mutations are only observed to the result of
 /// this function. Changing the original collection will not affect it.
 // TODO(jmesserly): ObservableSet?
-toObservable(dynamic value, {bool deep = true}) =>
+dynamic toObservable(dynamic value, {bool deep = true}) =>
     deep ? _toObservableDeep(value) : _toObservableShallow(value);
 
 /// Converts the [Iterable] to an [ObservableList].

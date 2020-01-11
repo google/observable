@@ -13,7 +13,7 @@ import 'package:test/test.dart';
 /// to happen in the next microtask:
 ///
 ///     future.then(newMicrotask).then(...)
-newMicrotask(_) => Future.value();
+Future newMicrotask(_) => Future.value();
 
 void expectChanges(List<ChangeRecord> actual, List<ChangeRecord> expected,
     {String reason}) {

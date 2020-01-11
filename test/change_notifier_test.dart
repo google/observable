@@ -31,8 +31,8 @@ void main() {
 
   group(ChangeNotifier, () {
     Future<void> runTest<T extends ChangeRecord>(
-        FutureOr<void> runFn(ChangeNotifier<T> cn),
-        FutureOr<void> testFn(ChangeRecords<T> cr)) async {
+        FutureOr<void> Function(ChangeNotifier<T> cn) runFn,
+        FutureOr<void> Function(ChangeRecords<T> cr) testFn) async {
       final cn = ChangeNotifier<T>();
 
       cn.changes.listen((value) {
@@ -83,7 +83,7 @@ class B extends A {
       super == other &&
           other is B &&
           runtimeType == other.runtimeType &&
-          this.value == other.value;
+          value == other.value;
 
   @override
   int get hashCode => value.hashCode;
