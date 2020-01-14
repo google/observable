@@ -26,15 +26,12 @@ class PropertyChangeRecord<T> implements ChangeRecord {
   );
 
   @override
-  bool operator ==(Object o) {
-    if (o is PropertyChangeRecord<T>) {
-      return identical(object, o.object) &&
-          name == o.name &&
-          oldValue == o.oldValue &&
-          newValue == o.newValue;
-    }
-    return false;
-  }
+  bool operator ==(Object o) =>
+      o is PropertyChangeRecord<T> &&
+      identical(object, o.object) &&
+      name == o.name &&
+      oldValue == o.oldValue &&
+      newValue == o.newValue;
 
   @override
   int get hashCode => hash4(object, name, oldValue, newValue);
