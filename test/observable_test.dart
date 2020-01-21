@@ -48,7 +48,7 @@ void observableTests() {
 
   test('changes delived async', () {
     var t = createModel(123);
-    int called = 0;
+    var called = 0;
 
     subs.add(t.changes.listen(expectAsync1((records) {
       called++;
@@ -62,7 +62,7 @@ void observableTests() {
 
   test('cause changes in handler', () {
     var t = createModel(123);
-    int called = 0;
+    var called = 0;
 
     subs.add(t.changes.listen(expectAsync1((records) {
       called++;
@@ -79,7 +79,7 @@ void observableTests() {
   test('multiple observers', () {
     var t = createModel(123);
 
-    verifyRecords(records) {
+    void verifyRecords(records) {
       expectPropertyChanges(records, 2);
     }
 
@@ -196,7 +196,7 @@ void observableTests() {
   });
 }
 
-expectPropertyChanges(records, int number) {
+void expectPropertyChanges(records, int number) {
   expect(records.length, number, reason: 'expected $number change records');
   for (var record in records) {
     expect(record is PropertyChangeRecord, true,
@@ -206,14 +206,14 @@ expectPropertyChanges(records, int number) {
   }
 }
 
-createModel(int number) => ObservableSubclass(number);
+ObservableSubclass createModel(int number) => ObservableSubclass(number);
 
 class ObservableSubclass<T> extends PropertyChangeNotifier {
   ObservableSubclass([T initialValue]) : _value = initialValue;
 
   T get value => _value;
   set value(T newValue) {
-    T oldValue = _value;
+    var oldValue = _value;
     _value = newValue;
     notifyPropertyChange(#value, oldValue, newValue);
   }

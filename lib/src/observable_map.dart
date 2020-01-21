@@ -45,7 +45,7 @@ class ObservableMap<K, V> extends Observable implements Map<K, V> {
   ObservableMap() : _map = HashMap<K, V>();
 
   /// Creates a new observable map using a [LinkedHashMap].
-  ObservableMap.linked() : _map = LinkedHashMap<K, V>();
+  ObservableMap.linked() : _map = <K, V>{};
 
   /// Creates a new observable map using a [SplayTreeMap].
   ObservableMap.sorted() : _map = SplayTreeMap<K, V>();
@@ -108,8 +108,8 @@ class ObservableMap<K, V> extends Observable implements Map<K, V> {
       return;
     }
 
-    int len = _map.length;
-    V oldValue = _map[key];
+    var len = _map.length;
+    var oldValue = _map[key];
 
     _map[key] = value;
 
@@ -131,9 +131,9 @@ class ObservableMap<K, V> extends Observable implements Map<K, V> {
   }
 
   @override
-  V putIfAbsent(K key, V ifAbsent()) {
-    int len = _map.length;
-    V result = _map.putIfAbsent(key, ifAbsent);
+  V putIfAbsent(K key, V Function() ifAbsent) {
+    var len = _map.length;
+    var result = _map.putIfAbsent(key, ifAbsent);
     if (hasObservers && len != _map.length) {
       notifyPropertyChange(#length, len, _map.length);
       notifyChange(MapChangeRecord.insert(key, result));
@@ -144,8 +144,8 @@ class ObservableMap<K, V> extends Observable implements Map<K, V> {
 
   @override
   V remove(Object key) {
-    int len = _map.length;
-    V result = _map.remove(key);
+    var len = _map.length;
+    var result = _map.remove(key);
     if (hasObservers && len != _map.length) {
       notifyChange(MapChangeRecord.remove(key, result));
       notifyPropertyChange(#length, len, _map.length);
@@ -156,7 +156,7 @@ class ObservableMap<K, V> extends Observable implements Map<K, V> {
 
   @override
   void clear() {
-    int len = _map.length;
+    var len = _map.length;
     if (hasObservers && len > 0) {
       _map.forEach((key, value) {
         notifyChange(MapChangeRecord.remove(key, value));
@@ -168,7 +168,7 @@ class ObservableMap<K, V> extends Observable implements Map<K, V> {
   }
 
   @override
-  void forEach(void f(K key, V value)) => _map.forEach(f);
+  void forEach(void Function(K key, V value) f) => _map.forEach(f);
 
   @override
   String toString() => MapBase.mapToString(this);
@@ -194,20 +194,21 @@ class ObservableMap<K, V> extends Observable implements Map<K, V> {
   }
 
   @override
-  Map<K2, V2> map<K2, V2>(MapEntry<K2, V2> transform(K key, V value)) {
+  Map<K2, V2> map<K2, V2>(MapEntry<K2, V2> Function(K key, V value) transform) {
     return _map.map(transform);
   }
 
   @override
-  V update(K key, V update(V value), {V ifAbsent()}) {
+  V update(K key, V Function(V value) update, {V Function() ifAbsent}) {
     return _map.update(key, update, ifAbsent: ifAbsent);
   }
 
   @override
-  void updateAll(V update(K key, V value)) => _map.updateAll(update);
+  void updateAll(V Function(K key, V value) update) => _map.updateAll(update);
 
   @override
-  void removeWhere(bool test(K key, V value)) => _map.removeWhere(test);
+  void removeWhere(bool Function(K key, V value) test) =>
+      _map.removeWhere(test);
 
   // Note: we don't really have a reasonable old/new value to use here.
   // But this should fix "keys" and "values" in templates with minimal overhead.

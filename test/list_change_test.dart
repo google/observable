@@ -12,7 +12,7 @@ import 'observable_test_utils.dart';
 // This file contains code ported from:
 // https://github.com/rafaelw/ChangeSummary/blob/master/tests/test.js
 
-main() => listChangeTests();
+void main() => listChangeTests();
 
 // TODO(jmesserly): port or write array fuzzer tests
 void listChangeTests() {
@@ -69,7 +69,7 @@ void listChangeTests() {
   });
 
   group('List deltas can be applied', () {
-    applyAndCheckDeltas(model, copy, changes) => changes.then((summary) {
+    void applyAndCheckDeltas(model, copy, changes) => changes.then((summary) {
           // apply deltas to the copy
           for (ListChangeRecord delta in summary) {
             delta.apply(copy);
@@ -229,7 +229,8 @@ void listChangeTests() {
   });
 
   group('edit distance', () {
-    assertEditDistance(orig, changes, expectedDist) => changes.then((summary) {
+    void assertEditDistance(orig, changes, expectedDist) =>
+        changes.then((summary) {
           var actualDistance = 0;
           for (var delta in summary) {
             actualDistance += delta.addedCount + delta.removed.length;
