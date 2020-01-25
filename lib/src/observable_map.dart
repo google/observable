@@ -45,7 +45,7 @@ class ObservableMap<K, V> extends Observable implements Map<K, V> {
   ObservableMap() : _map = HashMap<K, V>();
 
   /// Creates a new observable map using a [LinkedHashMap].
-  ObservableMap.linked() : _map = HashMap<K, V>();
+  ObservableMap.linked() : _map = <K, V>{};
 
   /// Creates a new observable map using a [SplayTreeMap].
   ObservableMap.sorted() : _map = SplayTreeMap<K, V>();
