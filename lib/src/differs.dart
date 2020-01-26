@@ -29,7 +29,7 @@ class EqualityDiffer<E> implements Differ<E> {
 
   const EqualityDiffer([this._equality = const DefaultEquality()]);
 
-  const EqualityDiffer.identity() : this._equality = const IdentityEquality();
+  const EqualityDiffer.identity() : _equality = const IdentityEquality();
 
   @override
   List<ChangeRecord> diff(E oldValue, E newValue) {

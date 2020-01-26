@@ -9,14 +9,12 @@ import 'package:test/test.dart';
 
 import 'observable_test_utils.dart';
 
-main() => _runTests();
-
-_runTests() {
+void main() {
   // TODO(jmesserly): need all standard Map API tests.
 
   StreamSubscription sub;
 
-  sharedTearDown() {
+  void sharedTearDown() {
     if (sub != null) {
       sub.cancel();
       sub = null;
@@ -395,9 +393,9 @@ PropertyChangeRecord<int> _lengthChange(map, int oldValue, int newValue) =>
 MapChangeRecord _changeKey(key, old, newValue) =>
     MapChangeRecord(key, old, newValue);
 
-_insertKey(key, newValue) => MapChangeRecord.insert(key, newValue);
+ChangeRecord _insertKey(key, newValue) => MapChangeRecord.insert(key, newValue);
 
-_removeKey(key, oldValue) => MapChangeRecord.remove(key, oldValue);
+ChangeRecord _removeKey(key, oldValue) => MapChangeRecord.remove(key, oldValue);
 
 PropertyChangeRecord<Null> _propChange(map, prop) =>
     PropertyChangeRecord<Null>(map, prop, null, null);
