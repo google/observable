@@ -110,7 +110,6 @@ class ObservableList<E> extends ListBase<E> with Observable {
   ///
   /// [deliverChanges] can be called to force synchronous delivery.
   Stream<List<ListChangeRecord<E>>> get listChanges {
-    // TODO(jmesserly): split observed/unobserved notions?
     _listChanges ??= StreamController.broadcast(
       sync: true,
       onCancel: () {

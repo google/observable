@@ -9,9 +9,7 @@ import 'package:test/test.dart';
 
 import 'observable_test_utils.dart';
 
-void main() => _runTests();
-
-void _runTests() {
+void main() {
   // TODO(jmesserly): need all standard List API tests.
 
   StreamSubscription sub, sub2;
@@ -344,6 +342,5 @@ ObservableList<int> list;
 PropertyChangeRecord<int> _lengthChange(int oldValue, int newValue) =>
     PropertyChangeRecord<int>(list, #length, oldValue, newValue);
 
-ListChangeRecord _change(int index,
-        {List removed = const [], int addedCount = 0}) =>
+void _change(int index, {List removed = const [], int addedCount = 0}) =>
     ListChangeRecord(list, index, removed: removed, addedCount: addedCount);
