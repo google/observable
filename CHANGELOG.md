@@ -1,3 +1,7 @@
+## 0.22.3-dev
+
+* Reintroduce custom equality for `PropertyChangeRecord` from 0.18.0.
+
 ## 0.22.2
 
 * Add `toObservableList` and `toObservableMap`, better typed versions of
