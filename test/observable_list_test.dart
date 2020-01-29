@@ -342,5 +342,6 @@ ObservableList<int> list;
 PropertyChangeRecord<int> _lengthChange(int oldValue, int newValue) =>
     PropertyChangeRecord<int>(list, #length, oldValue, newValue);
 
-void _change(int index, {List removed = const [], int addedCount = 0}) =>
+ListChangeRecord _change(int index,
+        {List removed = const [], int addedCount = 0}) =>
     ListChangeRecord(list, index, removed: removed, addedCount: addedCount);
