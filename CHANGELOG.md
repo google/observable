@@ -1,6 +1,7 @@
 ## 0.22.3-dev
 
 * Reintroduce custom equality for `PropertyChangeRecord` from 0.18.0.
+* Update ObservableMap to notify observers about changes for all methods.
 
 ## 0.22.2
 
