@@ -45,7 +45,7 @@ class ObservableList<E> extends ListBase<E> with Observable {
   /// If a [length] argument is supplied, a fixed size list of that
   /// length is created.
   ObservableList([int length])
-      : _list = length != null ? List<E>(length) : <E>[];
+      : _list = length != null ? List<E>.filled(length, null) : <E>[];
 
   /// Creates an observable list of the given [length].
   ///
