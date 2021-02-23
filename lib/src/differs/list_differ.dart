@@ -59,11 +59,11 @@ List<List<int>> _calcEditDistance<E>(
   // 'Deletion' columns.
   final rowCount = oldEnd - oldStart + 1;
   final columnCount = currentEnd - currentStart + 1;
-  final distances = List<List<int>>(rowCount);
+  final distances = List<List<int>>.filled(rowCount, null);
 
   // 'Addition' rows. Initialize null column.
   for (var i = 0; i < rowCount; i++) {
-    distances[i] = List<int>(columnCount);
+    distances[i] = List<int>.filled(columnCount, null);
     distances[i][0] = i;
   }
 

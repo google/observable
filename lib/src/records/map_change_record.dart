@@ -76,7 +76,11 @@ class MapChangeRecord<K, V> implements ChangeRecord {
 
   @override
   String toString() {
-    final kind = isInsert ? 'insert' : isRemove ? 'remove' : 'set';
+    final kind = isInsert
+        ? 'insert'
+        : isRemove
+            ? 'remove'
+            : 'set';
     return '#<MapChangeRecord $kind $key from $oldValue to $newValue>';
   }
 }
