@@ -2,13 +2,13 @@ name: observable
 version: 0.22.3-dev
 author: Dart Team <misc@dartlang.org>
 description: Support for marking objects as observable
-homepage: https://github.com/dart-lang/observable
+homepage: https://github.com/google/observable
 environment:
-  sdk: '>=2.0.0 <3.0.0'
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
   collection: ^1.11.0
-  dart_internal: ^0.1.1
+  dart_internal: ">=0.1.1 < 0.3.0"
   meta: ^1.0.4
   quiver: '>=0.24.0 <3.0.0'
 

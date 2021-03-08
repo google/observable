@@ -93,13 +93,13 @@ class ObservableMap<K, V> extends Observable implements Map<K, V> {
   bool get isNotEmpty => !isEmpty;
 
   @override
-  bool containsValue(Object value) => _map.containsValue(value);
+  bool containsValue(Object? value) => _map.containsValue(value);
 
   @override
-  bool containsKey(Object key) => _map.containsKey(key);
+  bool containsKey(Object? key) => _map.containsKey(key);
 
   @override
-  V operator [](Object key) => _map[key];
+  V? operator [](Object? key) => _map[key];
 
   @override
   void operator []=(K key, V value) {
@@ -143,7 +143,7 @@ class ObservableMap<K, V> extends Observable implements Map<K, V> {
   }
 
   @override
-  V remove(Object key) {
+  V? remove(Object? key) {
     var len = _map.length;
     var result = _map.remove(key);
     if (hasObservers && len != _map.length) {
@@ -199,7 +199,7 @@ class ObservableMap<K, V> extends Observable implements Map<K, V> {
   }
 
   @override
-  V update(K key, V Function(V value) update, {V Function() ifAbsent}) {
+  V update(K key, V Function(V value) update, {V Function()? ifAbsent}) {
     return _map.update(key, update, ifAbsent: ifAbsent);
   }
 

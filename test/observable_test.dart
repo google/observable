@@ -13,7 +13,7 @@ void main() => observableTests();
 
 void observableTests() {
   // Track the subscriptions so we can clean them up in tearDown.
-  List subs;
+  late List subs;
 
   setUp(() {
     subs = [];
@@ -113,7 +113,7 @@ void observableTests() {
 
   test('cancel listening', () {
     var t = createModel(123);
-    var sub;
+    late var sub;
     sub = t.changes.listen(expectAsync1((records) {
       expectPropertyChanges(records, 1);
       sub.cancel();
@@ -124,7 +124,7 @@ void observableTests() {
 
   test('cancel and reobserve', () {
     var t = createModel(123);
-    var sub;
+    late var sub;
     sub = t.changes.listen(expectAsync1((records) {
       expectPropertyChanges(records, 1);
       sub.cancel();
@@ -141,7 +141,7 @@ void observableTests() {
 
   test('cannot modify changes list', () {
     var t = createModel(123);
-    var records;
+    late var records;
     subs.add(t.changes.listen((r) {
       records = r;
     }));
@@ -182,7 +182,7 @@ void observableTests() {
 
   test('notifyPropertyChange', () {
     var t = createModel(123);
-    var records;
+    late var records;
     subs.add(t.changes.listen((r) {
       records = r;
     }));
@@ -209,16 +209,16 @@ void expectPropertyChanges(records, int number) {
 ObservableSubclass createModel(int number) => ObservableSubclass(number);
 
 class ObservableSubclass<T> extends PropertyChangeNotifier {
-  ObservableSubclass([T initialValue]) : _value = initialValue;
+  ObservableSubclass([T? initialValue]) : _value = initialValue;
 
-  T get value => _value;
-  set value(T newValue) {
+  T? get value => _value;
+  set value(T? newValue) {
     var oldValue = _value;
     _value = newValue;
     notifyPropertyChange(#value, oldValue, newValue);
   }
 
-  T _value;
+  T? _value;
 
   @override
   String toString() => '#<$runtimeType value: $value>';

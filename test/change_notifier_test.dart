@@ -32,7 +32,7 @@ void main() {
   group(ChangeNotifier, () {
     Future<void> runTest<T extends ChangeRecord>(
         FutureOr<void> Function(ChangeNotifier<T> cn) runFn,
-        FutureOr<void> Function(ChangeRecords<T> cr) testFn) async {
+        FutureOr<void> Function(List<T> cr) testFn) async {
       final cn = ChangeNotifier<T>();
 
       cn.changes.listen((value) {
