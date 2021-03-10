@@ -4,8 +4,6 @@
 
 library observable.test.observable_test_utils;
 
-import 'dart:async';
-
 import 'package:observable/observable.dart';
 import 'package:test/test.dart';
 
