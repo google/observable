@@ -4,7 +4,7 @@ author: Dart Team <misc@dartlang.org>
 description: Support for marking objects as observable
 homepage: https://github.com/google/observable
 environment:
-  sdk: '>=2.0.0 <3.0.0'
+  sdk: '>=2.1.0 <3.0.0'
 
 dependencies:
   collection: ^1.11.0
