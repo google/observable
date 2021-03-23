@@ -1,3 +1,5 @@
+[![Build Status](https://github.com/google/observable/workflows/ci/badge.svg)](https://github.com/google/observable/actions?query=workflow%3A"ci"+branch%3Amaster)
+
 Support for detecting and being notified when an object is mutated.
 
 An observable is a way to be notified of a continuous stream of events over time.
