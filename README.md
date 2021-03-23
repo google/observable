@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/dart-lang/observable.svg?branch=master)](https://travis-ci.org/dart-lang/observable)
+[![Build Status](https://github.com/google/observable/workflows/ci/badge.svg)](https://github.com/google/observable/actions?query=workflow%3A"ci"+branch%3Amaster)
 
 Support for detecting and being notified when an object is mutated.
 

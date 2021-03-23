@@ -1,5 +1,6 @@
-## 0.22.3-dev
+## 0.23.0
 
+* Support latest dependencies.
 * Reintroduce custom equality for `PropertyChangeRecord` from 0.18.0.
 
 ## 0.22.2
