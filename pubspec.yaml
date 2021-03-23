@@ -1,5 +1,5 @@
 name: observable
-version: 0.23
+version: 0.23.0
 description: Support for marking objects as observable
 homepage: https://github.com/google/observable
 environment:
