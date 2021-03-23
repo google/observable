@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/dart-lang/observable.svg?branch=master)](https://travis-ci.org/dart-lang/observable)
-
 Support for detecting and being notified when an object is mutated.
 
 An observable is a way to be notified of a continuous stream of events over time.
