@@ -23,7 +23,7 @@ void main() {
     List<ChangeRecord>? changes;
 
     setUp(() {
-      list = toObservableList([1, 2, 3]);
+      list = toObservableList(<int?>[1, 2, 3]);
       changes = null;
       sub = list.changes.listen((records) {
         changes = getPropertyChangeRecords(records, #length);
@@ -204,8 +204,8 @@ void main() {
       expect(list.indexOf(1, 1), 3);
       expect(list.lastIndexOf(1), 3);
       expect(list.last, 4);
-      var copy = <int>[];
-      list.forEach((int i) => copy.add(i));
+      var copy = <int?>[];
+      list.forEach(copy.add);
       expect(copy, orderedEquals([1, 2, 3, 1, 3, 4]));
       return Future(() {
         // no change from read-only operators
@@ -280,7 +280,7 @@ void main() {
     });
 
     test('sort', () {
-      list.sort((x, y) => x - y);
+      list.sort((x, y) => x! - y!);
       expect(list, orderedEquals([1, 1, 2, 3, 3, 4]));
 
       return Future(() {
@@ -325,7 +325,7 @@ void main() {
   });
 }
 
-late ObservableList<int> list;
+late ObservableList<int?> list;
 
 PropertyChangeRecord<int> _lengthChange(int oldValue, int newValue) =>
     PropertyChangeRecord<int>(list, #length, oldValue, newValue);

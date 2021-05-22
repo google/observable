@@ -223,18 +223,13 @@ class ObservableList<E> extends ListBase<E> with Observable {
     if (iterable is! List && iterable is! Set) {
       iterable = iterable.toList();
     }
-    var insertionLength = iterable.length;
-    // There might be errors after the length change, in which case the list
-    // will end up being modified but the operation not complete. Unless we
-    // always go through a "toList" we can't really avoid that.
     var len = _list.length;
-    _list.length += insertionLength;
 
-    _list.setRange(index + insertionLength, length, this, index);
-    _list.setAll(index, iterable);
+    _list.insertAll(index, iterable);
 
     _notifyChangeLength(len, _list.length);
 
+    var insertionLength = length - len;
     if (hasListObservers && insertionLength > 0) {
       _notifyListChange(index, addedCount: insertionLength);
     }

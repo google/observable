@@ -47,9 +47,9 @@ void listChangeTests() {
   });
 
   test('List Splice Truncate And Expand With Length', () {
-    final model = ObservableList<String>.from(['a', 'b', 'c', 'd', 'e']);
+    final model = ObservableList<String?>.from(['a', 'b', 'c', 'd', 'e']);
 
-    List<ListChangeRecord<String>>? summary;
+    List<ListChangeRecord<String?>>? summary;
     sub = model.listChanges.listen((r) => summary = r);
 
     model.length = 2;

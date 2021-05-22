@@ -94,8 +94,7 @@ dynamic _toObservableDeep(dynamic value) {
 
 ObservableMap _toObservableDeepMap(Map<dynamic, dynamic> value) {
   return extractMapTypeArguments(value, <K, V>() {
-    var result =
-        ObservableMap<K, V>.createFromType(value.cast<K, V>());
+    var result = ObservableMap<K, V>.createFromType(value.cast<K, V>());
     value.forEach((k, v) {
       result[_toObservableDeep(k)] = _toObservableDeep(v);
     });

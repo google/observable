@@ -90,7 +90,7 @@ void main() {
     List<ChangeRecord>? changes;
 
     setUp(() {
-      map = toObservable({'a': 1, 'b': 2, 'c': 3});
+      map = toObservable(<String, int?>{'a': 1, 'b': 2, 'c': 3});
       changes = null;
       sub = map.changes.listen((records) {
         changes =
@@ -380,11 +380,13 @@ PropertyChangeRecord<int> _lengthChange(map, int oldValue, int newValue) =>
     PropertyChangeRecord<int>(map, #length, oldValue, newValue);
 
 MapChangeRecord _changeKey(key, old, newValue) =>
-    MapChangeRecord(key, old, newValue);
+    MapChangeRecord<String, int?>(key, old, newValue);
 
-ChangeRecord _insertKey(key, newValue) => MapChangeRecord.insert(key, newValue);
+ChangeRecord _insertKey(key, newValue) =>
+    MapChangeRecord<String, int?>.insert(key, newValue);
 
-ChangeRecord _removeKey(key, oldValue) => MapChangeRecord.remove(key, oldValue);
+ChangeRecord _removeKey(key, oldValue) =>
+    MapChangeRecord<String, int?>.remove(key, oldValue);
 
 PropertyChangeRecord<Null> _propChange(map, prop) =>
     PropertyChangeRecord<Null>(map, prop, null, null);
