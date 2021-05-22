@@ -56,16 +56,17 @@ List<List<int>> _calcEditDistance<E>(
   int oldStart,
   int oldEnd,
 ) {
-  // 'Deletion' columns.
   final rowCount = oldEnd - oldStart + 1;
   final columnCount = currentEnd - currentStart + 1;
-  final distances = List<List<int>>(rowCount);
 
-  // 'Addition' rows. Initialize null column.
-  for (var i = 0; i < rowCount; i++) {
-    distances[i] = List<int>(columnCount);
-    distances[i][0] = i;
-  }
+  // Create distances matrix with 'Deletion' columns and 'Addition' rows.
+  final distances = List<List<int>>.generate(
+    rowCount,
+    // First value is [i] to initialize null column.
+    // Other values will be overwritten, so for simplicity they can also be [i].
+    (i) => List<int>.filled(columnCount, i),
+    growable: false,
+  );
 
   // Initialize null row.
   for (var j = 0; j < columnCount; j++) {
@@ -441,7 +442,7 @@ List<ListChangeRecord<E>> _createInitialSplices<E>(
 // insert incorrectly, because those items will be shifted.
 List<ListChangeRecord<E>> projectListSplices<E>(
     List<E> list, List<ListChangeRecord<E>> records,
-    [Equality<E> equality]) {
+    [Equality<E>? equality]) {
   equality ??= DefaultEquality<E>();
   if (records.length <= 1) return records;
   final splices = <ListChangeRecord<E>>[];

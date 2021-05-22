@@ -12,18 +12,15 @@ import 'observable_test_utils.dart';
 void main() {
   // TODO(jmesserly): need all standard Map API tests.
 
-  StreamSubscription sub;
+  StreamSubscription? sub;
 
-  void sharedTearDown() {
-    if (sub != null) {
-      sub.cancel();
-      sub = null;
-    }
-  }
+  tearDown(() {
+    sub?.cancel();
+  });
 
   group('observe length', () {
-    ObservableMap map;
-    List<ChangeRecord> changes;
+    late ObservableMap map;
+    List<ChangeRecord>? changes;
 
     setUp(() {
       map = toObservable({'a': 1, 'b': 2, 'c': 3});
@@ -32,8 +29,6 @@ void main() {
         changes = getPropertyChangeRecords(records, #length);
       });
     });
-
-    tearDown(sharedTearDown);
 
     test('add item changes length', () {
       map['d'] = 4;
@@ -91,8 +86,8 @@ void main() {
   });
 
   group('observe item', () {
-    ObservableMap map;
-    List<ChangeRecord> changes;
+    late ObservableMap map;
+    List<ChangeRecord>? changes;
 
     setUp(() {
       map = toObservable({'a': 1, 'b': 2, 'c': 3});
@@ -102,8 +97,6 @@ void main() {
             records.where((r) => r is MapChangeRecord && r.key == 'b').toList();
       });
     });
-
-    tearDown(sharedTearDown);
 
     test('putIfAbsent new item does not change existing item', () {
       map.putIfAbsent('d', () => 4);
@@ -192,9 +185,9 @@ void main() {
   });
 
   group('observe keys/values', () {
-    ObservableMap map;
-    int keysChanged;
-    int valuesChanged;
+    late ObservableMap map;
+    late int keysChanged;
+    late int valuesChanged;
 
     setUp(() {
       map = toObservable({'a': 1, 'b': 2, 'c': 3});
@@ -205,8 +198,6 @@ void main() {
         valuesChanged += getPropertyChangeRecords(records, #values).length;
       });
     });
-
-    tearDown(sharedTearDown);
 
     test('add item changes keys/values', () {
       map['d'] = 4;
@@ -265,16 +256,14 @@ void main() {
   });
 
   group('change records', () {
-    List<ChangeRecord> records;
-    ObservableMap map;
+    List<ChangeRecord>? records;
+    late ObservableMap map;
 
     setUp(() {
       map = toObservable({'a': 1, 'b': 2});
       records = null;
       map.changes.first.then((r) => records = r);
     });
-
-    tearDown(sharedTearDown);
 
     test('read operations', () {
       expect(map.length, 2);
@@ -372,8 +361,8 @@ void main() {
   });
 
   group('Updates delegate as a spy', () {
-    Map delegate;
-    ObservableMap map;
+    late Map delegate;
+    late ObservableMap map;
 
     setUp(() {
       delegate = {};
