@@ -101,5 +101,5 @@ abstract class Observable<C extends ChangeRecord> {
   ///
   /// If there are no listeners to [changes], this method does nothing.
   @Deprecated('Use ChangeNotifier instead to have this method available')
-  void notifyChange([C change]) => _delegate.notifyChange(change);
+  void notifyChange([C? change]) => _delegate.notifyChange(change);
 }

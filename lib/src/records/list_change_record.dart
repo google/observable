@@ -27,7 +27,7 @@ class ListChangeRecord<E> implements ChangeRecord {
   factory ListChangeRecord(
     List<E> object,
     int index, {
-    List<E> removed,
+    List<E>? removed,
     int addedCount = 0,
   }) {
     return ListChangeRecord._(
@@ -51,7 +51,7 @@ class ListChangeRecord<E> implements ChangeRecord {
   ///
   /// If [addedCount] is not specified it defaults to `removed.length`.
   ListChangeRecord.replace(this.object, this.index, List<E> removed,
-      [int addedCount])
+      [int? addedCount])
       : removed = freezeInDevMode<E>(removed),
         addedCount = addedCount ?? removed.length {
     _assertValidState();
@@ -82,18 +82,11 @@ class ListChangeRecord<E> implements ChangeRecord {
 
   void _assertValidState() {
     assert(() {
-      if (object == null) {
-        throw ArgumentError.notNull('object');
-      }
-      if (index == null) {
-        throw ArgumentError.notNull('index');
-      }
-      if (removed == null) {
-        throw ArgumentError.notNull('removed');
-      }
-      if (addedCount == null || addedCount < 0) {
-        throw ArgumentError('Invalid `addedCount`: $addedCount');
-      }
+      ArgumentError.checkNotNull(object, 'object');
+      ArgumentError.checkNotNull(index, 'index');
+      ArgumentError.checkNotNull(removed, 'removed');
+      ArgumentError.checkNotNull(addedCount, 'addedCount');
+      RangeError.checkNotNegative(addedCount, 'addedCount');
       return true;
     }());
   }

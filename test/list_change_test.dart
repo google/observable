@@ -16,7 +16,7 @@ void main() => listChangeTests();
 
 // TODO(jmesserly): port or write array fuzzer tests
 void listChangeTests() {
-  StreamSubscription sub;
+  StreamSubscription? sub;
   var model;
 
   tearDown(() {
@@ -25,14 +25,14 @@ void listChangeTests() {
   });
 
   ListChangeRecord<E> _delta<E>(int i, List<E> r, int a,
-          {ObservableList<E> typedModel}) =>
+          {ObservableList<E>? typedModel}) =>
       ListChangeRecord(typedModel ?? model, i, removed: r, addedCount: a);
 
   test('sequential adds', () {
     final model = ObservableList();
     model.add(0);
 
-    List<ListChangeRecord> summary;
+    List<ListChangeRecord>? summary;
     sub = model.listChanges.listen((r) => summary = r);
 
     model.add(1);
@@ -41,15 +41,15 @@ void listChangeTests() {
     expect(summary, null);
     return Future(() {
       expect(summary, [_delta(1, [], 2, typedModel: model)]);
-      expect(summary[0].added, [1, 2]);
-      expect(summary[0].removed, []);
+      expect(summary![0].added, [1, 2]);
+      expect(summary![0].removed, []);
     });
   });
 
   test('List Splice Truncate And Expand With Length', () {
-    final model = ObservableList<String>.from(['a', 'b', 'c', 'd', 'e']);
+    final model = ObservableList<String?>.from(['a', 'b', 'c', 'd', 'e']);
 
-    List<ListChangeRecord<String>> summary;
+    List<ListChangeRecord<String?>>? summary;
     sub = model.listChanges.listen((r) => summary = r);
 
     model.length = 2;
@@ -57,14 +57,14 @@ void listChangeTests() {
       expect(summary, [
         _delta(2, ['c', 'd', 'e'], 0, typedModel: model)
       ]);
-      expect(summary[0].added, []);
-      expect(summary[0].removed, ['c', 'd', 'e']);
+      expect(summary![0].added, []);
+      expect(summary![0].removed, ['c', 'd', 'e']);
       summary = null;
       model.length = 5;
     }).then(newMicrotask).then((_) {
       expect(summary, [_delta(2, [], 3, typedModel: model)]);
-      expect(summary[0].added, [null, null, null]);
-      expect(summary[0].removed, []);
+      expect(summary![0].added, [null, null, null]);
+      expect(summary![0].removed, []);
     });
   });
 
@@ -229,7 +229,8 @@ void listChangeTests() {
   });
 
   group('edit distance', () {
-    void assertEditDistance(orig, changes, expectedDist) =>
+    void assertEditDistance(
+            orig, Future<List<ListChangeRecord>> changes, expectedDist) =>
         changes.then((summary) {
           var actualDistance = 0;
           for (var delta in summary) {

@@ -14,12 +14,12 @@ import 'package:test/test.dart';
 Future newMicrotask(_) => Future.value();
 
 void expectChanges(List<ChangeRecord> actual, List<ChangeRecord> expected,
-    {String reason}) {
+    {String? reason}) {
   expect(actual, _EqualsMatcher(expected), reason: reason);
 }
 
 void expectNotChanges(List<ChangeRecord> actual, ChangeRecords expectedNot,
-    {String reason}) {
+    {String? reason}) {
   expect(actual, isNot(_EqualsMatcher(expectedNot)), reason: reason);
 }
 

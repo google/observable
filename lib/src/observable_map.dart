@@ -93,13 +93,13 @@ class ObservableMap<K, V> extends Observable implements Map<K, V> {
   bool get isNotEmpty => !isEmpty;
 
   @override
-  bool containsValue(Object value) => _map.containsValue(value);
+  bool containsValue(Object? value) => _map.containsValue(value);
 
   @override
-  bool containsKey(Object key) => _map.containsKey(key);
+  bool containsKey(Object? key) => _map.containsKey(key);
 
   @override
-  V operator [](Object key) => _map[key];
+  V? operator [](Object? key) => _map[key];
 
   @override
   void operator []=(K key, V value) {
@@ -115,10 +115,10 @@ class ObservableMap<K, V> extends Observable implements Map<K, V> {
 
     if (len != _map.length) {
       notifyPropertyChange(#length, len, _map.length);
-      notifyChange(MapChangeRecord.insert(key, value));
+      notifyChange(MapChangeRecord<K, V>.insert(key, value));
       _notifyKeysValuesChanged();
     } else if (oldValue != value) {
-      notifyChange(MapChangeRecord(key, oldValue, value));
+      notifyChange(MapChangeRecord<K, V>(key, oldValue, value));
       _notifyValuesChanged();
     }
   }
@@ -136,18 +136,18 @@ class ObservableMap<K, V> extends Observable implements Map<K, V> {
     var result = _map.putIfAbsent(key, ifAbsent);
     if (hasObservers && len != _map.length) {
       notifyPropertyChange(#length, len, _map.length);
-      notifyChange(MapChangeRecord.insert(key, result));
+      notifyChange(MapChangeRecord<K, V>.insert(key, result));
       _notifyKeysValuesChanged();
     }
     return result;
   }
 
   @override
-  V remove(Object key) {
+  V? remove(Object? key) {
     var len = _map.length;
     var result = _map.remove(key);
     if (hasObservers && len != _map.length) {
-      notifyChange(MapChangeRecord.remove(key, result));
+      notifyChange(MapChangeRecord<K, V>.remove(key as K, result));
       notifyPropertyChange(#length, len, _map.length);
       _notifyKeysValuesChanged();
     }
@@ -159,7 +159,7 @@ class ObservableMap<K, V> extends Observable implements Map<K, V> {
     var len = _map.length;
     if (hasObservers && len > 0) {
       _map.forEach((key, value) {
-        notifyChange(MapChangeRecord.remove(key, value));
+        notifyChange(MapChangeRecord<K, V>.remove(key, value));
       });
       notifyPropertyChange(#length, len, 0);
       _notifyKeysValuesChanged();
@@ -199,7 +199,7 @@ class ObservableMap<K, V> extends Observable implements Map<K, V> {
   }
 
   @override
-  V update(K key, V Function(V value) update, {V Function() ifAbsent}) {
+  V update(K key, V Function(V value) update, {V Function()? ifAbsent}) {
     return _map.update(key, update, ifAbsent: ifAbsent);
   }
 

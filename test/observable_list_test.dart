@@ -12,30 +12,23 @@ import 'observable_test_utils.dart';
 void main() {
   // TODO(jmesserly): need all standard List API tests.
 
-  StreamSubscription sub, sub2;
+  StreamSubscription? sub, sub2;
 
-  void sharedTearDown() {
-    list = null;
-    sub.cancel();
-    if (sub2 != null) {
-      sub2.cancel();
-      sub2 = null;
-    }
-  }
+  tearDown(() {
+    sub?.cancel();
+    sub2?.cancel();
+  });
 
   group('observe length', () {
-    ObservableList list;
-    List<ChangeRecord> changes;
+    List<ChangeRecord>? changes;
 
     setUp(() {
-      list = toObservable([1, 2, 3]) as ObservableList;
+      list = toObservableList(<int?>[1, 2, 3]);
       changes = null;
       sub = list.changes.listen((records) {
         changes = getPropertyChangeRecords(records, #length);
       });
     });
-
-    tearDown(sharedTearDown);
 
     test('add changes length', () {
       list.add(4);
@@ -100,17 +93,15 @@ void main() {
   });
 
   group('observe index', () {
-    List<ListChangeRecord> changes;
+    List<ListChangeRecord>? changes;
 
     setUp(() {
-      list = toObservable([1, 2, 3]) as ObservableList;
+      list = toObservableList([1, 2, 3]);
       changes = null;
       sub = list.listChanges.listen((List<ListChangeRecord> records) {
         changes = getListChangeRecords(records, 1);
       });
     });
-
-    tearDown(sharedTearDown);
 
     test('add does not change existing items', () {
       list.add(4);
@@ -189,23 +180,21 @@ void main() {
   });
 
   test('toString', () {
-    var list = toObservable([1, 2, 3]);
+    list = toObservableList([1, 2, 3]);
     expect(list.toString(), '[1, 2, 3]');
   });
 
   group('change records', () {
-    List<ChangeRecord> propRecords;
-    List<ListChangeRecord> listRecords;
+    List<ChangeRecord>? propRecords;
+    List<ListChangeRecord>? listRecords;
 
     setUp(() {
-      list = toObservable([1, 2, 3, 1, 3, 4]) as ObservableList;
+      list = toObservableList([1, 2, 3, 1, 3, 4]);
       propRecords = null;
       listRecords = null;
       sub = list.changes.listen((r) => propRecords = r);
       sub2 = list.listChanges.listen((r) => listRecords = r);
     });
-
-    tearDown(sharedTearDown);
 
     test('read operations', () {
       expect(list.length, 6);
@@ -215,8 +204,8 @@ void main() {
       expect(list.indexOf(1, 1), 3);
       expect(list.lastIndexOf(1), 3);
       expect(list.last, 4);
-      var copy = <int>[];
-      list.forEach((int i) => copy.add(i));
+      var copy = <int?>[];
+      list.forEach(copy.add);
       expect(copy, orderedEquals([1, 2, 3, 1, 3, 4]));
       return Future(() {
         // no change from read-only operators
@@ -291,7 +280,7 @@ void main() {
     });
 
     test('sort', () {
-      list.sort((x, y) => x - y);
+      list.sort((x, y) => x! - y!);
       expect(list, orderedEquals([1, 1, 2, 3, 3, 4]));
 
       return Future(() {
@@ -304,11 +293,10 @@ void main() {
     });
 
     test('sort of 2 elements', () {
-      var list = toObservable([3, 1]);
+      var list = toObservableList([3, 1]);
       // Dummy listener to record changes.
       // TODO(jmesserly): should we just record changes always, to support the sync api?
-      sub = list.listChanges.listen((List<ListChangeRecord> records) => null)
-          as StreamSubscription;
+      sub = list.listChanges.listen((List<ListChangeRecord> records) => null);
       list.sort();
       expect(list.deliverListChanges(), true);
       list.sort();
@@ -337,7 +325,7 @@ void main() {
   });
 }
 
-ObservableList<int> list;
+late ObservableList<int?> list;
 
 PropertyChangeRecord<int> _lengthChange(int oldValue, int newValue) =>
     PropertyChangeRecord<int>(list, #length, oldValue, newValue);

@@ -1,3 +1,7 @@
+## 0.24.0-dev
+
+* Migrate to [null safety](https://dart.dev/null-safety).
+
 ## 0.23.0
 
 * Support latest dependencies.

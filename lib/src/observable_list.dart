@@ -9,8 +9,8 @@ import 'dart:async';
 import 'dart:collection' show ListBase, UnmodifiableListView;
 
 import 'differs.dart';
-import 'records.dart';
 import 'observable.dart' show Observable;
+import 'records.dart';
 
 /// Represents an observable list of model values. If any items are added,
 /// removed, or replaced, then observers that are listening to [changes]
@@ -30,30 +30,15 @@ class ObservableList<E> extends ListBase<E> with Observable {
   static ObservableList<T> castFrom<S, T>(ObservableList<S> source) =>
       ObservableList<T>._spy(source._list.cast<T>());
 
-  List<ListChangeRecord<E>> _listRecords;
+  List<ListChangeRecord<E>>? _listRecords;
 
-  StreamController<List<ListChangeRecord<E>>> _listChanges;
+  StreamController<List<ListChangeRecord<E>>>? _listChanges;
 
   /// The inner [List<E>] with the actual storage.
   final List<E> _list;
 
-  /// Creates an observable list of the given [length].
-  ///
-  /// If no [length] argument is supplied an extendable list of
-  /// length 0 is created.
-  ///
-  /// If a [length] argument is supplied, a fixed size list of that
-  /// length is created.
-  ObservableList([int length])
-      : _list = length != null ? List<E>.filled(length, null) : <E>[];
-
-  /// Creates an observable list of the given [length].
-  ///
-  /// This constructor exists to work around an issue in the VM whereby
-  /// classes that derive from [ObservableList] and mixin other classes
-  /// require a default generative constructor in the super class that
-  /// does not take optional arguments.
-  ObservableList.withLength(int length) : this(length);
+  /// Creates an empty observable list.
+  ObservableList() : _list = <E>[];
 
   /// Creates an observable list with the elements of [other]. The order in
   /// the list will be the order provided by the iterator of [other].
@@ -116,10 +101,10 @@ class ObservableList<E> extends ListBase<E> with Observable {
         _listChanges = null;
       },
     );
-    return _listChanges.stream;
+    return _listChanges!.stream;
   }
 
-  bool get hasListObservers => _listChanges != null && _listChanges.hasListener;
+  bool get hasListObservers => _listChanges?.hasListener ?? false;
 
   @override
   int get length => _list.length;
@@ -205,7 +190,7 @@ class ObservableList<E> extends ListBase<E> with Observable {
   }
 
   @override
-  bool remove(Object element) {
+  bool remove(Object? element) {
     for (var i = 0; i < length; i++) {
       if (this[i] == element) {
         removeRange(i, i + 1);
@@ -238,18 +223,13 @@ class ObservableList<E> extends ListBase<E> with Observable {
     if (iterable is! List && iterable is! Set) {
       iterable = iterable.toList();
     }
-    var insertionLength = iterable.length;
-    // There might be errors after the length change, in which case the list
-    // will end up being modified but the operation not complete. Unless we
-    // always go through a "toList" we can't really avoid that.
     var len = _list.length;
-    _list.length += insertionLength;
 
-    _list.setRange(index + insertionLength, length, this, index);
-    _list.setAll(index, iterable);
+    _list.insertAll(index, iterable);
 
     _notifyChangeLength(len, _list.length);
 
+    var insertionLength = length - len;
     if (hasListObservers && insertionLength > 0) {
       _notifyListChange(index, addedCount: insertionLength);
     }
@@ -257,19 +237,19 @@ class ObservableList<E> extends ListBase<E> with Observable {
 
   @override
   void insert(int index, E element) {
-    if (index < 0 || index > length) {
-      throw RangeError.range(index, 0, length);
-    }
     if (index == length) {
       add(element);
       return;
     }
-    // We are modifying the length just below the is-check. Without the check
+    // We are modifying the length just below these checks. Without the checks
     // Array.copy could throw an exception, leaving the list in a bad state
     // (with a length that has been increased, but without a new element).
     if (index is! int) throw ArgumentError(index);
-    _list.length++;
-    _list.setRange(index + 1, length, this, index);
+    RangeError.checkValidIndex(index, this);
+    _list
+      // Increase the length by adding [element], in case [E] isn't nullable.
+      ..add(element)
+      ..setRange(index + 1, length, this, index);
 
     _notifyChangeLength(_list.length - 1, _list.length);
     if (hasListObservers) {
@@ -296,7 +276,7 @@ class ObservableList<E> extends ListBase<E> with Observable {
 
   void _notifyListChange(
     int index, {
-    List<E> removed,
+    List<E>? removed,
     int addedCount = 0,
   }) {
     if (!hasListObservers) return;
@@ -304,7 +284,7 @@ class ObservableList<E> extends ListBase<E> with Observable {
       _listRecords = [];
       scheduleMicrotask(deliverListChanges);
     }
-    _listRecords.add(ListChangeRecord<E>(
+    _listRecords!.add(ListChangeRecord<E>(
       this,
       index,
       removed: removed,
@@ -325,11 +305,11 @@ class ObservableList<E> extends ListBase<E> with Observable {
 
   bool deliverListChanges() {
     if (_listRecords == null) return false;
-    final records = projectListSplices<E>(this, _listRecords);
+    final records = projectListSplices<E>(this, _listRecords!);
     _listRecords = null;
 
     if (hasListObservers && records.isNotEmpty) {
-      _listChanges.add(UnmodifiableListView<ListChangeRecord<E>>(records));
+      _listChanges!.add(UnmodifiableListView<ListChangeRecord<E>>(records));
       return true;
     }
     return false;
@@ -366,7 +346,7 @@ class ObservableList<E> extends ListBase<E> with Observable {
       var addEnd = change.index + change.addedCount;
       var removeEnd = change.index + change.removed.length;
 
-      Iterable addedItems = current.getRange(change.index, addEnd);
+      var addedItems = current.getRange(change.index, addEnd);
       previous.replaceRange(change.index, removeEnd, addedItems);
     }
   }
