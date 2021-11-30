@@ -56,7 +56,10 @@ void main() {
     test(
         'delivers expectChangesed changes',
         () => runTest<B>((cn) {
-              cn..notifyChange(B(1))..notifyChange(B(2))..notifyChange(B(3));
+              cn
+                ..notifyChange(B(1))
+                ..notifyChange(B(2))
+                ..notifyChange(B(3));
             }, (cr) {
               expectChanges(cr, ChangeRecords<B>.wrap([B(1), B(2), B(3)]));
             }));
