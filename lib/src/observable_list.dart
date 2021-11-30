@@ -244,7 +244,6 @@ class ObservableList<E> extends ListBase<E> with Observable {
     // We are modifying the length just below these checks. Without the checks
     // Array.copy could throw an exception, leaving the list in a bad state
     // (with a length that has been increased, but without a new element).
-    if (index is! int) throw ArgumentError(index);
     RangeError.checkValidIndex(index, this);
     _list
       // Increase the length by adding [element], in case [E] isn't nullable.
