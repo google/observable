@@ -1,0 +1,9 @@
+# Files and directories created by pub
+.dart_tool/
+.packages
+.pub/
+packages
+pubspec.lock
+
+# Directory created by dartdoc
+doc/api/
