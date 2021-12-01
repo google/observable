@@ -1,7 +1,9 @@
-## 0.24.0-dev
+## 0.24.0
 
 * Migrate to [null safety](https://dart.dev/null-safety).
-* Update ObservableMap to notify observers about changes for all methods.
+* Fix [issue][issue_91] where `ObservableMap` did not notify for all methods.
+
+[issue_91]: https://github.com/dart-lang/observable/issues/91
 
 ## 0.23.0
 
